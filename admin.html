@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>LUMÉ — Адмін-панель</title>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#faf7f4;--ink:#2b2724;--muted:#8a8079;--accent:#c08a5e;--accent-dark:#a06d44;--line:#e7ddd3;--shadow:0 8px 30px rgba(40,30,20,.08);--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+img{max-width:100%;display:block}
+a{color:var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:11px 22px;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.btn:hover{background:var(--accent-dark)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{background:#fff;border-color:var(--ink)}
+.btn-danger{background:#c0564e}.btn-danger:hover{background:#a3473f}
+input,select,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(--ink)}
+.muted{color:var(--muted);font-size:13px}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:36px;width:100%;max-width:380px}
+.login-box .logo{font-size:26px;font-weight:800;letter-spacing:3px;text-align:center;margin-bottom:4px}
+.login-box .logo span{color:var(--accent)}
+.login-box h1{font-size:18px;text-align:center;margin-bottom:24px;font-weight:600}
+.login-box .field{margin-bottom:14px}
+.msg{font-size:13px;margin-top:12px;text-align:center;min-height:18px}
+.msg.err{color:#c0564e}.msg.ok{color:#2e8b57}
+
+/* DASHBOARD */
+.topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.topbar-in{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.topbar .logo{font-size:20px;font-weight:800;letter-spacing:2px}
+.topbar .logo span{color:var(--accent)}
+.topbar-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+.head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
+.head-row h2{font-size:22px}
+
+.prod-list{display:flex;flex-direction:column;gap:10px}
+.prow{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.prow .thumb{width:64px;height:64px;border-radius:10px;overflow:hidden;background:#efe7df;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff}
+.prow .pinfo .t{font-weight:600;font-size:15px}
+.prow .pinfo .m{font-size:12px;color:var(--muted);margin-top:2px}
+.prow .pinfo .pr{font-size:14px;font-weight:600;margin-top:3px}
+.prow .pr .old{color:var(--muted);text-decoration:line-through;font-weight:400;margin-left:6px;font-size:12px}
+.prow-actions{display:flex;gap:8px}
+.tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:20px;padding:2px 9px;margin-left:6px}
+.tag.sale{background:#c0564e}.tag.new{background:#e8654f}.tag.hit{background:#a06d44}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;z-index:50;padding:30px 16px;overflow-y:auto}
+.overlay.open{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius);width:100%;max-width:560px;padding:26px;position:relative}
+.modal h3{font-size:20px;margin-bottom:18px}
+.modal .close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:26px;cursor:pointer;color:var(--ink);line-height:1}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{margin-bottom:14px}
+.size-pick{display:flex;flex-wrap:wrap;gap:8px}
+.size-pick label{display:inline-flex;align-items:center;gap:6px;font-weight:500;background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer;margin:0}
+.size-pick input{width:auto}
+.img-preview{width:90px;height:120px;border-radius:10px;object-fit:cover;border:1px solid var(--line);background:#efe7df;display:none}
+.form-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+.loader{text-align:center;color:var(--muted);padding:40px}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginView">
+  <div class="login-box">
+    <div class="logo">LUM<span>É</span></div>
+    <h1>Адмін-панель</h1>
+    <form id="loginForm">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>Пароль</label>
+        <input type="password" id="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn" style="width:100%" type="submit">Увійти</button>
+      <div class="msg" id="loginMsg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashView" style="display:none">
+  <div class="topbar">
+    <div class="topbar-in">
+      <div class="logo">LUM<span>É</span> · адмін</div>
+      <div class="topbar-actions">
+        <a class="btn btn-ghost btn-sm" href="/" target="_blank">↗ Відкрити сайт</a>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">Вийти</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="head-row">
+      <h2>Товари</h2>
+      <button class="btn" id="addBtn">+ Додати товар</button>
+    </div>
+    <div id="list" class="prod-list"></div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="close" id="modalClose">×</button>
+    <h3 id="modalTitle">Новий товар</h3>
+    <form id="prodForm">
+      <input type="hidden" id="pid">
+      <div class="field">
+        <label>Назва *</label>
+        <input type="text" id="ptitle" required>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Артикул</label>
+          <input type="text" id="psku" placeholder="LM-1001">
+        </div>
+        <div class="field">
+          <label>Категорія</label>
+          <input type="text" id="pcat" list="catList" placeholder="Сукні">
+          <datalist id="catList"></datalist>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Ціна, грн *</label>
+          <input type="number" id="pprice" min="0" required>
+        </div>
+        <div class="field">
+          <label>Стара ціна, грн (необов'язково)</label>
+          <input type="number" id="pold" min="0">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Бейдж</label>
+          <select id="pbadge">
+            <option value="">— немає —</option>
+            <option value="new">НОВИНКА</option>
+            <option value="sale">SALE</option>
+            <option value="hit">ХІТ</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Порядок (менше = вище)</label>
+          <input type="number" id="psort" value="0">
+        </div>
+      </div>
+      <div class="field">
+        <label>Розміри</label>
+        <div class="size-pick" id="sizePick"></div>
+        <input type="text" id="psizesCustom" placeholder="або введіть свої через кому: XL, 2XL, 3XL" style="margin-top:8px">
+      </div>
+      <div class="field">
+        <label>Опис</label>
+        <textarea id="pdesc" rows="3" placeholder="Короткий опис товару…"></textarea>
+      </div>
+      <div class="field">
+        <label>Фото</label>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <img class="img-preview" id="imgPreview">
+          <div style="flex:1">
+            <input type="file" id="pimage" accept="image/*">
+            <div class="muted" style="margin-top:6px">JPG/PNG/WebP. Завантаження після збереження.</div>
+            <input type="hidden" id="pimageUrl">
+          </div>
+        </div>
+      </div>
+      <div class="msg err" id="formMsg"></div>
+      <div class="form-foot">
+        <button type="button" class="btn btn-ghost" id="cancelBtn">Скасувати</button>
+        <button type="submit" class="btn" id="saveBtn">Зберегти</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const SIZES_PRESET=['XL','2XL','3XL','4XL','5XL','Один розмір'];
+const BADGE_LABEL={new:'НОВИНКА',sale:'SALE',hit:'ХІТ'};
+let sb=null, products=[];
+
+/* ---------- init ---------- */
+function configured(){
+  return window.SUPABASE_URL && window.SUPABASE_URL.indexOf('YOUR')<0 && typeof supabase!=='undefined';
+}
+if(!configured()){
+  document.getElementById('loginMsg').className='msg err';
+  document.getElementById('loginMsg').textContent='Спочатку заповніть config.js (ключі Supabase).';
+}else{
+  sb=supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+  sb.auth.getSession().then(({data})=>{ if(data.session) showDashboard(); });
+}
+
+/* ---------- auth ---------- */
+document.getElementById('loginForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!sb) return;
+  const msg=document.getElementById('loginMsg'); msg.className='msg'; msg.textContent='Вхід…';
+  const {error}=await sb.auth.signInWithPassword({
+    email:document.getElementById('email').value.trim(),
+    password:document.getElementById('password').value
+  });
+  if(error){ msg.className='msg err'; msg.textContent='Невірний email або пароль'; }
+  else{ msg.textContent=''; showDashboard(); }
+});
+document.getElementById('logoutBtn').addEventListener('click', async ()=>{
+  await sb.auth.signOut();
+  document.getElementById('dashView').style.display='none';
+  document.getElementById('loginView').style.display='flex';
+});
+
+function showDashboard(){
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('dashView').style.display='block';
+  loadList();
+}
+
+/* ---------- list ---------- */
+async function loadList(){
+  const box=document.getElementById('list');
+  box.innerHTML='<div class="loader">Завантаження…</div>';
+  const {data,error}=await sb.from('products').select('*').order('sort',{ascending:true}).order('id',{ascending:true});
+  if(error){ box.innerHTML='<div class="loader">Помилка завантаження</div>'; return; }
+  products=data||[];
+  // оновити список категорій для datalist
+  const cats=[...new Set(products.map(p=>p.category).filter(Boolean))];
+  document.getElementById('catList').innerHTML=cats.map(c=>`<option value="${esc(c)}">`).join('');
+  if(!products.length){ box.innerHTML='<div class="loader">Товарів ще немає. Натисніть «Додати товар».</div>'; return; }
+  box.innerHTML='';
+  products.forEach(p=>{
+    const row=document.createElement('div');
+    row.className='prow';
+    row.innerHTML=`
+      <div class="thumb">${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:'🛍️'}</div>
+      <div class="pinfo">
+        <div class="t">${esc(p.title)}${p.badge?`<span class="tag ${p.badge}">${BADGE_LABEL[p.badge]||esc(p.badge)}</span>`:''}</div>
+        <div class="m">${esc(p.category||'—')} · Арт: ${esc(p.sku||'—')} · ${(p.sizes||[]).join(', ')||'—'}</div>
+        <div class="pr">${(p.price||0).toLocaleString('uk-UA')} грн.${p.old_price?`<span class="old">${p.old_price.toLocaleString('uk-UA')} грн.</span>`:''}</div>
+      </div>
+      <div class="prow-actions">
+        <button class="btn btn-ghost btn-sm" data-edit="${p.id}">Редагувати</button>
+        <button class="btn btn-danger btn-sm" data-del="${p.id}">✕</button>
+      </div>`;
+    box.appendChild(row);
+  });
+  box.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openForm(+b.dataset.edit));
+  box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delProduct(+b.dataset.del));
+}
+
+/* ---------- form ---------- */
+const overlay=document.getElementById('modalOverlay');
+function buildSizePicker(selected){
+  const box=document.getElementById('sizePick');
+  box.innerHTML=SIZES_PRESET.map(s=>`<label><input type="checkbox" value="${s}" ${selected.includes(s)?'checked':''}> ${s}</label>`).join('');
+}
+function openForm(id){
+  const p = id ? products.find(x=>x.id===id) : null;
+  document.getElementById('modalTitle').textContent = p ? 'Редагувати товар' : 'Новий товар';
+  document.getElementById('pid').value = p?p.id:'';
+  document.getElementById('ptitle').value = p?p.title:'';
+  document.getElementById('psku').value = p?(p.sku||''):'';
+  document.getElementById('pcat').value = p?(p.category||''):'';
+  document.getElementById('pprice').value = p?p.price:'';
+  document.getElementById('pold').value = p?(p.old_price||''):'';
+  document.getElementById('pbadge').value = p?(p.badge||''):'';
+  document.getElementById('psort').value = p?(p.sort||0):0;
+  document.getElementById('pdesc').value = p?(p.description||''):'';
+  document.getElementById('psizesCustom').value='';
+  const sizes = p?(p.sizes||[]):['XL','2XL','3XL','4XL','5XL'];
+  // розміри, яких немає у пресеті — у поле "свої"
+  const custom = sizes.filter(s=>!SIZES_PRESET.includes(s));
+  if(custom.length) document.getElementById('psizesCustom').value=custom.join(', ');
+  buildSizePicker(sizes);
+  document.getElementById('pimage').value='';
+  document.getElementById('pimageUrl').value = p?(p.image_url||''):'';
+  const prev=document.getElementById('imgPreview');
+  if(p&&p.image_url){ prev.src=p.image_url; prev.style.display='block'; } else { prev.style.display='none'; }
+  document.getElementById('formMsg').textContent='';
+  overlay.classList.add('open');
+}
+function closeForm(){ overlay.classList.remove('open'); }
+document.getElementById('addBtn').onclick=()=>openForm(null);
+document.getElementById('cancelBtn').onclick=closeForm;
+document.getElementById('modalClose').onclick=closeForm;
+overlay.onclick=e=>{ if(e.target===overlay) closeForm(); };
+
+// прев'ю обраного файлу
+document.getElementById('pimage').addEventListener('change',e=>{
+  const f=e.target.files[0]; const prev=document.getElementById('imgPreview');
+  if(f){ prev.src=URL.createObjectURL(f); prev.style.display='block'; }
+});
+
+function collectSizes(){
+  const checked=[...document.querySelectorAll('#sizePick input:checked')].map(i=>i.value);
+  const custom=document.getElementById('psizesCustom').value.split(',').map(s=>s.trim()).filter(Boolean);
+  return [...new Set([...checked,...custom])];
+}
+
+document.getElementById('prodForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const msg=document.getElementById('formMsg'); msg.className='msg err'; msg.textContent='';
+  const saveBtn=document.getElementById('saveBtn'); saveBtn.disabled=true; saveBtn.textContent='Збереження…';
+  try{
+    let imageUrl=document.getElementById('pimageUrl').value||null;
+    const file=document.getElementById('pimage').files[0];
+    if(file){
+      const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+      const path=Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;
+      const up=await sb.storage.from('product-images').upload(path,file,{cacheControl:'3600',upsert:false});
+      if(up.error) throw up.error;
+      imageUrl=sb.storage.from('product-images').getPublicUrl(path).data.publicUrl;
+    }
+    const payload={
+      title:document.getElementById('ptitle').value.trim(),
+      sku:document.getElementById('psku').value.trim()||null,
+      category:document.getElementById('pcat').value.trim()||null,
+      price:parseInt(document.getElementById('pprice').value)||0,
+      old_price:document.getElementById('pold').value?parseInt(document.getElementById('pold').value):null,
+      badge:document.getElementById('pbadge').value||null,
+      sort:parseInt(document.getElementById('psort').value)||0,
+      sizes:collectSizes(),
+      description:document.getElementById('pdesc').value.trim()||null,
+      image_url:imageUrl
+    };
+    const id=document.getElementById('pid').value;
+    let res;
+    if(id) res=await sb.from('products').update(payload).eq('id',id);
+    else   res=await sb.from('products').insert(payload);
+    if(res.error) throw res.error;
+    closeForm(); loadList();
+  }catch(err){
+    msg.textContent='Помилка: '+(err.message||err);
+  }finally{
+    saveBtn.disabled=false; saveBtn.textContent='Зберегти';
+  }
+});
+
+async function delProduct(id){
+  const p=products.find(x=>x.id===id);
+  if(!confirm('Видалити товар «'+(p?p.title:'')+'»?')) return;
+  const {error}=await sb.from('products').delete().eq('id',id);
+  if(error){ alert('Помилка: '+error.message); return; }
+  loadList();
+}
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+</script>
+</body>
+</html>

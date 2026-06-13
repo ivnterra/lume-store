@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LUMÉ STORE — Магазин одягу та аксесуарів</title>
 <meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів LUMÉ. Доставка по Україні Новою Поштою.">
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --bg:#faf7f4;
@@ -496,11 +498,15 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ---------- PRODUCT DATA (замініть на свої товари) ---------- */
-const CATS = ['Усі','Сукні','Верх','Низ','Аксесуари'];
+/* ---------- PRODUCT DATA ---------- */
+let CATS = ['Усі'];
+let PRODUCTS = [];                 // заповнюється з бази (Supabase) або демо
 const APP_SIZES=['XL','2XL','3XL','4XL','5XL'];
 const ONE_SIZE=['Один розмір'];
-const PRODUCTS = [
+const CAT_ICON={'Сукні':'👗','Верх':'👚','Низ':'👖','Аксесуари':'👜'};
+const FALLBACK_COLORS=['#c9a98a','#a9b8a0','#b8a9c9','#a0855e','#c9b08a','#8a9eb8','#9e8a7a','#c98aa0','#7a6f8a'];
+/* Демо-товари — показуються, поки не підключено базу даних (config.js) */
+const DEMO_PRODUCTS = [
   {id:1, title:'Сукня міді «Флоренція»', cat:'Сукні', price:1290, old:1590, badge:'sale', color:'#c9a98a', icon:'👗', sku:'LM-1001', sizes:APP_SIZES},
   {id:2, title:'Лляна сорочка «Бриз»', cat:'Верх', price:890, old:null, badge:'new', color:'#a9b8a0', icon:'👚', sku:'LM-1002', sizes:APP_SIZES},
   {id:3, title:'Спідниця плісе «Аврора»', cat:'Низ', price:990, old:1190, badge:'sale', color:'#b8a9c9', icon:'🩱', sku:'LM-1003', sizes:APP_SIZES},
@@ -527,13 +533,36 @@ let detailId = null;
 const grid = document.getElementById('grid');
 const filtersEl = document.getElementById('filters');
 
-CATS.forEach(c=>{
-  const b=document.createElement('button');
-  b.className='filter-btn'+(c==='Усі'?' active':'');
-  b.textContent=c;
-  b.onclick=()=>{currentFilter=c;document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderGrid();};
-  filtersEl.appendChild(b);
-});
+function buildFilters(){
+  filtersEl.innerHTML='';
+  CATS.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(c===currentFilter?' active':'');
+    b.textContent=c;
+    b.onclick=()=>{currentFilter=c;document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderGrid();};
+    filtersEl.appendChild(b);
+  });
+}
+
+/* Завантаження товарів з Supabase (з fallback на демо) */
+async function loadProducts(){
+  try{
+    if(!window.SUPABASE_URL || window.SUPABASE_URL.indexOf('ВСТАВ')>-1 || window.SUPABASE_URL.indexOf('YOUR')>-1 || typeof supabase==='undefined') throw 0;
+    const sb=supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    const {data,error}=await sb.from('products').select('*').order('sort',{ascending:true}).order('id',{ascending:true});
+    if(error||!data||!data.length) throw 0;
+    PRODUCTS=data.map(r=>({
+      id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
+      badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?r.sizes:ONE_SIZE,
+      image:r.image_url||null, description:r.description||''
+    }));
+  }catch(e){
+    PRODUCTS=DEMO_PRODUCTS;   // база ще не підключена — показуємо демо
+  }
+  CATS=['Усі',...Array.from(new Set(PRODUCTS.map(p=>p.cat)))];
+  buildFilters();
+  renderGrid();
+}
 
 function fmt(n){return n.toLocaleString('uk-UA')+' грн.';}
 
@@ -543,6 +572,13 @@ function shade(hex){
   let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
   r=Math.round(r*.7);g=Math.round(g*.7);b=Math.round(b*.7);
   return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+function prodColor(p){return p.color||FALLBACK_COLORS[(Number(p.id)||0)%FALLBACK_COLORS.length];}
+function prodIcon(p){return p.icon||CAT_ICON[p.cat]||'🛍️';}
+function imgBlock(p){
+  if(p.image) return `<img src="${p.image}" alt="${(p.title||'').replace(/"/g,'')}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`;
+  return `<div class="ph" style="background:linear-gradient(135deg,${prodColor(p)},${shade(prodColor(p))})">${prodIcon(p)}</div>`;
 }
 
 function sizeChips(p, selected, ctx){
@@ -557,13 +593,13 @@ function cardHTML(p){
   if(cardSize[p.id]===undefined) cardSize[p.id]=p.sizes[0];
   return `
     <div class="card-img" onclick="openDetail(${p.id})" style="cursor:pointer">
-      ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]}</span>`:''}
-      <div class="ph" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
+      ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:''}
+      ${imgBlock(p)}
     </div>
     <div class="card-body">
       <div class="card-cat">${p.cat}</div>
       <div class="card-title">${p.title}</div>
-      <div class="card-sku">Артикул: ${p.sku}</div>
+      ${p.sku?`<div class="card-sku">Артикул: ${p.sku}</div>`:'<div class="card-sku">&nbsp;</div>'}
       <div class="card-price">
         <span class="price-now">${fmt(p.price)}</span>
         ${p.old?`<span class="price-old">${fmt(p.old)}</span>`:''}
@@ -587,7 +623,6 @@ function renderGrid(){
     grid.appendChild(card);
   });
 }
-renderGrid();
 
 function selectCardSize(id,size,el){
   cardSize[id]=size;
@@ -601,6 +636,7 @@ function orderFromCard(id){
 
 /* ---------- PRODUCT DETAIL PAGE ---------- */
 function descFor(p){
+  if(p.description) return p.description.replace(/\n/g,'<br>');
   const name=p.title.replace(/[«»]/g,'');
   return `${name} — стильна та зручна модель з нової колекції LUMÉ. Якісний матеріал приємний до тіла, добре тримає форму та підкреслює фігуру. Чудово пасує як для повсякдення, так і для особливих подій. Доступні розміри ${p.sizes.join(', ')}. Відправка по Україні Новою Поштою.`;
 }
@@ -611,13 +647,13 @@ function openDetail(id){
   detailSize=p.sizes[0];
   document.getElementById('pvWrap').innerHTML=`
     <div class="pv-gallery">
-      ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]}</span>`:''}
-      <div class="ph" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
+      ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:''}
+      ${imgBlock(p)}
     </div>
     <div class="pv-info">
       <div class="card-cat">${p.cat}</div>
       <h1>${p.title}</h1>
-      <div class="pv-sku">Артикул: ${p.sku}</div>
+      ${p.sku?`<div class="pv-sku">Артикул: ${p.sku}</div>`:''}
       <div class="pv-price">
         <span class="price-now">${fmt(p.price)}</span>
         ${p.old?`<span class="price-old">${fmt(p.old)}</span>`:''}
@@ -696,7 +732,7 @@ function updateCart(){
       const el=document.createElement('div');
       el.className='cart-item';
       el.innerHTML=`
-        <div class="thumb" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
+        <div class="thumb" style="overflow:hidden;${p.image?'':'background:linear-gradient(135deg,'+prodColor(p)+','+shade(prodColor(p))+')'}">${p.image?`<img src="${p.image}" alt="" style="width:100%;height:100%;object-fit:cover">`:prodIcon(p)}</div>
         <div class="ci-info">
           <div class="ci-title">${p.title}</div>
           ${it.size?`<div style="font-size:12px;color:var(--muted)">Розмір: ${it.size}</div>`:''}
@@ -822,6 +858,9 @@ document.querySelectorAll('.stat .num').forEach(el=>statObserver.observe(el));
 
 /* close modal on ESC */
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
+
+/* ---------- INIT: завантаження товарів ---------- */
+loadProducts();
 </script>
 </body>
 </html>
