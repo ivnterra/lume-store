@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMÉ STORE — Магазин одягу та аксесуарів</title>
+<meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів LUMÉ. Доставка по Україні Новою Поштою.">
+<style>
+:root{
+  --bg:#faf7f4;
+  --ink:#2b2724;
+  --muted:#8a8079;
+  --accent:#c08a5e;
+  --accent-dark:#a06d44;
+  --line:#e7ddd3;
+  --white:#fff;
+  --shadow:0 8px 30px rgba(40,30,20,.08);
+  --radius:16px;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',-apple-system,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:14px 28px;border-radius:40px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.3px}
+.btn:hover{background:var(--accent-dark);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn-outline:hover{background:var(--accent);color:#fff}
+.section{padding:70px 0}
+.section h2{font-size:34px;font-weight:700;text-align:center;margin-bottom:10px;letter-spacing:.5px}
+.section .sub{text-align:center;color:var(--muted);max-width:640px;margin:0 auto 45px}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{font-size:24px;font-weight:800;letter-spacing:3px}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:15px;font-weight:500;color:var(--ink);transition:.2s}
+.nav-links a:hover{color:var(--accent)}
+.cart-btn{position:relative;background:none;border:none;cursor:pointer;font-size:22px;color:var(--ink);display:flex;align-items:center}
+.cart-count{position:absolute;top:-8px;right:-10px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.burger{display:none;background:none;border:none;font-size:26px;cursor:pointer}
+
+/* HERO SLIDER */
+.hero{position:relative;overflow:hidden;background:#efe7df}
+.slides{display:flex;transition:transform .6s ease}
+.slide{min-width:100%;position:relative;height:560px;display:flex;align-items:center}
+.slide-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.7)}
+.slide-1{background:linear-gradient(120deg,#c9a98a,#8a6f55)}
+.slide-2{background:linear-gradient(120deg,#a98e9e,#6f5563)}
+.slide-3{background:linear-gradient(120deg,#8aa9a0,#556f63)}
+.slide-content{position:relative;z-index:2;color:#fff;max-width:560px}
+.slide-content .eyebrow{text-transform:uppercase;letter-spacing:3px;font-size:13px;opacity:.9;margin-bottom:14px}
+.slide-content h1{font-size:48px;font-weight:800;line-height:1.1;margin-bottom:16px}
+.slide-content .promo{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);padding:8px 18px;border-radius:30px;font-size:15px;margin-bottom:26px}
+.slider-dots{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.45);border:none;cursor:pointer;transition:.2s}
+.dot.active{background:#fff;width:28px;border-radius:6px}
+.slider-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:46px;height:46px;border-radius:50%;font-size:22px;cursor:pointer;z-index:3;transition:.2s}
+.slider-arrow:hover{background:rgba(255,255,255,.4)}
+.arrow-left{left:20px}.arrow-right{right:20px}
+
+/* CATALOG */
+.filters{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:38px}
+.filter-btn{background:#fff;border:1px solid var(--line);padding:9px 20px;border-radius:30px;cursor:pointer;font-size:14px;font-weight:500;transition:.2s;color:var(--ink)}
+.filter-btn.active,.filter-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:.25s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(40,30,20,.14)}
+.card-img{position:relative;aspect-ratio:3/4;overflow:hidden}
+.card-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:54px;color:#fff}
+.badge{position:absolute;top:12px;left:12px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:.5px}
+.badge.sale{background:#c0564e}
+.card-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.card-cat{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.card-title{font-size:17px;font-weight:600;margin-bottom:10px}
+.card-price{display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:auto}
+.price-now{font-size:20px;font-weight:700;color:var(--accent)}
+.price-old{font-size:15px;color:var(--muted);text-decoration:line-through}
+.card .btn{width:100%;padding:11px}
+
+/* HOW TO ORDER */
+.how{background:#fff}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.step{text-align:center;padding:20px}
+.step-num{width:64px;height:64px;border-radius:50%;background:var(--bg);border:2px solid var(--accent);color:var(--accent);font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.step h3{font-size:18px;margin-bottom:8px}
+.step p{color:var(--muted);font-size:15px}
+
+/* ABOUT + STATS */
+.about-wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:50px;align-items:center}
+.about-text p{margin-bottom:14px;color:#5a534d}
+.stats{display:grid;grid-template-columns:1fr;gap:18px}
+.stat{background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);text-align:center}
+.stat .num{font-size:40px;font-weight:800;color:var(--accent)}
+.stat .lbl{color:var(--muted);font-size:15px}
+
+/* DELIVERY */
+.delivery{background:#fff}
+.delivery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.dcard{border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.dcard .ic{font-size:38px;margin-bottom:14px}
+.dcard h3{font-size:18px;margin-bottom:8px}
+.dcard p{color:var(--muted);font-size:15px}
+
+/* REVIEWS */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.review{background:#fff;border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.stars{color:#e0a93f;font-size:17px;margin-bottom:12px}
+.review p{font-style:italic;color:#5a534d;margin-bottom:16px}
+.review .author{font-weight:700}
+
+/* CONTACT */
+.contact{background:linear-gradient(120deg,#2b2724,#41372f);color:#fff}
+.contact h2{color:#fff}
+.contact .sub{color:rgba(255,255,255,.7)}
+.contact-form{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.messengers{display:flex;justify-content:center;gap:16px;margin-top:30px}
+.msg-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:40px;font-weight:600;color:#fff;transition:.2s}
+.msg-btn:hover{transform:translateY(-2px)}
+.tg{background:#2aabee}.vb{background:#7360f2}
+
+/* INPUTS */
+input,select{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+.field-err{border-color:#c0564e!important}
+.err-msg{color:#ffb4ae;font-size:13px;display:none}
+.contact-form label,.modal label{font-size:14px;font-weight:500;display:block;margin-bottom:6px}
+.checkbox-row{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted)}
+.checkbox-row input{width:auto;margin-top:3px}
+
+/* FOOTER */
+footer{background:#211d1a;color:rgba(255,255,255,.6);padding:36px 0;text-align:center;font-size:14px}
+footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
+
+/* CART DRAWER */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:.3s;z-index:90}
+.overlay.open{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:-460px;width:420px;max-width:90vw;height:100%;background:var(--bg);z-index:100;transition:.35s;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.2)}
+.drawer.open{right:0}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:22px;border-bottom:1px solid var(--line)}
+.drawer-head h3{font-size:20px}
+.close-btn{background:none;border:none;font-size:26px;cursor:pointer;color:var(--ink);line-height:1}
+.drawer-body{flex:1;overflow-y:auto;padding:18px}
+.cart-empty{text-align:center;color:var(--muted);margin-top:60px}
+.cart-item{display:flex;gap:14px;background:#fff;border-radius:12px;padding:12px;margin-bottom:12px;align-items:center}
+.cart-item .thumb{width:56px;height:56px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff}
+.cart-item .ci-info{flex:1}
+.cart-item .ci-title{font-size:14px;font-weight:600}
+.cart-item .ci-price{font-size:14px;color:var(--accent);font-weight:600}
+.qty{display:flex;align-items:center;gap:8px;margin-top:4px}
+.qty button{width:24px;height:24px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;font-size:15px;line-height:1}
+.ci-remove{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px}
+.drawer-foot{padding:22px;border-top:1px solid var(--line);background:#fff}
+.cart-total{display:flex;justify-content:space-between;font-size:19px;font-weight:700;margin-bottom:16px}
+.drawer-foot .btn{width:100%}
+
+/* MODAL */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:110;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:var(--bg);border-radius:var(--radius);max-width:480px;width:100%;max-height:92vh;overflow-y:auto;padding:30px;position:relative}
+.modal-box h3{font-size:24px;margin-bottom:6px}
+.modal .note{background:#fdf3e7;border:1px solid #f0d9b8;color:#9a6b2f;font-size:13px;padding:10px 14px;border-radius:10px;margin:14px 0}
+.modal .order-summary{background:#fff;border-radius:12px;padding:14px;margin-bottom:16px;font-size:14px;max-height:150px;overflow-y:auto}
+.modal .order-summary .row{display:flex;justify-content:between;justify-content:space-between;margin-bottom:6px}
+.modal .form-group{margin-bottom:14px}
+.pay-options{display:flex;flex-direction:column;gap:10px}
+.pay-opt{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
+.pay-opt input{width:auto}
+.modal-close{position:absolute;top:16px;right:18px}
+
+/* TOAST */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:14px 26px;border-radius:40px;font-size:15px;z-index:200;transition:.4s;box-shadow:var(--shadow)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:980px){
+  .grid{grid-template-columns:repeat(3,1fr)}
+  .about-wrap{grid-template-columns:1fr;gap:30px}
+}
+@media(max-width:760px){
+  .nav-links{position:fixed;top:70px;right:-100%;flex-direction:column;background:var(--bg);width:70%;height:calc(100vh - 70px);padding:30px;gap:24px;transition:.3s;border-left:1px solid var(--line)}
+  .nav-links.open{right:0}
+  .burger{display:block}
+  .grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .steps,.delivery-grid,.reviews-grid{grid-template-columns:1fr}
+  .slide-content h1{font-size:34px}
+  .slide{height:480px}
+  .section h2{font-size:27px}
+  .section{padding:50px 0}
+}
+@media(max-width:430px){
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container nav">
+    <div class="logo">LUM<span>É</span></div>
+    <nav class="nav-links" id="navLinks">
+      <a href="#catalog" onclick="closeNav()">Каталог</a>
+      <a href="#about" onclick="closeNav()">Про нас</a>
+      <a href="#delivery" onclick="closeNav()">Доставка</a>
+      <a href="#contacts" onclick="closeNav()">Контакти</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:16px">
+      <button class="cart-btn" onclick="openCart()" aria-label="Кошик">
+        🛍️<span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="burger" onclick="toggleNav()" aria-label="Меню">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO SLIDER -->
+<section class="hero">
+  <div class="slides" id="slides">
+    <div class="slide">
+      <div class="slide-bg slide-1"></div>
+      <div class="container slide-content">
+        <div class="eyebrow">Нова колекція 2026</div>
+        <h1>Стильний одяг для кожного дня</h1>
+        <div class="promo">−10% на другу річ у чеку</div><br>
+        <a href="#catalog" class="btn">Перейти до каталогу</a>
+      </div>
+    </div>
+    <div class="slide">
+      <div class="slide-bg slide-2"></div>
+      <div class="container slide-content">
+        <div class="eyebrow">Аксесуари</div>
+        <h1>Деталі, що створюють образ</h1>
+        <div class="promo">Сумки, прикраси, хустки</div><br>
+        <a href="#catalog" class="btn">Перейти до каталогу</a>
+      </div>
+    </div>
+    <div class="slide">
+      <div class="slide-bg slide-3"></div>
+      <div class="container slide-content">
+        <div class="eyebrow">Великі розміри XL–4XL</div>
+        <h1>Комфорт без компромісів</h1>
+        <div class="promo">−15% на трикотаж</div><br>
+        <a href="#catalog" class="btn">Перейти до каталогу</a>
+      </div>
+    </div>
+  </div>
+  <button class="slider-arrow arrow-left" onclick="moveSlide(-1)">‹</button>
+  <button class="slider-arrow arrow-right" onclick="moveSlide(1)">›</button>
+  <div class="slider-dots" id="dots"></div>
+</section>
+
+<!-- CATALOG -->
+<section class="section" id="catalog">
+  <div class="container">
+    <h2>Каталог</h2>
+    <p class="sub">Обери улюблені моделі — менеджер зв'яжеться з тобою для підтвердження замовлення</p>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- HOW TO ORDER -->
+<section class="section how">
+  <div class="container">
+    <h2>Як замовити?</h2>
+    <p class="sub">Лише три прості кроки</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Оберіть товар</h3>
+        <p>Додайте товари в кошик та залиште заявку через форму замовлення.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Очікуйте дзвінка</h3>
+        <p>Наш менеджер зв'яжеться з вами для підтвердження. Залиште діючий номер Viber / Telegram.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Доставка 1–3 дні</h3>
+        <p>Відправка по Україні Новою Поштою. Оплата при отриманні або за реквізитами.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT + STATS -->
+<section class="section" id="about">
+  <div class="container about-wrap">
+    <div class="about-text">
+      <h2 style="text-align:left">Про нас</h2>
+      <p>Ми — інтернет-магазин жіночого одягу та аксесуарів LUMÉ, де можна знайти стильні, зручні та вдало підібрані моделі для будь-якого типу фігури.</p>
+      <p>Для нас важливо, щоб річ не просто гарно виглядала на фото, а й справді добре сиділа, підкреслювала переваги та дарувала комфорт і впевненість у собі.</p>
+      <p>У нашому асортименті — повсякденний та святковий одяг, трикотаж, верхній одяг, сумки й прикраси. Ми уважно стежимо за трендами та поєднуємо гарний вигляд, якість і доступну ціну.</p>
+      <p>Наша мета — щоб кожна знайшла саме свій образ: красивий, зручний і такий, у якому хочеться жити.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num" data-count="2000">0</div><div class="lbl">Задоволених покупців за сезон</div></div>
+      <div class="stat"><div class="num" data-count="90" data-suffix="%">0</div><div class="lbl">Клієнток повертаються знову</div></div>
+      <div class="stat"><div class="num" data-count="150" data-prefix="+">0</div><div class="lbl">Моделей у наявності</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section class="section delivery" id="delivery">
+  <div class="container">
+    <h2>Доставка і оплата</h2>
+    <p class="sub">Зверніть увагу: відправка замовлень лише Новою Поштою</p>
+    <div class="delivery-grid">
+      <div class="dcard">
+        <div class="ic">🚚</div>
+        <h3>Доставка</h3>
+        <p>Надсилання по Україні службою «Нова Пошта». Вартість доставки оплачує покупець згідно з тарифами перевізника.</p>
+      </div>
+      <div class="dcard">
+        <div class="ic">💳</div>
+        <h3>Оплата карткою</h3>
+        <p>Банківською карткою Visa / MasterCard за реквізитами — повна передплата зі знижкою.</p>
+      </div>
+      <div class="dcard">
+        <div class="ic">📦</div>
+        <h3>Накладений платіж</h3>
+        <p>Оплата при отриманні на відділенні. Додатково сплачується послуга післяплати 20 грн + 2% страхового збору.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section" id="reviews">
+  <div class="container">
+    <h2>Відгуки клієнтів</h2>
+    <p class="sub">Нам довіряють тисячі покупців</p>
+    <div class="reviews-grid">
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>«Сукня сіла ідеально, нічого не тисне і гарно підкреслює фігуру. Якість реально топ, тканина щільна. В житті навіть краща, ніж на фото!»</p>
+        <div class="author">Марія</div>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>«Дуже переживала щодо розміру, але все підійшло супер. Нарешті знайшла одяг, у якому комфортно та стильно. Дякую!»</p>
+        <div class="author">Анна</div>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>«Швидка доставка і класний сервіс. Речі виглядають дорого, добре тримають форму. Замовлю ще.»</p>
+        <div class="author">Тетяна</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section contact" id="contacts">
+  <div class="container">
+    <h2>Маєте питання?</h2>
+    <p class="sub">Залиште контакти — наш менеджер зв'яжеться з вами</p>
+    <form class="contact-form" id="contactForm" novalidate>
+      <div>
+        <input type="text" id="cName" placeholder="Ім'я">
+        <span class="err-msg" id="cNameErr">Вкажіть ім'я</span>
+      </div>
+      <div>
+        <input type="tel" id="cPhone" placeholder="Ваш телефон">
+        <span class="err-msg" id="cPhoneErr">Вкажіть коректний номер</span>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="cAgree">
+        <span>Натискаючи кнопку, ви надаєте згоду на обробку персональних даних.</span>
+      </label>
+      <button type="submit" class="btn">Відправити</button>
+    </form>
+    <div class="messengers">
+      <a href="https://t.me/" target="_blank" class="msg-btn tg">✈️ Telegram</a>
+      <a href="https://viber.com/" target="_blank" class="msg-btn vb">📞 Viber</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="logo">LUM<span style="color:var(--accent)">É</span></div>
+    <p>Відправка лише Новою Поштою • Доставка по всій Україні</p>
+    <p style="margin-top:8px;opacity:.6">© 2026 LUMÉ Store. Усі права захищено.</p>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Кошик</h3>
+    <button class="close-btn" onclick="closeCart()">×</button>
+  </div>
+  <div class="drawer-body" id="cartBody">
+    <p class="cart-empty">Ваш кошик порожній 🛍️</p>
+  </div>
+  <div class="drawer-foot">
+    <div class="cart-total"><span>Разом:</span><span id="cartTotal">0 ₴</span></div>
+    <button class="btn" id="checkoutBtn" onclick="openOrder()" disabled style="opacity:.5">Оформити замовлення</button>
+  </div>
+</aside>
+
+<!-- ORDER MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="close-btn modal-close" onclick="closeOrder()">×</button>
+    <h3>Ваше замовлення</h3>
+    <div class="note">Зверніть увагу, відправка замовлень лише Новою Поштою!</div>
+    <div class="order-summary" id="orderSummary"></div>
+    <form id="orderForm" novalidate>
+      <div class="form-group">
+        <label>Ім'я</label>
+        <input type="text" id="oName" placeholder="Ваше ім'я">
+        <span class="err-msg" id="oNameErr">Вкажіть ім'я</span>
+      </div>
+      <div class="form-group">
+        <label>Номер телефону</label>
+        <input type="tel" id="oPhone" placeholder="+380">
+        <span class="err-msg" id="oPhoneErr">Вкажіть коректний номер</span>
+      </div>
+      <div class="form-group">
+        <label>Варіант оплати</label>
+        <div class="pay-options">
+          <label class="pay-opt"><input type="radio" name="pay" value="Передплата за реквізитами" checked> Передплата за реквізитами</label>
+          <label class="pay-opt"><input type="radio" name="pay" value="Післяплата"> Післяплата</label>
+        </div>
+      </div>
+      <label class="checkbox-row" style="margin-bottom:16px">
+        <input type="checkbox" id="oAgree">
+        <span>Даю згоду на обробку моїх персональних даних</span>
+      </label>
+      <button type="submit" class="btn" style="width:100%">ЗАМОВИТИ</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- PRODUCT DATA (замініть на свої товари) ---------- */
+const CATS = ['Усі','Сукні','Верх','Низ','Аксесуари'];
+const PRODUCTS = [
+  {id:1, title:'Сукня міді «Флоренція»', cat:'Сукні', price:1290, old:1590, badge:'sale', color:'#c9a98a', icon:'👗'},
+  {id:2, title:'Лляна сорочка «Бриз»', cat:'Верх', price:890, old:null, badge:'new', color:'#a9b8a0', icon:'👚'},
+  {id:3, title:'Спідниця плісе «Аврора»', cat:'Низ', price:990, old:1190, badge:'sale', color:'#b8a9c9', icon:'🩱'},
+  {id:4, title:'Шкіряна сумка «Мілано»', cat:'Аксесуари', price:1450, old:null, badge:'hit', color:'#a0855e', icon:'👜'},
+  {id:5, title:'Трикотажна сукня «Осінь»', cat:'Сукні', price:1150, old:null, badge:null, color:'#c9b08a', icon:'👗'},
+  {id:6, title:'Оверсайз худі «Комфорт»', cat:'Верх', price:1090, old:1290, badge:'sale', color:'#8a9eb8', icon:'🧥'},
+  {id:7, title:'Широкі штани «Палаццо»', cat:'Низ', price:1190, old:null, badge:'new', color:'#9e8a7a', icon:'👖'},
+  {id:8, title:'Шовкова хустка «Версаль»', cat:'Аксесуари', price:490, old:690, badge:'sale', color:'#c98aa0', icon:'🧣'},
+  {id:9, title:'Вечірня сукня «Зоря»', cat:'Сукні', price:1890, old:null, badge:'hit', color:'#7a6f8a', icon:'👗'},
+  {id:10, title:'Базова футболка «Кліо»', cat:'Верх', price:590, old:null, badge:null, color:'#b8b0a0', icon:'👕'},
+  {id:11, title:'Джинси «Скіні»', cat:'Низ', price:1290, old:1490, badge:'sale', color:'#6f7a8a', icon:'👖'},
+  {id:12, title:'Сонцезахисні окуляри «Ріо»', cat:'Аксесуари', price:790, old:null, badge:'new', color:'#8a8a7a', icon:'🕶️'}
+];
+const BADGE_LABEL = {sale:'SALE', new:'НОВИНКА', hit:'ХІТ'};
+
+/* ---------- STATE ---------- */
+let cart = {};          // id -> qty
+let currentFilter = 'Усі';
+
+/* ---------- RENDER CATALOG ---------- */
+const grid = document.getElementById('grid');
+const filtersEl = document.getElementById('filters');
+
+CATS.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='filter-btn'+(c==='Усі'?' active':'');
+  b.textContent=c;
+  b.onclick=()=>{currentFilter=c;document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderGrid();};
+  filtersEl.appendChild(b);
+});
+
+function fmt(n){return n.toLocaleString('uk-UA')+' ₴';}
+
+function renderGrid(){
+  grid.innerHTML='';
+  const list = currentFilter==='Усі'?PRODUCTS:PRODUCTS.filter(p=>p.cat===currentFilter);
+  list.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <div class="card-img">
+        ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]}</span>`:''}
+        <div class="ph" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">${p.cat}</div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-price">
+          <span class="price-now">${fmt(p.price)}</span>
+          ${p.old?`<span class="price-old">${fmt(p.old)}</span>`:''}
+        </div>
+        <button class="btn" onclick="addToCart(${p.id})">У кошик</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+function shade(hex){
+  // darken hex by ~25%
+  const n=parseInt(hex.slice(1),16);
+  let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  r=Math.round(r*.7);g=Math.round(g*.7);b=Math.round(b*.7);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+renderGrid();
+
+/* ---------- CART ---------- */
+function addToCart(id){
+  cart[id]=(cart[id]||0)+1;
+  updateCart();
+  showToast('Додано в кошик ✓');
+  pulseCart();
+}
+function changeQty(id,d){
+  cart[id]+=d;
+  if(cart[id]<=0) delete cart[id];
+  updateCart();
+}
+function removeItem(id){delete cart[id];updateCart();}
+
+function cartItemsCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
+function cartTotal(){return Object.entries(cart).reduce((s,[id,q])=>s+PRODUCTS.find(p=>p.id==id).price*q,0);}
+
+function updateCart(){
+  document.getElementById('cartCount').textContent=cartItemsCount();
+  const body=document.getElementById('cartBody');
+  const ids=Object.keys(cart);
+  if(ids.length===0){
+    body.innerHTML='<p class="cart-empty">Ваш кошик порожній 🛍️</p>';
+    document.getElementById('checkoutBtn').disabled=true;
+    document.getElementById('checkoutBtn').style.opacity=.5;
+  }else{
+    body.innerHTML='';
+    ids.forEach(id=>{
+      const p=PRODUCTS.find(x=>x.id==id);const q=cart[id];
+      const el=document.createElement('div');
+      el.className='cart-item';
+      el.innerHTML=`
+        <div class="thumb" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
+        <div class="ci-info">
+          <div class="ci-title">${p.title}</div>
+          <div class="ci-price">${fmt(p.price)}</div>
+          <div class="qty">
+            <button onclick="changeQty(${p.id},-1)">−</button>
+            <span>${q}</span>
+            <button onclick="changeQty(${p.id},1)">+</button>
+          </div>
+        </div>
+        <button class="ci-remove" onclick="removeItem(${p.id})">🗑️</button>`;
+      body.appendChild(el);
+    });
+    document.getElementById('checkoutBtn').disabled=false;
+    document.getElementById('checkoutBtn').style.opacity=1;
+  }
+  document.getElementById('cartTotal').textContent=fmt(cartTotal());
+}
+
+function pulseCart(){
+  const c=document.getElementById('cartCount');
+  c.style.transform='scale(1.4)';
+  setTimeout(()=>c.style.transform='scale(1)',200);
+}
+
+/* ---------- DRAWER / MODAL ---------- */
+function openCart(){document.getElementById('drawer').classList.add('open');document.getElementById('overlay').classList.add('open');}
+function closeCart(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+function openOrder(){
+  if(Object.keys(cart).length===0)return;
+  const sum=document.getElementById('orderSummary');
+  sum.innerHTML='';
+  Object.keys(cart).forEach(id=>{
+    const p=PRODUCTS.find(x=>x.id==id);
+    sum.innerHTML+=`<div class="row"><span>${p.title} × ${cart[id]}</span><span>${fmt(p.price*cart[id])}</span></div>`;
+  });
+  sum.innerHTML+=`<div class="row" style="font-weight:700;border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><span>Разом:</span><span>${fmt(cartTotal())}</span></div>`;
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeOrder(){document.getElementById('modal').classList.remove('open');if(!document.getElementById('drawer').classList.contains('open'))document.getElementById('overlay').classList.remove('open');}
+function closeAll(){closeCart();document.getElementById('modal').classList.remove('open');}
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open');}
+function closeNav(){document.getElementById('navLinks').classList.remove('open');}
+
+/* ---------- VALIDATION ---------- */
+function validPhone(v){return /^[\+]?[\d\s\-\(\)]{9,}$/.test(v.trim());}
+
+function setErr(input,err,show){
+  input.classList.toggle('field-err',show);
+  err.style.display=show?'block':'none';
+}
+
+document.getElementById('orderForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=document.getElementById('oName'),phone=document.getElementById('oPhone'),agree=document.getElementById('oAgree');
+  let ok=true;
+  setErr(name,document.getElementById('oNameErr'),!name.value.trim());if(!name.value.trim())ok=false;
+  setErr(phone,document.getElementById('oPhoneErr'),!validPhone(phone.value));if(!validPhone(phone.value))ok=false;
+  if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
+  if(!ok)return;
+  const pay=document.querySelector('input[name="pay"]:checked').value;
+  // тут можна відправити дані на сервер / Telegram-бот
+  closeAll();
+  cart={};updateCart();
+  document.getElementById('orderForm').reset();
+  showToast('Дякуємо! Замовлення прийнято ✓');
+});
+
+document.getElementById('contactForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=document.getElementById('cName'),phone=document.getElementById('cPhone'),agree=document.getElementById('cAgree');
+  let ok=true;
+  setErr(name,document.getElementById('cNameErr'),!name.value.trim());if(!name.value.trim())ok=false;
+  setErr(phone,document.getElementById('cPhoneErr'),!validPhone(phone.value));if(!validPhone(phone.value))ok=false;
+  if(!agree.checked){ok=false;agree.parentElement.style.color='#ffb4ae';}else{agree.parentElement.style.color='';}
+  if(!ok)return;
+  document.getElementById('contactForm').reset();
+  showToast('Дякуємо! Ми зв\'яжемося з вами ✓');
+});
+
+/* ---------- TOAST ---------- */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+/* ---------- SLIDER ---------- */
+let slideIdx=0;const slideCount=3;
+const slidesEl=document.getElementById('slides');
+const dotsEl=document.getElementById('dots');
+for(let i=0;i<slideCount;i++){
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' active':'');
+  d.onclick=()=>goSlide(i);
+  dotsEl.appendChild(d);
+}
+function goSlide(i){
+  slideIdx=(i+slideCount)%slideCount;
+  slidesEl.style.transform=`translateX(-${slideIdx*100}%)`;
+  document.querySelectorAll('.dot').forEach((d,j)=>d.classList.toggle('active',j===slideIdx));
+}
+function moveSlide(d){goSlide(slideIdx+d);}
+let autoSlide=setInterval(()=>moveSlide(1),5500);
+slidesEl.addEventListener('mouseenter',()=>clearInterval(autoSlide));
+slidesEl.addEventListener('mouseleave',()=>autoSlide=setInterval(()=>moveSlide(1),5500));
+
+/* ---------- ANIMATED STATS ---------- */
+const statObserver=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      const el=en.target,target=+el.dataset.count,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+      let cur=0;const step=Math.ceil(target/60);
+      const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=pre+cur.toLocaleString('uk-UA')+suf;},25);
+      statObserver.unobserve(el);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('.stat .num').forEach(el=>statObserver.observe(el));
+
+/* close modal on ESC */
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
+</script>
+</body>
+</html>
