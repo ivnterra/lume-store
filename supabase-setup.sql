@@ -14,7 +14,9 @@ create table if not exists public.products (
   badge       text,                       -- 'new' | 'sale' | 'hit' | null
   sizes       text[]  default '{}',       -- напр. {'XL','2XL','3XL'}
   description text,
-  image_url   text,
+  image_url   text,                       -- головне фото (= images[1])
+  images      text[]  default '{}',       -- галерея фото (порядок = розміщення)
+  in_stock    boolean default true,       -- статус наявності
   sort        integer default 0,          -- порядок показу (менше = вище)
   created_at  timestamptz default now()
 );

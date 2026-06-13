@@ -66,7 +66,17 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 .size-pick{display:flex;flex-wrap:wrap;gap:8px}
 .size-pick label{display:inline-flex;align-items:center;gap:6px;font-weight:500;background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer;margin:0}
 .size-pick input{width:auto}
-.img-preview{width:90px;height:120px;border-radius:10px;object-fit:cover;border:1px solid var(--line);background:#efe7df;display:none}
+.gallery-edit{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.gthumb{width:84px}
+.gthumb .imgbox{position:relative;width:84px;height:108px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#efe7df}
+.gthumb .imgbox img{width:100%;height:100%;object-fit:cover}
+.gthumb .main-tag{position:absolute;top:4px;left:4px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px}
+.gctrl{display:flex;justify-content:center;gap:4px;margin-top:5px}
+.gctrl button{border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;font-size:13px;width:26px;height:24px;line-height:1;padding:0}
+.gctrl button:disabled{opacity:.35;cursor:default}
+.gctrl .del{color:#c0564e}
+.stock-row{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.stock-row input{width:auto}.stock-row label{margin:0}
 .form-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
 .loader{text-align:center;color:var(--muted);padding:40px}
 @media(max-width:560px){.grid2{grid-template-columns:1fr}}
@@ -171,15 +181,16 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
         <textarea id="pdesc" rows="3" placeholder="Короткий опис товару…"></textarea>
       </div>
       <div class="field">
-        <label>Фото</label>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <img class="img-preview" id="imgPreview">
-          <div style="flex:1">
-            <input type="file" id="pimage" accept="image/*">
-            <div class="muted" style="margin-top:6px">JPG/PNG/WebP. Завантаження після збереження.</div>
-            <input type="hidden" id="pimageUrl">
-          </div>
+        <div class="stock-row">
+          <input type="checkbox" id="pinstock" checked>
+          <label for="pinstock">В наявності <span class="muted">(зніміть галочку — буде «Немає в наявності»)</span></label>
         </div>
+      </div>
+      <div class="field">
+        <label>Фотографії (перша — головна; порядок змінюється стрілками ← →)</label>
+        <div class="gallery-edit" id="galleryEdit"></div>
+        <input type="file" id="pimage" accept="image/*" multiple>
+        <div class="muted" id="uploadStatus" style="margin-top:6px">JPG/PNG/WebP. Можна вибрати декілька файлів одразу.</div>
       </div>
       <div class="msg err" id="formMsg"></div>
       <div class="form-foot">
@@ -193,7 +204,30 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 <script>
 const SIZES_PRESET=['XL','2XL','3XL','4XL','5XL','Один розмір'];
 const BADGE_LABEL={new:'НОВИНКА',sale:'SALE',hit:'ХІТ'};
-let sb=null, products=[];
+let sb=null, products=[], formImages=[];
+
+function renderGallery(){
+  const box=document.getElementById('galleryEdit');
+  if(!formImages.length){ box.innerHTML='<div class="muted">Фото ще не додано.</div>'; return; }
+  box.innerHTML=formImages.map((url,i)=>`
+    <div class="gthumb">
+      <div class="imgbox">
+        ${i===0?'<span class="main-tag">Головне</span>':''}
+        <img src="${esc(url)}" alt="">
+      </div>
+      <div class="gctrl">
+        <button type="button" onclick="moveImg(${i},-1)" ${i===0?'disabled':''} title="Лівіше">←</button>
+        <button type="button" class="del" onclick="removeImg(${i})" title="Видалити">✕</button>
+        <button type="button" onclick="moveImg(${i},1)" ${i===formImages.length-1?'disabled':''} title="Правіше">→</button>
+      </div>
+    </div>`).join('');
+}
+function moveImg(i,d){
+  const j=i+d; if(j<0||j>=formImages.length) return;
+  [formImages[i],formImages[j]]=[formImages[j],formImages[i]];
+  renderGallery();
+}
+function removeImg(i){ formImages.splice(i,1); renderGallery(); }
 
 /* ---------- init ---------- */
 function configured(){
@@ -249,8 +283,8 @@ async function loadList(){
     row.innerHTML=`
       <div class="thumb">${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:'🛍️'}</div>
       <div class="pinfo">
-        <div class="t">${esc(p.title)}${p.badge?`<span class="tag ${p.badge}">${BADGE_LABEL[p.badge]||esc(p.badge)}</span>`:''}</div>
-        <div class="m">${esc(p.category||'—')} · Арт: ${esc(p.sku||'—')} · ${(p.sizes||[]).join(', ')||'—'}</div>
+        <div class="t">${esc(p.title)}${p.badge?`<span class="tag ${p.badge}">${BADGE_LABEL[p.badge]||esc(p.badge)}</span>`:''}${p.in_stock===false?'<span class="tag" style="background:#6f6a66">Немає в наявності</span>':''}</div>
+        <div class="m">${esc(p.category||'—')} · Арт: ${esc(p.sku||'—')} · ${(p.sizes||[]).join(', ')||'—'} · 📷 ${(Array.isArray(p.images)?p.images.length:(p.image_url?1:0))}</div>
         <div class="pr">${(p.price||0).toLocaleString('uk-UA')} грн.${p.old_price?`<span class="old">${p.old_price.toLocaleString('uk-UA')} грн.</span>`:''}</div>
       </div>
       <div class="prow-actions">
@@ -287,10 +321,11 @@ function openForm(id){
   const custom = sizes.filter(s=>!SIZES_PRESET.includes(s));
   if(custom.length) document.getElementById('psizesCustom').value=custom.join(', ');
   buildSizePicker(sizes);
+  document.getElementById('pinstock').checked = p ? (p.in_stock!==false) : true;
+  formImages = p ? ((Array.isArray(p.images)&&p.images.length)?p.images.slice():(p.image_url?[p.image_url]:[])) : [];
+  renderGallery();
   document.getElementById('pimage').value='';
-  document.getElementById('pimageUrl').value = p?(p.image_url||''):'';
-  const prev=document.getElementById('imgPreview');
-  if(p&&p.image_url){ prev.src=p.image_url; prev.style.display='block'; } else { prev.style.display='none'; }
+  document.getElementById('uploadStatus').textContent='JPG/PNG/WebP. Можна вибрати декілька файлів одразу.';
   document.getElementById('formMsg').textContent='';
   overlay.classList.add('open');
 }
@@ -300,10 +335,24 @@ document.getElementById('cancelBtn').onclick=closeForm;
 document.getElementById('modalClose').onclick=closeForm;
 overlay.onclick=e=>{ if(e.target===overlay) closeForm(); };
 
-// прев'ю обраного файлу
-document.getElementById('pimage').addEventListener('change',e=>{
-  const f=e.target.files[0]; const prev=document.getElementById('imgPreview');
-  if(f){ prev.src=URL.createObjectURL(f); prev.style.display='block'; }
+// завантаження кількох фото одразу (у Storage), з показом у галереї
+document.getElementById('pimage').addEventListener('change', async e=>{
+  const files=[...e.target.files]; if(!files.length) return;
+  const status=document.getElementById('uploadStatus');
+  let n=0;
+  for(const file of files){
+    n++; status.textContent=`Завантаження ${n}/${files.length}: ${file.name}…`;
+    try{
+      const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+      const path=Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;
+      const up=await sb.storage.from('product-images').upload(path,file,{cacheControl:'3600',upsert:false});
+      if(up.error) throw up.error;
+      formImages.push(sb.storage.from('product-images').getPublicUrl(path).data.publicUrl);
+      renderGallery();
+    }catch(err){ status.textContent='Помилка завантаження: '+(err.message||err); e.target.value=''; return; }
+  }
+  status.textContent='Готово ✓ Перша фотографія — головна. Порядок можна змінити стрілками.';
+  e.target.value='';
 });
 
 function collectSizes(){
@@ -317,15 +366,6 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
   const msg=document.getElementById('formMsg'); msg.className='msg err'; msg.textContent='';
   const saveBtn=document.getElementById('saveBtn'); saveBtn.disabled=true; saveBtn.textContent='Збереження…';
   try{
-    let imageUrl=document.getElementById('pimageUrl').value||null;
-    const file=document.getElementById('pimage').files[0];
-    if(file){
-      const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
-      const path=Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;
-      const up=await sb.storage.from('product-images').upload(path,file,{cacheControl:'3600',upsert:false});
-      if(up.error) throw up.error;
-      imageUrl=sb.storage.from('product-images').getPublicUrl(path).data.publicUrl;
-    }
     const payload={
       title:document.getElementById('ptitle').value.trim(),
       sku:document.getElementById('psku').value.trim()||null,
@@ -336,7 +376,9 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
       sort:parseInt(document.getElementById('psort').value)||0,
       sizes:collectSizes(),
       description:document.getElementById('pdesc').value.trim()||null,
-      image_url:imageUrl
+      in_stock:document.getElementById('pinstock').checked,
+      images:formImages,
+      image_url:formImages[0]||null
     };
     const id=document.getElementById('pid').value;
     let res;

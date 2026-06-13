@@ -76,6 +76,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .card-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:54px;color:#fff}
 .badge{position:absolute;top:14px;right:14px;background:#e8654f;color:#fff;font-size:12px;font-weight:700;padding:7px 16px;border-radius:24px;letter-spacing:.5px;z-index:2}
 .badge.sale{background:#c0564e}
+.badge.oos{top:14px;left:14px;right:auto;background:#6f6a66}
 .card-body{padding:18px;display:flex;flex-direction:column;flex:1}
 .card-cat{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
 .card-title{font-size:18px;font-weight:700;margin-bottom:6px}
@@ -194,8 +195,14 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 .pv-back{display:inline-flex;align-items:center;gap:8px;height:64px;background:none;border:none;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer}
 .pv-back:hover{color:var(--accent)}
 .pv-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:40px 0}
-.pv-gallery{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow)}
-.pv-gallery .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;color:#fff}
+.pv-media{display:flex;flex-direction:column;gap:12px}
+.pv-main{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow)}
+.pv-main img{width:100%;height:100%;object-fit:cover}
+.pv-main .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;color:#fff}
+.pv-thumbs{display:flex;gap:10px;flex-wrap:wrap}
+.pv-thumb{width:64px;height:80px;border-radius:8px;overflow:hidden;border:2px solid transparent;cursor:pointer;transition:.15s}
+.pv-thumb.active{border-color:var(--accent)}
+.pv-thumb img{width:100%;height:100%;object-fit:cover}
 .pv-info h1{font-size:32px;font-weight:700;margin:4px 0 8px}
 .pv-sku{color:var(--muted);font-size:14px;margin-bottom:18px}
 .pv-price{display:flex;align-items:center;gap:14px;margin-bottom:24px}
@@ -528,6 +535,7 @@ let currentFilter = 'Усі';
 let cardSize = {};      // product id -> chosen size (catalog cards)
 let detailSize = null;  // chosen size in detail view
 let detailId = null;
+let detailImages = []; // gallery images of opened product
 
 /* ---------- RENDER CATALOG ---------- */
 const grid = document.getElementById('grid');
@@ -551,11 +559,14 @@ async function loadProducts(){
     const sb=supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
     const {data,error}=await sb.from('products').select('*').order('sort',{ascending:true}).order('id',{ascending:true});
     if(error||!data||!data.length) throw 0;
-    PRODUCTS=data.map(r=>({
-      id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
-      badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?r.sizes:ONE_SIZE,
-      image:r.image_url||null, description:r.description||''
-    }));
+    PRODUCTS=data.map(r=>{
+      const imgs=(Array.isArray(r.images)&&r.images.length)?r.images:(r.image_url?[r.image_url]:[]);
+      return {
+        id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
+        badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?r.sizes:ONE_SIZE,
+        images:imgs, image:imgs[0]||null, description:r.description||'', in_stock:r.in_stock!==false
+      };
+    });
   }catch(e){
     PRODUCTS=DEMO_PRODUCTS;   // база ще не підключена — показуємо демо
   }
@@ -580,6 +591,7 @@ function imgBlock(p){
   if(p.image) return `<img src="${p.image}" alt="${(p.title||'').replace(/"/g,'')}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`;
   return `<div class="ph" style="background:linear-gradient(135deg,${prodColor(p)},${shade(prodColor(p))})">${prodIcon(p)}</div>`;
 }
+function imagesOf(p){return (p.images&&p.images.length)?p.images:(p.image?[p.image]:[]);}
 
 function sizeChips(p, selected, ctx){
   return p.sizes.map(s=>{
@@ -591,9 +603,11 @@ function sizeChips(p, selected, ctx){
 
 function cardHTML(p){
   if(cardSize[p.id]===undefined) cardSize[p.id]=p.sizes[0];
+  const oos = p.in_stock===false;
   return `
     <div class="card-img" onclick="openDetail(${p.id})" style="cursor:pointer">
       ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:''}
+      ${oos?'<span class="badge oos">Немає в наявності</span>':''}
       ${imgBlock(p)}
     </div>
     <div class="card-body">
@@ -607,8 +621,9 @@ function cardHTML(p){
       <div class="size-label">Розмір</div>
       <div class="sizes">${sizeChips(p, cardSize[p.id], 'card')}</div>
       <div class="card-actions">
-        <button class="btn btn-detail" onclick="openDetail(${p.id})">↘ Детальніше</button>
-        <button class="btn" onclick="orderFromCard(${p.id})">Замовити</button>
+        ${oos
+          ? `<button class="btn btn-detail" style="flex:1" onclick="openDetail(${p.id})">↘ Детальніше</button>`
+          : `<button class="btn btn-detail" onclick="openDetail(${p.id})">↘ Детальніше</button><button class="btn" onclick="orderFromCard(${p.id})">Замовити</button>`}
       </div>
     </div>`;
 }
@@ -645,10 +660,18 @@ function openDetail(id){
   if(!p)return;
   detailId=p.id;
   detailSize=p.sizes[0];
+  const oos = p.in_stock===false;
+  detailImages = imagesOf(p);
+  const badgeHTML = p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:'';
+  const oosHTML = oos?`<span class="badge oos">Немає в наявності</span>`:'';
+  const mainInner = detailImages.length?`<img src="${detailImages[0]}" alt="${(p.title||'').replace(/"/g,'')}">`:imgBlock(p);
+  const thumbsHTML = detailImages.length>1
+    ? `<div class="pv-thumbs">`+detailImages.map((u,i)=>`<div class="pv-thumb${i===0?' active':''}" onclick="pvShow(${i})"><img src="${u}" alt=""></div>`).join('')+`</div>`
+    : '';
   document.getElementById('pvWrap').innerHTML=`
-    <div class="pv-gallery">
-      ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:''}
-      ${imgBlock(p)}
+    <div class="pv-media">
+      <div class="pv-main" id="pvMain">${badgeHTML}${oosHTML}${mainInner}</div>
+      ${thumbsHTML}
     </div>
     <div class="pv-info">
       <div class="card-cat">${p.cat}</div>
@@ -661,7 +684,9 @@ function openDetail(id){
       <div class="pv-section-label">Розмір</div>
       <div class="sizes">${sizeChips(p, detailSize, 'detail')}</div>
       <div class="pv-desc">${descFor(p)}</div>
-      <button class="btn" onclick="orderFromDetail()">Замовити</button>
+      ${oos
+        ? `<button class="btn" disabled style="opacity:.5;cursor:not-allowed">Немає в наявності</button>`
+        : `<button class="btn" onclick="orderFromDetail()">Замовити</button>`}
     </div>`;
   renderRelated(p);
   document.getElementById('productView').classList.add('open');
@@ -673,6 +698,13 @@ function selectDetailSize(size,el){
   detailSize=size;
   el.parentElement.querySelectorAll('.size-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
+}
+function pvShow(i){
+  const main=document.getElementById('pvMain');
+  if(!main||!detailImages[i])return;
+  const img=main.querySelector('img');
+  if(img) img.src=detailImages[i];
+  document.querySelectorAll('.pv-thumb').forEach((t,j)=>t.classList.toggle('active',j===i));
 }
 function orderFromDetail(){
   addToCart(detailId, detailSize);
@@ -699,6 +731,8 @@ function closeDetail(){
 /* ---------- CART ---------- */
 function ckey(id,size){return id+'|'+(size||'');}
 function addToCart(id,size){
+  const prod=PRODUCTS.find(x=>x.id==id);
+  if(prod && prod.in_stock===false){ showToast('Товару немає в наявності'); return; }
   const k=ckey(id,size);
   if(cart[k]) cart[k].qty++;
   else cart[k]={id:+id,size:size||'',qty:1};
