@@ -72,15 +72,24 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(40,30,20,.14)}
 .card-img{position:relative;aspect-ratio:3/4;overflow:hidden}
 .card-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:54px;color:#fff}
-.badge{position:absolute;top:12px;left:12px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:.5px}
+.badge{position:absolute;top:14px;right:14px;background:#e8654f;color:#fff;font-size:12px;font-weight:700;padding:7px 16px;border-radius:24px;letter-spacing:.5px;z-index:2}
 .badge.sale{background:#c0564e}
 .card-body{padding:18px;display:flex;flex-direction:column;flex:1}
 .card-cat{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-.card-title{font-size:17px;font-weight:600;margin-bottom:10px}
-.card-price{display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:auto}
-.price-now{font-size:20px;font-weight:700;color:var(--accent)}
+.card-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.card-sku{font-size:13px;color:var(--muted);margin-bottom:12px}
+.card-price{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.price-now{font-size:21px;font-weight:700;color:var(--ink)}
 .price-old{font-size:15px;color:var(--muted);text-decoration:line-through}
-.card .btn{width:100%;padding:11px}
+.size-label{font-size:13px;color:var(--muted);margin-bottom:8px}
+.sizes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.size-chip{min-width:44px;padding:8px 6px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:.15s;color:var(--ink)}
+.size-chip:hover{border-color:var(--accent)}
+.size-chip.active{border-color:var(--ink);border-width:1.5px}
+.card-actions{display:flex;gap:10px;margin-top:auto}
+.card-actions .btn{flex:1;padding:12px 8px;font-size:14px}
+.btn-detail{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn-detail:hover{background:#fff;color:var(--ink);border-color:var(--ink);transform:none}
 
 /* HOW TO ORDER */
 .how{background:#fff}
@@ -176,6 +185,26 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:14px 26px;border-radius:40px;font-size:15px;z-index:200;transition:.4s;box-shadow:var(--shadow)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
+/* PRODUCT DETAIL VIEW */
+.product-view{display:none;position:fixed;inset:0;background:var(--bg);z-index:120;overflow-y:auto}
+.product-view.open{display:block}
+.pv-top{position:sticky;top:0;background:rgba(250,247,244,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);z-index:5}
+.pv-back{display:inline-flex;align-items:center;gap:8px;height:64px;background:none;border:none;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer}
+.pv-back:hover{color:var(--accent)}
+.pv-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:40px 0}
+.pv-gallery{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow)}
+.pv-gallery .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;color:#fff}
+.pv-info h1{font-size:32px;font-weight:700;margin:4px 0 8px}
+.pv-sku{color:var(--muted);font-size:14px;margin-bottom:18px}
+.pv-price{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.pv-price .price-now{font-size:30px}
+.pv-price .price-old{font-size:19px}
+.pv-section-label{font-size:14px;color:var(--muted);margin-bottom:10px}
+.pv-desc{color:#5a534d;margin:24px 0;line-height:1.7}
+.pv-info .btn{margin-top:8px;padding:15px 44px}
+.related{border-top:1px solid var(--line);padding:50px 0 70px;margin-top:20px}
+.related h2{font-size:26px;font-weight:700;text-align:center;margin-bottom:36px}
+
 /* RESPONSIVE */
 @media(max-width:980px){
   .grid{grid-template-columns:repeat(3,1fr)}
@@ -189,6 +218,9 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
   .steps,.delivery-grid,.reviews-grid{grid-template-columns:1fr}
   .slide-content h1{font-size:34px}
   .slide{height:480px}
+  .pv-wrap{grid-template-columns:1fr;gap:24px;padding:24px 0}
+  .pv-info h1{font-size:26px}
+  .related{grid-template-columns:1fr}
   .section h2{font-size:27px}
   .section{padding:50px 0}
 }
@@ -393,6 +425,24 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
   </div>
 </footer>
 
+<!-- PRODUCT DETAIL VIEW -->
+<div class="product-view" id="productView">
+  <div class="pv-top">
+    <div class="container">
+      <button class="pv-back" onclick="closeDetail()">← Назад до каталогу</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="pv-wrap" id="pvWrap"></div>
+  </div>
+  <div class="related">
+    <div class="container">
+      <h2>Вам може сподобатися</h2>
+      <div class="grid" id="relatedGrid"></div>
+    </div>
+  </div>
+</div>
+
 <!-- CART DRAWER -->
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 <aside class="drawer" id="drawer">
@@ -404,7 +454,7 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
     <p class="cart-empty">Ваш кошик порожній 🛍️</p>
   </div>
   <div class="drawer-foot">
-    <div class="cart-total"><span>Разом:</span><span id="cartTotal">0 ₴</span></div>
+    <div class="cart-total"><span>Разом:</span><span id="cartTotal">0 грн.</span></div>
     <button class="btn" id="checkoutBtn" onclick="openOrder()" disabled style="opacity:.5">Оформити замовлення</button>
   </div>
 </aside>
@@ -448,25 +498,30 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 <script>
 /* ---------- PRODUCT DATA (замініть на свої товари) ---------- */
 const CATS = ['Усі','Сукні','Верх','Низ','Аксесуари'];
+const APP_SIZES=['XL','2XL','3XL','4XL','5XL'];
+const ONE_SIZE=['Один розмір'];
 const PRODUCTS = [
-  {id:1, title:'Сукня міді «Флоренція»', cat:'Сукні', price:1290, old:1590, badge:'sale', color:'#c9a98a', icon:'👗'},
-  {id:2, title:'Лляна сорочка «Бриз»', cat:'Верх', price:890, old:null, badge:'new', color:'#a9b8a0', icon:'👚'},
-  {id:3, title:'Спідниця плісе «Аврора»', cat:'Низ', price:990, old:1190, badge:'sale', color:'#b8a9c9', icon:'🩱'},
-  {id:4, title:'Шкіряна сумка «Мілано»', cat:'Аксесуари', price:1450, old:null, badge:'hit', color:'#a0855e', icon:'👜'},
-  {id:5, title:'Трикотажна сукня «Осінь»', cat:'Сукні', price:1150, old:null, badge:null, color:'#c9b08a', icon:'👗'},
-  {id:6, title:'Оверсайз худі «Комфорт»', cat:'Верх', price:1090, old:1290, badge:'sale', color:'#8a9eb8', icon:'🧥'},
-  {id:7, title:'Широкі штани «Палаццо»', cat:'Низ', price:1190, old:null, badge:'new', color:'#9e8a7a', icon:'👖'},
-  {id:8, title:'Шовкова хустка «Версаль»', cat:'Аксесуари', price:490, old:690, badge:'sale', color:'#c98aa0', icon:'🧣'},
-  {id:9, title:'Вечірня сукня «Зоря»', cat:'Сукні', price:1890, old:null, badge:'hit', color:'#7a6f8a', icon:'👗'},
-  {id:10, title:'Базова футболка «Кліо»', cat:'Верх', price:590, old:null, badge:null, color:'#b8b0a0', icon:'👕'},
-  {id:11, title:'Джинси «Скіні»', cat:'Низ', price:1290, old:1490, badge:'sale', color:'#6f7a8a', icon:'👖'},
-  {id:12, title:'Сонцезахисні окуляри «Ріо»', cat:'Аксесуари', price:790, old:null, badge:'new', color:'#8a8a7a', icon:'🕶️'}
+  {id:1, title:'Сукня міді «Флоренція»', cat:'Сукні', price:1290, old:1590, badge:'sale', color:'#c9a98a', icon:'👗', sku:'LM-1001', sizes:APP_SIZES},
+  {id:2, title:'Лляна сорочка «Бриз»', cat:'Верх', price:890, old:null, badge:'new', color:'#a9b8a0', icon:'👚', sku:'LM-1002', sizes:APP_SIZES},
+  {id:3, title:'Спідниця плісе «Аврора»', cat:'Низ', price:990, old:1190, badge:'sale', color:'#b8a9c9', icon:'🩱', sku:'LM-1003', sizes:APP_SIZES},
+  {id:4, title:'Шкіряна сумка «Мілано»', cat:'Аксесуари', price:1450, old:null, badge:'hit', color:'#a0855e', icon:'👜', sku:'LM-1004', sizes:ONE_SIZE},
+  {id:5, title:'Трикотажна сукня «Осінь»', cat:'Сукні', price:1150, old:null, badge:null, color:'#c9b08a', icon:'👗', sku:'LM-1005', sizes:APP_SIZES},
+  {id:6, title:'Оверсайз худі «Комфорт»', cat:'Верх', price:1090, old:1290, badge:'sale', color:'#8a9eb8', icon:'🧥', sku:'LM-1006', sizes:APP_SIZES},
+  {id:7, title:'Широкі штани «Палаццо»', cat:'Низ', price:1190, old:null, badge:'new', color:'#9e8a7a', icon:'👖', sku:'LM-1007', sizes:APP_SIZES},
+  {id:8, title:'Шовкова хустка «Версаль»', cat:'Аксесуари', price:490, old:690, badge:'sale', color:'#c98aa0', icon:'🧣', sku:'LM-1008', sizes:ONE_SIZE},
+  {id:9, title:'Вечірня сукня «Зоря»', cat:'Сукні', price:1890, old:null, badge:'hit', color:'#7a6f8a', icon:'👗', sku:'LM-1009', sizes:APP_SIZES},
+  {id:10, title:'Базова футболка «Кліо»', cat:'Верх', price:590, old:null, badge:null, color:'#b8b0a0', icon:'👕', sku:'LM-1010', sizes:APP_SIZES},
+  {id:11, title:'Джинси «Скіні»', cat:'Низ', price:1290, old:1490, badge:'sale', color:'#6f7a8a', icon:'👖', sku:'LM-1011', sizes:APP_SIZES},
+  {id:12, title:'Сонцезахисні окуляри «Ріо»', cat:'Аксесуари', price:790, old:null, badge:'new', color:'#8a8a7a', icon:'🕶️', sku:'LM-1012', sizes:ONE_SIZE}
 ];
 const BADGE_LABEL = {sale:'SALE', new:'НОВИНКА', hit:'ХІТ'};
 
 /* ---------- STATE ---------- */
-let cart = {};          // id -> qty
+let cart = {};          // key "id|size" -> {id, size, qty}
 let currentFilter = 'Усі';
+let cardSize = {};      // product id -> chosen size (catalog cards)
+let detailSize = null;  // chosen size in detail view
+let detailId = null;
 
 /* ---------- RENDER CATALOG ---------- */
 const grid = document.getElementById('grid');
@@ -480,7 +535,47 @@ CATS.forEach(c=>{
   filtersEl.appendChild(b);
 });
 
-function fmt(n){return n.toLocaleString('uk-UA')+' ₴';}
+function fmt(n){return n.toLocaleString('uk-UA')+' грн.';}
+
+function shade(hex){
+  // darken hex by ~30%
+  const n=parseInt(hex.slice(1),16);
+  let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  r=Math.round(r*.7);g=Math.round(g*.7);b=Math.round(b*.7);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+function sizeChips(p, selected, ctx){
+  return p.sizes.map(s=>{
+    const act = s===selected ? ' active' : '';
+    const handler = ctx==='card' ? `selectCardSize(${p.id},'${s}',this)` : `selectDetailSize('${s}',this)`;
+    return `<button type="button" class="size-chip${act}" onclick="${handler}">${s}</button>`;
+  }).join('');
+}
+
+function cardHTML(p){
+  if(cardSize[p.id]===undefined) cardSize[p.id]=p.sizes[0];
+  return `
+    <div class="card-img" onclick="openDetail(${p.id})" style="cursor:pointer">
+      ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]}</span>`:''}
+      <div class="ph" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-cat">${p.cat}</div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-sku">Артикул: ${p.sku}</div>
+      <div class="card-price">
+        <span class="price-now">${fmt(p.price)}</span>
+        ${p.old?`<span class="price-old">${fmt(p.old)}</span>`:''}
+      </div>
+      <div class="size-label">Розмір</div>
+      <div class="sizes">${sizeChips(p, cardSize[p.id], 'card')}</div>
+      <div class="card-actions">
+        <button class="btn btn-detail" onclick="openDetail(${p.id})">↘ Детальніше</button>
+        <button class="btn" onclick="orderFromCard(${p.id})">Замовити</button>
+      </div>
+    </div>`;
+}
 
 function renderGrid(){
   grid.innerHTML='';
@@ -488,75 +583,131 @@ function renderGrid(){
   list.forEach(p=>{
     const card=document.createElement('div');
     card.className='card';
-    card.innerHTML=`
-      <div class="card-img">
-        ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]}</span>`:''}
-        <div class="ph" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
-      </div>
-      <div class="card-body">
-        <div class="card-cat">${p.cat}</div>
-        <div class="card-title">${p.title}</div>
-        <div class="card-price">
-          <span class="price-now">${fmt(p.price)}</span>
-          ${p.old?`<span class="price-old">${fmt(p.old)}</span>`:''}
-        </div>
-        <button class="btn" onclick="addToCart(${p.id})">У кошик</button>
-      </div>`;
+    card.innerHTML=cardHTML(p);
     grid.appendChild(card);
   });
 }
-function shade(hex){
-  // darken hex by ~25%
-  const n=parseInt(hex.slice(1),16);
-  let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
-  r=Math.round(r*.7);g=Math.round(g*.7);b=Math.round(b*.7);
-  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
-}
 renderGrid();
 
+function selectCardSize(id,size,el){
+  cardSize[id]=size;
+  el.parentElement.querySelectorAll('.size-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function orderFromCard(id){
+  addToCart(id, cardSize[id]);
+  openCart();
+}
+
+/* ---------- PRODUCT DETAIL PAGE ---------- */
+function descFor(p){
+  const name=p.title.replace(/[«»]/g,'');
+  return `${name} — стильна та зручна модель з нової колекції LUMÉ. Якісний матеріал приємний до тіла, добре тримає форму та підкреслює фігуру. Чудово пасує як для повсякдення, так і для особливих подій. Доступні розміри ${p.sizes.join(', ')}. Відправка по Україні Новою Поштою.`;
+}
+function openDetail(id){
+  const p=PRODUCTS.find(x=>x.id==id);
+  if(!p)return;
+  detailId=p.id;
+  detailSize=p.sizes[0];
+  document.getElementById('pvWrap').innerHTML=`
+    <div class="pv-gallery">
+      ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]}</span>`:''}
+      <div class="ph" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
+    </div>
+    <div class="pv-info">
+      <div class="card-cat">${p.cat}</div>
+      <h1>${p.title}</h1>
+      <div class="pv-sku">Артикул: ${p.sku}</div>
+      <div class="pv-price">
+        <span class="price-now">${fmt(p.price)}</span>
+        ${p.old?`<span class="price-old">${fmt(p.old)}</span>`:''}
+      </div>
+      <div class="pv-section-label">Розмір</div>
+      <div class="sizes">${sizeChips(p, detailSize, 'detail')}</div>
+      <div class="pv-desc">${descFor(p)}</div>
+      <button class="btn" onclick="orderFromDetail()">Замовити</button>
+    </div>`;
+  renderRelated(p);
+  document.getElementById('productView').classList.add('open');
+  document.body.style.overflow='hidden';
+  window.scrollTo(0,0);
+  document.getElementById('productView').scrollTop=0;
+}
+function selectDetailSize(size,el){
+  detailSize=size;
+  el.parentElement.querySelectorAll('.size-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function orderFromDetail(){
+  addToCart(detailId, detailSize);
+  closeDetail();
+  openCart();
+}
+function renderRelated(p){
+  const rel=document.getElementById('relatedGrid');
+  let pool=PRODUCTS.filter(x=>x.cat===p.cat && x.id!==p.id);
+  if(pool.length<4) pool=pool.concat(PRODUCTS.filter(x=>x.id!==p.id && x.cat!==p.cat));
+  rel.innerHTML='';
+  pool.slice(0,4).forEach(rp=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=cardHTML(rp);
+    rel.appendChild(card);
+  });
+}
+function closeDetail(){
+  document.getElementById('productView').classList.remove('open');
+  document.body.style.overflow='';
+}
+
 /* ---------- CART ---------- */
-function addToCart(id){
-  cart[id]=(cart[id]||0)+1;
+function ckey(id,size){return id+'|'+(size||'');}
+function addToCart(id,size){
+  const k=ckey(id,size);
+  if(cart[k]) cart[k].qty++;
+  else cart[k]={id:+id,size:size||'',qty:1};
   updateCart();
   showToast('Додано в кошик ✓');
   pulseCart();
 }
-function changeQty(id,d){
-  cart[id]+=d;
-  if(cart[id]<=0) delete cart[id];
+function changeQty(k,d){
+  if(!cart[k])return;
+  cart[k].qty+=d;
+  if(cart[k].qty<=0) delete cart[k];
   updateCart();
 }
-function removeItem(id){delete cart[id];updateCart();}
+function removeItem(k){delete cart[k];updateCart();}
 
-function cartItemsCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
-function cartTotal(){return Object.entries(cart).reduce((s,[id,q])=>s+PRODUCTS.find(p=>p.id==id).price*q,0);}
+function cartItemsCount(){return Object.values(cart).reduce((a,i)=>a+i.qty,0);}
+function cartTotal(){return Object.values(cart).reduce((s,i)=>s+PRODUCTS.find(p=>p.id===i.id).price*i.qty,0);}
 
 function updateCart(){
   document.getElementById('cartCount').textContent=cartItemsCount();
   const body=document.getElementById('cartBody');
-  const ids=Object.keys(cart);
-  if(ids.length===0){
+  const keys=Object.keys(cart);
+  if(keys.length===0){
     body.innerHTML='<p class="cart-empty">Ваш кошик порожній 🛍️</p>';
     document.getElementById('checkoutBtn').disabled=true;
     document.getElementById('checkoutBtn').style.opacity=.5;
   }else{
     body.innerHTML='';
-    ids.forEach(id=>{
-      const p=PRODUCTS.find(x=>x.id==id);const q=cart[id];
+    keys.forEach(k=>{
+      const it=cart[k];const p=PRODUCTS.find(x=>x.id===it.id);
       const el=document.createElement('div');
       el.className='cart-item';
       el.innerHTML=`
         <div class="thumb" style="background:linear-gradient(135deg,${p.color},${shade(p.color)})">${p.icon}</div>
         <div class="ci-info">
           <div class="ci-title">${p.title}</div>
+          ${it.size?`<div style="font-size:12px;color:var(--muted)">Розмір: ${it.size}</div>`:''}
           <div class="ci-price">${fmt(p.price)}</div>
           <div class="qty">
-            <button onclick="changeQty(${p.id},-1)">−</button>
-            <span>${q}</span>
-            <button onclick="changeQty(${p.id},1)">+</button>
+            <button onclick="changeQty('${k}',-1)">−</button>
+            <span>${it.qty}</span>
+            <button onclick="changeQty('${k}',1)">+</button>
           </div>
         </div>
-        <button class="ci-remove" onclick="removeItem(${p.id})">🗑️</button>`;
+        <button class="ci-remove" onclick="removeItem('${k}')">🗑️</button>`;
       body.appendChild(el);
     });
     document.getElementById('checkoutBtn').disabled=false;
@@ -578,16 +729,16 @@ function openOrder(){
   if(Object.keys(cart).length===0)return;
   const sum=document.getElementById('orderSummary');
   sum.innerHTML='';
-  Object.keys(cart).forEach(id=>{
-    const p=PRODUCTS.find(x=>x.id==id);
-    sum.innerHTML+=`<div class="row"><span>${p.title} × ${cart[id]}</span><span>${fmt(p.price*cart[id])}</span></div>`;
+  Object.keys(cart).forEach(k=>{
+    const it=cart[k];const p=PRODUCTS.find(x=>x.id===it.id);
+    sum.innerHTML+=`<div class="row"><span>${p.title}${it.size?' ('+it.size+')':''} × ${it.qty}</span><span>${fmt(p.price*it.qty)}</span></div>`;
   });
   sum.innerHTML+=`<div class="row" style="font-weight:700;border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><span>Разом:</span><span>${fmt(cartTotal())}</span></div>`;
   document.getElementById('modal').classList.add('open');
   document.getElementById('overlay').classList.add('open');
 }
 function closeOrder(){document.getElementById('modal').classList.remove('open');if(!document.getElementById('drawer').classList.contains('open'))document.getElementById('overlay').classList.remove('open');}
-function closeAll(){closeCart();document.getElementById('modal').classList.remove('open');}
+function closeAll(){closeCart();document.getElementById('modal').classList.remove('open');closeDetail();}
 function toggleNav(){document.getElementById('navLinks').classList.toggle('open');}
 function closeNav(){document.getElementById('navLinks').classList.remove('open');}
 
