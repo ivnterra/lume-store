@@ -7,8 +7,8 @@
 <meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів LUMÉ. Доставка по Україні Новою Поштою.">
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.min.css">
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 <style>
 :root{
   --bg:#faf7f4;
@@ -870,7 +870,7 @@ function initPhone(input){
   return window.intlTelInput(input,{
     initialCountry:'auto',
     geoIpLookup:function(cb){ fetch('/api/geo').then(r=>r.json()).then(d=>cb(d.country||'ua')).catch(()=>cb('ua')); },
-    utilsScript:'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js',
+    utilsScript:'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js',
     separateDialCode:true,
     preferredCountries:['ua','pl','de','cz','sk'],
     dropdownContainer:document.body
