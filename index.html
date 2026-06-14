@@ -529,6 +529,21 @@ const DEMO_PRODUCTS = [
 ];
 const BADGE_LABEL = {sale:'SALE', new:'НОВИНКА', hit:'ХІТ'};
 
+/* ---------- UTM-мітки (зберігаємо при заході за рекламним посиланням) ---------- */
+(function(){
+  try{
+    const p=new URLSearchParams(location.search);
+    const keys=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+    const u={}; let has=false;
+    keys.forEach(k=>{const v=p.get(k); if(v){u[k]=v.slice(0,200); has=true;}});
+    if(has) localStorage.setItem('lume_utm', JSON.stringify(u));
+    if(!localStorage.getItem('lume_first'))
+      localStorage.setItem('lume_first', JSON.stringify({referrer:document.referrer||'', landing:location.href}));
+  }catch(e){}
+})();
+function getUTM(){ try{return JSON.parse(localStorage.getItem('lume_utm')||'{}');}catch(e){return {};} }
+function getFirst(){ try{return JSON.parse(localStorage.getItem('lume_first')||'{}');}catch(e){return {};} }
+
 /* ---------- STATE ---------- */
 let cart = {};          // key "id|size" -> {id, size, qty}
 let currentFilter = 'Усі';
@@ -830,7 +845,8 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   if(!ok)return;
   const pay=document.querySelector('input[name="pay"]:checked').value;
   const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,size:it.size,qty:it.qty,sum:p.price*it.qty};});
-  const payload={type:'order',name:name.value.trim(),phone:phone.value.trim(),pay,items,total:cartTotal()};
+  const first=getFirst();
+  const payload={type:'order',name:name.value.trim(),phone:phone.value.trim(),pay,items,total:cartTotal(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
   const btn=e.submitter; const oldTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
@@ -858,7 +874,8 @@ document.getElementById('contactForm').addEventListener('submit',async e=>{
   const btn=e.submitter; const oldTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
-    const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'contact',name:name.value.trim(),phone:phone.value.trim()})});
+    const first=getFirst();
+    const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'contact',name:name.value.trim(),phone:phone.value.trim(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href})});
     if(!r.ok) throw new Error();
     document.getElementById('contactForm').reset();
     showToast('Дякуємо! Ми зв\'яжемося з вами ✓');

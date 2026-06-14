@@ -1,7 +1,30 @@
-// Vercel Serverless Function — приймає замовлення/заявки і пересилає у Telegram.
-// Токен бота та chat_id зберігаються у змінних оточення Vercel (Project Settings → Environment Variables):
-//   TELEGRAM_BOT_TOKEN  — токен від @BotFather
-//   TELEGRAM_CHAT_ID    — куди слати (ваш chat id або id групи)
+// Vercel Serverless Function — приймає замовлення/заявки, зберігає у Supabase і пересилає у Telegram.
+// Змінні оточення Vercel (Project Settings → Environment Variables):
+//   TELEGRAM_BOT_TOKEN         — токен від @BotFather
+//   TELEGRAM_CHAT_ID           — куди слати (ваш chat id або id групи)
+//   SUPABASE_URL               — URL проєкту Supabase (для збереження у базу замовлень)
+//   SUPABASE_SERVICE_ROLE_KEY  — service_role / secret ключ (обходить RLS; тримати у секреті!)
+
+async function saveOrder(record) {
+  const SB = process.env.SUPABASE_URL;
+  const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!SB || !KEY) return; // база не налаштована — пропускаємо, замовлення все одно піде у Telegram
+  try {
+    await fetch(`${SB.replace(/\/$/, '')}/rest/v1/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': KEY,
+        'Authorization': 'Bearer ' + KEY,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(record)
+    });
+  } catch (e) {
+    // не зриваємо замовлення через помилку запису у базу
+    console.error('saveOrder failed:', e);
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -27,22 +50,24 @@ export default async function handler(req, res) {
     }
 
     const money = n => (Number(n) || 0).toLocaleString('uk-UA');
-    let text;
+    const utm = (body.utm && typeof body.utm === 'object') ? body.utm : {};
+    const isContact = body.type === 'contact';
+    const pay = String(body.pay || '').trim().slice(0, 120);
+    const items = Array.isArray(body.items) ? body.items : [];
 
-    if (body.type === 'contact') {
-      // Заявка з форми "Маєте питання?"
+    if (!isContact && !items.length) {
+      res.status(400).json({ error: 'empty order' });
+      return;
+    }
+
+    // ---- текст для Telegram ----
+    let text;
+    if (isContact) {
       text =
         `📩 Нова заявка (форма зв'язку) — LUMÉ\n\n` +
         `👤 Ім'я: ${name}\n` +
         `📞 Телефон: ${phone}`;
     } else {
-      // Замовлення з кошика
-      const pay = String(body.pay || '').trim().slice(0, 120);
-      const items = Array.isArray(body.items) ? body.items : [];
-      if (!items.length) {
-        res.status(400).json({ error: 'empty order' });
-        return;
-      }
       const lines = items
         .map(it => `• ${String(it.title || '').slice(0, 200)}${it.size ? ` (${it.size})` : ''} × ${Number(it.qty) || 1} — ${money(it.sum)} грн.`)
         .join('\n');
@@ -54,7 +79,29 @@ export default async function handler(req, res) {
         `🧾 Товари:\n${lines}\n\n` +
         `💰 Разом: ${money(body.total)} грн.`;
     }
+    if (utm.utm_source || utm.utm_campaign || utm.utm_medium) {
+      text += `\n\n🔗 Джерело: ${utm.utm_source || '—'}` +
+        (utm.utm_medium ? ` / ${utm.utm_medium}` : '') +
+        (utm.utm_campaign ? ` / ${utm.utm_campaign}` : '');
+    }
 
+    // ---- зберігаємо у базу (не блокуючи замовлення) ----
+    await saveOrder({
+      type: isContact ? 'contact' : 'order',
+      name, phone,
+      pay: isContact ? null : (pay || null),
+      items: isContact ? [] : items,
+      total: isContact ? 0 : (Number(body.total) || 0),
+      utm_source: utm.utm_source || null,
+      utm_medium: utm.utm_medium || null,
+      utm_campaign: utm.utm_campaign || null,
+      utm_term: utm.utm_term || null,
+      utm_content: utm.utm_content || null,
+      referrer: (body.referrer || '').toString().slice(0, 500) || null,
+      landing_page: (body.landing || '').toString().slice(0, 500) || null
+    });
+
+    // ---- надсилаємо у Telegram ----
     const tg = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -7,6 +7,7 @@
 <title>LUMÉ — Адмін-панель</title>
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#faf7f4;--ink:#2b2724;--muted:#8a8079;--accent:#c08a5e;--accent-dark:#a06d44;--line:#e7ddd3;--shadow:0 8px 30px rgba(40,30,20,.08);--radius:14px}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -79,6 +80,24 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 .stock-row input{width:auto}.stock-row label{margin:0}
 .form-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
 .loader{text-align:center;color:var(--muted);padding:40px}
+/* TABS */
+.tabs{display:flex;gap:6px}
+.tab-btn{background:none;border:none;padding:8px 16px;border-radius:30px;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted)}
+.tab-btn.active{background:var(--accent);color:#fff}
+.export-actions{display:flex;gap:8px;flex-wrap:wrap}
+.filters-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.filters-row input,.filters-row select{width:auto}
+.filters-row input[type=text]{flex:1;min-width:180px}
+.table-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px}
+.otable{border-collapse:collapse;width:100%;font-size:13px;min-width:820px}
+.otable th,.otable td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.otable th{background:#f3ece4;font-weight:700;white-space:nowrap;position:sticky;top:0}
+.otable tr:last-child td{border-bottom:none}
+.otable .cell-items{max-width:260px;font-size:12px;color:#5a534d}
+.otable select{padding:6px 8px;border-radius:8px;font-size:12px}
+.stat-pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.pill{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:13px}
+.pill b{font-size:16px;color:var(--accent)}
 @media(max-width:560px){.grid2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -109,18 +128,50 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
   <div class="topbar">
     <div class="topbar-in">
       <div class="logo">LUM<span>É</span> · адмін</div>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="products">Товари</button>
+        <button class="tab-btn" data-tab="orders">Замовлення</button>
+      </div>
       <div class="topbar-actions">
         <a class="btn btn-ghost btn-sm" href="/" target="_blank">↗ Відкрити сайт</a>
         <button class="btn btn-ghost btn-sm" id="logoutBtn">Вийти</button>
       </div>
     </div>
   </div>
-  <div class="wrap">
+
+  <!-- TAB: товари -->
+  <div class="wrap" id="tabProducts">
     <div class="head-row">
       <h2>Товари</h2>
       <button class="btn" id="addBtn">+ Додати товар</button>
     </div>
     <div id="list" class="prod-list"></div>
+  </div>
+
+  <!-- TAB: замовлення -->
+  <div class="wrap" id="tabOrders" style="display:none">
+    <div class="head-row">
+      <h2>Замовлення та заявки</h2>
+      <div class="export-actions">
+        <button class="btn btn-ghost btn-sm" id="expCsv">⬇ CSV</button>
+        <button class="btn btn-ghost btn-sm" id="expXlsx">⬇ Excel</button>
+        <button class="btn btn-ghost btn-sm" id="expJson">⬇ JSON</button>
+        <button class="btn btn-sm" id="refreshOrders">↻ Оновити</button>
+      </div>
+    </div>
+    <div class="stat-pills" id="orderStats"></div>
+    <div class="filters-row">
+      <span class="muted">Період:</span>
+      <input type="date" id="dFrom" title="Від">
+      <input type="date" id="dTo" title="До">
+      <select id="fType">
+        <option value="">Усі типи</option>
+        <option value="order">Замовлення</option>
+        <option value="contact">Заявки</option>
+      </select>
+      <input type="text" id="oSearch" placeholder="Пошук: ім'я, телефон, UTM…">
+    </div>
+    <div id="ordersBox"></div>
   </div>
 </div>
 
@@ -402,6 +453,143 @@ async function delProduct(id){
 }
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+/* ===================== ЗАМОВЛЕННЯ ===================== */
+const STATUS_LABEL={new:'Новий',processing:'В обробці',done:'Виконано',canceled:'Скасовано'};
+let orders=[], ordersFiltered=[];
+
+// перемикання вкладок
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const t=b.dataset.tab;
+  document.getElementById('tabProducts').style.display = t==='products'?'block':'none';
+  document.getElementById('tabOrders').style.display   = t==='orders'?'block':'none';
+  if(t==='orders' && !orders.length) loadOrders();
+});
+
+async function loadOrders(){
+  const box=document.getElementById('ordersBox');
+  box.innerHTML='<div class="loader">Завантаження…</div>';
+  const {data,error}=await sb.from('orders').select('*').order('created_at',{ascending:false}).limit(5000);
+  if(error){ box.innerHTML='<div class="loader">Помилка: '+esc(error.message)+'</div>'; return; }
+  orders=data||[];
+  applyOrderFilters();
+}
+
+function applyOrderFilters(){
+  const from=document.getElementById('dFrom').value;
+  const to=document.getElementById('dTo').value;
+  const type=document.getElementById('fType').value;
+  const q=document.getElementById('oSearch').value.trim().toLowerCase();
+  ordersFiltered=orders.filter(o=>{
+    if(type && (o.type||'order')!==type) return false;
+    const d=(o.created_at||'').slice(0,10);
+    if(from && d<from) return false;
+    if(to && d>to) return false;
+    if(q){
+      const hay=[o.name,o.phone,o.utm_source,o.utm_medium,o.utm_campaign].filter(Boolean).join(' ').toLowerCase();
+      if(hay.indexOf(q)<0) return false;
+    }
+    return true;
+  });
+  renderOrders();
+}
+
+function renderOrders(){
+  const box=document.getElementById('ordersBox');
+  // статистика
+  const ordersOnly=ordersFiltered.filter(o=>(o.type||'order')!=='contact');
+  const revenue=ordersOnly.reduce((s,o)=>s+(o.total||0),0);
+  document.getElementById('orderStats').innerHTML=
+    `<div class="pill">Усього записів: <b>${ordersFiltered.length}</b></div>`+
+    `<div class="pill">Замовлень: <b>${ordersOnly.length}</b></div>`+
+    `<div class="pill">Сума: <b>${revenue.toLocaleString('uk-UA')} грн.</b></div>`;
+  if(!ordersFiltered.length){ box.innerHTML='<div class="loader">Немає записів за фільтром.</div>'; return; }
+  const rows=ordersFiltered.map(o=>{
+    const items=(Array.isArray(o.items)?o.items:[]).map(it=>`${esc(it.title)}${it.size?' ('+esc(it.size)+')':''} ×${it.qty}`).join('<br>')||'—';
+    const utm=[o.utm_source,o.utm_medium,o.utm_campaign].filter(Boolean).join(' / ')||'—';
+    const dt=o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'';
+    return `<tr>
+      <td style="white-space:nowrap">${esc(dt)}</td>
+      <td>${(o.type||'order')==='contact'?'Заявка':'Замовлення'}</td>
+      <td>${esc(o.name||'')}</td>
+      <td style="white-space:nowrap">${esc(o.phone||'')}</td>
+      <td class="cell-items">${items}</td>
+      <td style="white-space:nowrap">${o.total?o.total.toLocaleString('uk-UA')+' грн.':'—'}</td>
+      <td>${esc(utm)}</td>
+      <td><select data-status="${o.id}">${Object.keys(STATUS_LABEL).map(s=>`<option value="${s}" ${(o.status||'new')===s?'selected':''}>${STATUS_LABEL[s]}</option>`).join('')}</select></td>
+      <td><button class="btn btn-danger btn-sm" data-delorder="${o.id}">✕</button></td>
+    </tr>`;
+  }).join('');
+  box.innerHTML=`<div class="table-wrap"><table class="otable">
+    <thead><tr><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Товари</th><th>Сума</th><th>UTM</th><th>Статус</th><th></th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+  box.querySelectorAll('[data-status]').forEach(s=>s.onchange=()=>updateOrderStatus(+s.dataset.status,s.value));
+  box.querySelectorAll('[data-delorder]').forEach(b=>b.onclick=()=>delOrder(+b.dataset.delorder));
+}
+
+async function updateOrderStatus(id,status){
+  const {error}=await sb.from('orders').update({status}).eq('id',id);
+  if(error){ alert('Помилка: '+error.message); return; }
+  const o=orders.find(x=>x.id===id); if(o) o.status=status;
+  renderOrders();
+}
+async function delOrder(id){
+  if(!confirm('Видалити запис #'+id+'?')) return;
+  const {error}=await sb.from('orders').delete().eq('id',id);
+  if(error){ alert('Помилка: '+error.message); return; }
+  orders=orders.filter(o=>o.id!==id);
+  applyOrderFilters();
+}
+
+['dFrom','dTo','fType','oSearch'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener(id==='oSearch'?'input':'change',applyOrderFilters);
+});
+document.getElementById('refreshOrders').onclick=loadOrders;
+
+/* ----- експорт ----- */
+function flattenOrder(o){
+  const items=(Array.isArray(o.items)?o.items:[]).map(it=>`${it.title}${it.size?' ('+it.size+')':''} x${it.qty} = ${it.sum||0}`).join('; ');
+  return {
+    id:o.id,
+    Дата:o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'',
+    Тип:(o.type||'order')==='contact'?'Заявка':'Замовлення',
+    "Ім'я":o.name||'', Телефон:o.phone||'', Оплата:o.pay||'',
+    Товари:items, Сума:o.total||0, Статус:STATUS_LABEL[o.status||'new']||o.status||'',
+    utm_source:o.utm_source||'', utm_medium:o.utm_medium||'', utm_campaign:o.utm_campaign||'',
+    utm_term:o.utm_term||'', utm_content:o.utm_content||'',
+    Реферер:o.referrer||'', Сторінка_входу:o.landing_page||''
+  };
+}
+function downloadFile(filename,content,mime){
+  const blob=new Blob([content],{type:mime});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function stamp(){return new Date().toISOString().slice(0,10);}
+document.getElementById('expJson').onclick=()=>{
+  if(!ordersFiltered.length) return alert('Немає даних для експорту');
+  downloadFile(`orders_${stamp()}.json`, JSON.stringify(ordersFiltered,null,2), 'application/json');
+};
+document.getElementById('expCsv').onclick=()=>{
+  if(!ordersFiltered.length) return alert('Немає даних для експорту');
+  const rows=ordersFiltered.map(flattenOrder);
+  const cols=Object.keys(rows[0]);
+  const cell=v=>{const s=String(v==null?'':v).replace(/"/g,'""');return /[",\n;]/.test(s)?`"${s}"`:s;};
+  const csv=[cols.join(','),...rows.map(r=>cols.map(c=>cell(r[c])).join(','))].join('\r\n');
+  downloadFile(`orders_${stamp()}.csv`, '﻿'+csv, 'text/csv;charset=utf-8');
+};
+document.getElementById('expXlsx').onclick=()=>{
+  if(!ordersFiltered.length) return alert('Немає даних для експорту');
+  if(typeof XLSX==='undefined') return alert('Бібліотека Excel не завантажилась (перевірте інтернет).');
+  const ws=XLSX.utils.json_to_sheet(ordersFiltered.map(flattenOrder));
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Замовлення');
+  XLSX.writeFile(wb, `orders_${stamp()}.xlsx`);
+};
 </script>
 </body>
 </html>
