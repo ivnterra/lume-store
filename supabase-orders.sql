@@ -9,6 +9,8 @@ create table if not exists public.orders (
   type         text default 'order',     -- 'order' | 'contact'
   name         text,
   phone        text,
+  city         text,                       -- місто доставки (з форми)
+  np_branch    text,                       -- відділення Нової Пошти (з форми)
   pay          text,
   items        jsonb default '[]',        -- [{title,size,qty,sum}]
   total        integer default 0,
@@ -18,6 +20,9 @@ create table if not exists public.orders (
   utm_campaign text,
   utm_term     text,
   utm_content  text,
+  geo_country  text,                       -- країна за IP (Vercel)
+  geo_region   text,                       -- регіон за IP
+  geo_city     text,                       -- місто за IP
   referrer     text,
   landing_page text
 );

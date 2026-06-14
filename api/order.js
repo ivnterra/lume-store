@@ -54,11 +54,23 @@ export default async function handler(req, res) {
     const isContact = body.type === 'contact';
     const pay = String(body.pay || '').trim().slice(0, 120);
     const items = Array.isArray(body.items) ? body.items : [];
+    const city = String(body.city || '').trim().slice(0, 160);
+    const npBranch = String(body.np_branch || '').trim().slice(0, 200);
 
     if (!isContact && !items.length) {
       res.status(400).json({ error: 'empty order' });
       return;
     }
+
+    // ---- геолокація за IP (заголовки Vercel) ----
+    const dec = v => { try { return decodeURIComponent(v); } catch (e) { return v; } };
+    const geoCountry = String(req.headers['x-vercel-ip-country'] || '').trim();
+    const geoRegion = String(req.headers['x-vercel-ip-country-region'] || '').trim();
+    const geoCity = dec(String(req.headers['x-vercel-ip-city'] || '').trim());
+
+    // ---- UTM рядками з підписами ----
+    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    const utmLines = utmKeys.filter(k => utm[k]).map(k => `${k}: ${utm[k]}`);
 
     // ---- текст для Telegram ----
     let text;
@@ -75,20 +87,22 @@ export default async function handler(req, res) {
         `🛍️ Нове замовлення — LUMÉ\n\n` +
         `👤 Ім'я: ${name}\n` +
         `📞 Телефон: ${phone}\n` +
+        `🏙️ Місто: ${city || '—'}\n` +
+        `🏤 Відділення НП: ${npBranch || '—'}\n` +
         `💳 Оплата: ${pay || '—'}\n\n` +
         `🧾 Товари:\n${lines}\n\n` +
         `💰 Разом: ${money(body.total)} грн.`;
     }
-    if (utm.utm_source || utm.utm_campaign || utm.utm_medium) {
-      text += `\n\n🔗 Джерело: ${utm.utm_source || '—'}` +
-        (utm.utm_medium ? ` / ${utm.utm_medium}` : '') +
-        (utm.utm_campaign ? ` / ${utm.utm_campaign}` : '');
-    }
+    const geoStr = [geoCountry, geoCity].filter(Boolean).join(', ');
+    if (geoStr) text += `\n\n🌍 Гео (IP): ${geoStr}`;
+    if (utmLines.length) text += `\n\n🔗 UTM:\n${utmLines.join('\n')}`;
 
     // ---- зберігаємо у базу (не блокуючи замовлення) ----
     await saveOrder({
       type: isContact ? 'contact' : 'order',
       name, phone,
+      city: isContact ? null : (city || null),
+      np_branch: isContact ? null : (npBranch || null),
       pay: isContact ? null : (pay || null),
       items: isContact ? [] : items,
       total: isContact ? 0 : (Number(body.total) || 0),
@@ -97,6 +111,9 @@ export default async function handler(req, res) {
       utm_campaign: utm.utm_campaign || null,
       utm_term: utm.utm_term || null,
       utm_content: utm.utm_content || null,
+      geo_country: geoCountry || null,
+      geo_region: geoRegion || null,
+      geo_city: geoCity || null,
       referrer: (body.referrer || '').toString().slice(0, 500) || null,
       landing_page: (body.landing || '').toString().slice(0, 500) || null
     });

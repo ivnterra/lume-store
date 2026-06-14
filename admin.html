@@ -508,22 +508,26 @@ function renderOrders(){
   if(!ordersFiltered.length){ box.innerHTML='<div class="loader">Немає записів за фільтром.</div>'; return; }
   const rows=ordersFiltered.map(o=>{
     const items=(Array.isArray(o.items)?o.items:[]).map(it=>`${esc(it.title)}${it.size?' ('+esc(it.size)+')':''} ×${it.qty}`).join('<br>')||'—';
-    const utm=[o.utm_source,o.utm_medium,o.utm_campaign].filter(Boolean).join(' / ')||'—';
+    const delivery=[o.city,o.np_branch?('НП '+o.np_branch):''].filter(Boolean).map(esc).join('<br>')||'—';
+    const utm=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].filter(k=>o[k]).map(k=>`${k}: ${esc(o[k])}`).join('<br>')||'—';
+    const geo=[o.geo_country,o.geo_city].filter(Boolean).map(esc).join(', ')||'—';
     const dt=o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'';
     return `<tr>
       <td style="white-space:nowrap">${esc(dt)}</td>
       <td>${(o.type||'order')==='contact'?'Заявка':'Замовлення'}</td>
       <td>${esc(o.name||'')}</td>
       <td style="white-space:nowrap">${esc(o.phone||'')}</td>
+      <td>${delivery}</td>
       <td class="cell-items">${items}</td>
       <td style="white-space:nowrap">${o.total?o.total.toLocaleString('uk-UA')+' грн.':'—'}</td>
-      <td>${esc(utm)}</td>
+      <td style="font-size:12px">${utm}</td>
+      <td style="white-space:nowrap">${geo}</td>
       <td><select data-status="${o.id}">${Object.keys(STATUS_LABEL).map(s=>`<option value="${s}" ${(o.status||'new')===s?'selected':''}>${STATUS_LABEL[s]}</option>`).join('')}</select></td>
       <td><button class="btn btn-danger btn-sm" data-delorder="${o.id}">✕</button></td>
     </tr>`;
   }).join('');
   box.innerHTML=`<div class="table-wrap"><table class="otable">
-    <thead><tr><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Товари</th><th>Сума</th><th>UTM</th><th>Статус</th><th></th></tr></thead>
+    <thead><tr><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Доставка</th><th>Товари</th><th>Сума</th><th>UTM</th><th>Гео (IP)</th><th>Статус</th><th></th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
   box.querySelectorAll('[data-status]').forEach(s=>s.onchange=()=>updateOrderStatus(+s.dataset.status,s.value));
   box.querySelectorAll('[data-delorder]').forEach(b=>b.onclick=()=>delOrder(+b.dataset.delorder));
@@ -556,10 +560,12 @@ function flattenOrder(o){
     id:o.id,
     Дата:o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'',
     Тип:(o.type||'order')==='contact'?'Заявка':'Замовлення',
-    "Ім'я":o.name||'', Телефон:o.phone||'', Оплата:o.pay||'',
+    "Ім'я":o.name||'', Телефон:o.phone||'',
+    Місто:o.city||'', Відділення_НП:o.np_branch||'', Оплата:o.pay||'',
     Товари:items, Сума:o.total||0, Статус:STATUS_LABEL[o.status||'new']||o.status||'',
     utm_source:o.utm_source||'', utm_medium:o.utm_medium||'', utm_campaign:o.utm_campaign||'',
     utm_term:o.utm_term||'', utm_content:o.utm_content||'',
+    Гео_країна:o.geo_country||'', Гео_регіон:o.geo_region||'', Гео_місто:o.geo_city||'',
     Реферер:o.referrer||'', Сторінка_входу:o.landing_page||''
   };
 }

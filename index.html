@@ -487,6 +487,16 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
         <span class="err-msg" id="oPhoneErr">Вкажіть коректний номер</span>
       </div>
       <div class="form-group">
+        <label>Місто</label>
+        <input type="text" id="oCity" placeholder="Напр. Київ">
+        <span class="err-msg" id="oCityErr">Вкажіть місто</span>
+      </div>
+      <div class="form-group">
+        <label>Відділення Нової Пошти</label>
+        <input type="text" id="oBranch" placeholder="Напр. №12 або адреса">
+        <span class="err-msg" id="oBranchErr">Вкажіть відділення</span>
+      </div>
+      <div class="form-group">
         <label>Варіант оплати</label>
         <div class="pay-options">
           <label class="pay-opt"><input type="radio" name="pay" value="Передплата за реквізитами" checked> Передплата за реквізитами</label>
@@ -838,15 +848,18 @@ function setErr(input,err,show){
 document.getElementById('orderForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const name=document.getElementById('oName'),phone=document.getElementById('oPhone'),agree=document.getElementById('oAgree');
+  const city=document.getElementById('oCity'),branch=document.getElementById('oBranch');
   let ok=true;
   setErr(name,document.getElementById('oNameErr'),!name.value.trim());if(!name.value.trim())ok=false;
   setErr(phone,document.getElementById('oPhoneErr'),!validPhone(phone.value));if(!validPhone(phone.value))ok=false;
+  setErr(city,document.getElementById('oCityErr'),!city.value.trim());if(!city.value.trim())ok=false;
+  setErr(branch,document.getElementById('oBranchErr'),!branch.value.trim());if(!branch.value.trim())ok=false;
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
   if(!ok)return;
   const pay=document.querySelector('input[name="pay"]:checked').value;
   const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,size:it.size,qty:it.qty,sum:p.price*it.qty};});
   const first=getFirst();
-  const payload={type:'order',name:name.value.trim(),phone:phone.value.trim(),pay,items,total:cartTotal(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
+  const payload={type:'order',name:name.value.trim(),phone:phone.value.trim(),city:city.value.trim(),np_branch:branch.value.trim(),pay,items,total:cartTotal(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
   const btn=e.submitter; const oldTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
