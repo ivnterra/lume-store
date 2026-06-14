@@ -7,6 +7,8 @@
 <meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів LUMÉ. Доставка по Україні Новою Поштою.">
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
 <style>
 :root{
   --bg:#faf7f4;
@@ -134,6 +136,11 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .msg-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:40px;font-weight:600;color:#fff;transition:.2s}
 .msg-btn:hover{transform:translateY(-2px)}
 .tg{background:#2aabee}.vb{background:#7360f2}
+
+/* PHONE INPUT (intl-tel-input) */
+.iti{width:100%}
+.iti__dropdown-content{z-index:300}
+.iti--container{z-index:2000}
 
 /* INPUTS */
 input,select{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
@@ -465,6 +472,7 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
   <div class="drawer-foot">
     <div class="cart-total"><span>Разом:</span><span id="cartTotal">0 грн.</span></div>
     <button class="btn" id="checkoutBtn" onclick="openOrder()" disabled style="opacity:.5">Оформити замовлення</button>
+    <button class="btn btn-outline" onclick="closeCart()" style="width:100%;margin-top:10px">Продовжити покупки</button>
   </div>
 </aside>
 
@@ -598,6 +606,7 @@ async function loadProducts(){
   CATS=['Усі',...Array.from(new Set(PRODUCTS.map(p=>p.cat)))];
   buildFilters();
   renderGrid();
+  routeFromPath();   // якщо відкрито /product/<id> — показати картку товару
 }
 
 function fmt(n){return n.toLocaleString('uk-UA')+' грн.';}
@@ -680,7 +689,7 @@ function descFor(p){
   const name=p.title.replace(/[«»]/g,'');
   return `${name} — стильна та зручна модель з нової колекції LUMÉ. Якісний матеріал приємний до тіла, добре тримає форму та підкреслює фігуру. Чудово пасує як для повсякдення, так і для особливих подій. Доступні розміри ${p.sizes.join(', ')}. Відправка по Україні Новою Поштою.`;
 }
-function openDetail(id){
+function openDetail(id, fromRoute){
   const p=PRODUCTS.find(x=>x.id==id);
   if(!p)return;
   detailId=p.id;
@@ -718,6 +727,8 @@ function openDetail(id){
   document.body.style.overflow='hidden';
   window.scrollTo(0,0);
   document.getElementById('productView').scrollTop=0;
+  document.title = p.title + ' — LUMÉ STORE';
+  if(!fromRoute){ try{ history.pushState({pid:p.id},'','/product/'+p.id); }catch(e){} }
 }
 function selectDetailSize(size,el){
   detailSize=size;
@@ -748,10 +759,22 @@ function renderRelated(p){
     rel.appendChild(card);
   });
 }
-function closeDetail(){
-  document.getElementById('productView').classList.remove('open');
+function closeDetail(fromRoute){
+  const pv=document.getElementById('productView');
+  const wasOpen=pv.classList.contains('open');
+  pv.classList.remove('open');
   document.body.style.overflow='';
+  if(wasOpen){
+    document.title='LUMÉ STORE — Магазин одягу та аксесуарів';
+    if(!fromRoute){ try{ history.pushState({},'','/'); }catch(e){} }
+  }
 }
+function routeFromPath(){
+  const m=location.pathname.match(/^\/product\/(\d+)/);
+  if(m && PRODUCTS.find(p=>p.id==+m[1])) openDetail(+m[1],true);
+  else closeDetail(true);
+}
+window.addEventListener('popstate', routeFromPath);
 
 /* ---------- CART ---------- */
 function ckey(id,size){return id+'|'+(size||'');}
@@ -840,6 +863,22 @@ function closeNav(){document.getElementById('navLinks').classList.remove('open')
 /* ---------- VALIDATION ---------- */
 function validPhone(v){return /^[\+]?[\d\s\-\(\)]{9,}$/.test(v.trim());}
 
+/* ---------- Телефон з вибором коду країни (intl-tel-input) ---------- */
+let itiOrder=null, itiContact=null;
+function initPhone(input){
+  if(!input || typeof window.intlTelInput==='undefined') return null;
+  return window.intlTelInput(input,{
+    initialCountry:'auto',
+    geoIpLookup:function(cb){ fetch('/api/geo').then(r=>r.json()).then(d=>cb(d.country||'ua')).catch(()=>cb('ua')); },
+    utilsScript:'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js',
+    separateDialCode:true,
+    preferredCountries:['ua','pl','de','cz','sk'],
+    dropdownContainer:document.body
+  });
+}
+function phoneValid(iti,el){ try{ if(iti && window.intlTelInputUtils) return iti.isValidNumber(); }catch(e){} return validPhone(el.value); }
+function phoneNumber(iti,el){ try{ if(iti && window.intlTelInputUtils){ const n=iti.getNumber(); if(n) return n; } }catch(e){} return el.value.trim(); }
+
 function setErr(input,err,show){
   input.classList.toggle('field-err',show);
   err.style.display=show?'block':'none';
@@ -851,7 +890,8 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   const city=document.getElementById('oCity'),branch=document.getElementById('oBranch');
   let ok=true;
   setErr(name,document.getElementById('oNameErr'),!name.value.trim());if(!name.value.trim())ok=false;
-  setErr(phone,document.getElementById('oPhoneErr'),!validPhone(phone.value));if(!validPhone(phone.value))ok=false;
+  const oPhoneOk=phoneValid(itiOrder,phone);
+  setErr(phone,document.getElementById('oPhoneErr'),!oPhoneOk);if(!oPhoneOk)ok=false;
   setErr(city,document.getElementById('oCityErr'),!city.value.trim());if(!city.value.trim())ok=false;
   setErr(branch,document.getElementById('oBranchErr'),!branch.value.trim());if(!branch.value.trim())ok=false;
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
@@ -859,16 +899,15 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   const pay=document.querySelector('input[name="pay"]:checked').value;
   const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,size:it.size,qty:it.qty,sum:p.price*it.qty};});
   const first=getFirst();
-  const payload={type:'order',name:name.value.trim(),phone:phone.value.trim(),city:city.value.trim(),np_branch:branch.value.trim(),pay,items,total:cartTotal(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
+  const payload={type:'order',name:name.value.trim(),phone:phoneNumber(itiOrder,phone),city:city.value.trim(),np_branch:branch.value.trim(),pay,items,total:cartTotal(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
   const btn=e.submitter; const oldTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
     const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     if(!r.ok) throw new Error();
-    closeAll();
-    cart={};updateCart();
-    document.getElementById('orderForm').reset();
-    showToast('Дякуємо! Замовлення прийнято ✓');
+    cart={};
+    window.location.href='/thanks';
+    return;
   }catch(err){
     showToast('Не вдалося відправити. Спробуйте ще раз або напишіть нам у Telegram/Viber');
   }finally{
@@ -881,14 +920,15 @@ document.getElementById('contactForm').addEventListener('submit',async e=>{
   const name=document.getElementById('cName'),phone=document.getElementById('cPhone'),agree=document.getElementById('cAgree');
   let ok=true;
   setErr(name,document.getElementById('cNameErr'),!name.value.trim());if(!name.value.trim())ok=false;
-  setErr(phone,document.getElementById('cPhoneErr'),!validPhone(phone.value));if(!validPhone(phone.value))ok=false;
+  const cPhoneOk=phoneValid(itiContact,phone);
+  setErr(phone,document.getElementById('cPhoneErr'),!cPhoneOk);if(!cPhoneOk)ok=false;
   if(!agree.checked){ok=false;agree.parentElement.style.color='#ffb4ae';}else{agree.parentElement.style.color='';}
   if(!ok)return;
   const btn=e.submitter; const oldTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
     const first=getFirst();
-    const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'contact',name:name.value.trim(),phone:phone.value.trim(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href})});
+    const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'contact',name:name.value.trim(),phone:phoneNumber(itiContact,phone),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href})});
     if(!r.ok) throw new Error();
     document.getElementById('contactForm').reset();
     showToast('Дякуємо! Ми зв\'яжемося з вами ✓');
@@ -944,7 +984,9 @@ document.querySelectorAll('.stat .num').forEach(el=>statObserver.observe(el));
 /* close modal on ESC */
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
 
-/* ---------- INIT: завантаження товарів ---------- */
+/* ---------- INIT ---------- */
+itiOrder=initPhone(document.getElementById('oPhone'));
+itiContact=initPhone(document.getElementById('cPhone'));
 loadProducts();
 </script>
 </body>

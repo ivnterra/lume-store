@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дякуємо за замовлення — LUMÉ STORE</title>
+<meta name="description" content="Дякуємо за замовлення в LUMÉ. Наш менеджер зв'яжеться з вами найближчим часом.">
+<style>
+:root{--bg:#faf7f4;--ink:#2b2724;--muted:#8a8079;--accent:#c08a5e;--accent-dark:#a06d44;--line:#e7ddd3;--shadow:0 8px 30px rgba(40,30,20,.08);--radius:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',-apple-system,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+header{background:rgba(250,247,244,.92);border-bottom:1px solid var(--line)}
+.nav{max-width:1180px;margin:0 auto;padding:0 20px;height:70px;display:flex;align-items:center}
+.logo{font-size:24px;font-weight:800;letter-spacing:3px}
+.logo span{color:var(--accent)}
+.wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);max-width:560px;width:100%;padding:48px 36px;text-align:center}
+.check{width:84px;height:84px;border-radius:50%;background:#eef6ee;color:#2e8b57;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 24px}
+h1{font-size:30px;font-weight:800;margin-bottom:14px}
+p{color:#5a534d;margin-bottom:14px}
+.note{background:#fdf3e7;border:1px solid #f0d9b8;color:#9a6b2f;font-size:14px;padding:12px 16px;border-radius:12px;margin:22px 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:14px 32px;border-radius:40px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;text-decoration:none;margin-top:6px}
+.btn:hover{background:var(--accent-dark)}
+.msgs{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.msg-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:40px;font-weight:600;color:#fff;text-decoration:none;font-size:14px}
+.tg{background:#2aabee}.vb{background:#7360f2}
+footer{background:#211d1a;color:rgba(255,255,255,.6);padding:24px;text-align:center;font-size:14px}
+@media(max-width:560px){.card{padding:36px 22px}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav"><a href="/" class="logo">LUM<span>É</span></a></div>
+</header>
+
+<main class="wrap">
+  <div class="card">
+    <div class="check">✓</div>
+    <h1>Дякуємо за замовлення!</h1>
+    <p>Ваша заявка успішно відправлена.</p>
+    <p><strong>Наш менеджер зв'яжеться з вами найближчим часом</strong> для підтвердження замовлення та деталей доставки.</p>
+    <div class="note">Зверніть увагу: відправка замовлень здійснюється лише Новою Поштою по Україні.</div>
+    <a href="/" class="btn">← Повернутися до магазину</a>
+    <div class="msgs">
+      <a href="https://t.me/" target="_blank" class="msg-btn tg">✈️ Telegram</a>
+      <a href="https://viber.com/" target="_blank" class="msg-btn vb">📞 Viber</a>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 LUMÉ Store. Відправка лише Новою Поштою • Доставка по всій Україні</footer>
+</body>
+</html>
