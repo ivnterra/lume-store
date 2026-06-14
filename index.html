@@ -873,7 +873,8 @@ function initPhone(input){
     utilsScript:'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js',
     separateDialCode:true,
     preferredCountries:['ua','pl','de','cz','sk'],
-    dropdownContainer:document.body
+    dropdownContainer:document.body,
+    customPlaceholder:function(ph){ return ph.replace(/^0/,''); }
   });
 }
 function phoneValid(iti,el){ try{ if(iti && window.intlTelInputUtils) return iti.isValidNumber(); }catch(e){} return validPhone(el.value); }
