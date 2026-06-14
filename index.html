@@ -498,6 +498,11 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
         <span class="err-msg" id="oPhoneErr">Вкажіть коректний номер</span>
       </div>
       <div class="form-group">
+        <label>Email <span style="color:var(--muted);font-weight:400">(необов'язково)</span></label>
+        <input type="email" id="oEmail" placeholder="email@example.com">
+        <span class="err-msg" id="oEmailErr">Невірний формат email</span>
+      </div>
+      <div class="form-group">
         <label>Місто</label>
         <input type="text" id="oCity" placeholder="Напр. Київ">
         <span class="err-msg" id="oCityErr">Вкажіть місто</span>
@@ -865,6 +870,7 @@ function closeNav(){document.getElementById('navLinks').classList.remove('open')
 
 /* ---------- VALIDATION ---------- */
 function validPhone(v){return /^[\+]?[\d\s\-\(\)]{9,}$/.test(v.trim());}
+function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());}
 
 /* ---------- Телефон з вибором коду країни (intl-tel-input) ---------- */
 let itiOrder=null, itiContact=null;
@@ -891,24 +897,32 @@ function setErr(input,err,show){
 document.getElementById('orderForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const name=document.getElementById('oName'),phone=document.getElementById('oPhone'),agree=document.getElementById('oAgree');
-  const city=document.getElementById('oCity'),branch=document.getElementById('oBranch');
+  const city=document.getElementById('oCity'),branch=document.getElementById('oBranch'),email=document.getElementById('oEmail');
   let ok=true;
   setErr(name,document.getElementById('oNameErr'),!name.value.trim());if(!name.value.trim())ok=false;
   const oPhoneOk=phoneValid(itiOrder,phone);
   setErr(phone,document.getElementById('oPhoneErr'),!oPhoneOk);if(!oPhoneOk)ok=false;
+  const emailVal=email.value.trim();
+  const emailOk=!emailVal||validEmail(emailVal);   // email необов'язковий
+  setErr(email,document.getElementById('oEmailErr'),!emailOk);if(!emailOk)ok=false;
   setErr(city,document.getElementById('oCityErr'),!city.value.trim());if(!city.value.trim())ok=false;
   setErr(branch,document.getElementById('oBranchErr'),!branch.value.trim());if(!branch.value.trim())ok=false;
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
   if(!ok)return;
   const pay=document.querySelector('input[name="pay"]:checked').value;
   const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,size:it.size,qty:it.qty,sum:p.price*it.qty};});
+  const dlItems=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {item_name:p.title,item_id:p.sku||String(p.id),price:p.price,quantity:it.qty,size:it.size};});
+  const total=cartTotal();
   const first=getFirst();
-  const payload={type:'order',name:name.value.trim(),phone:phoneNumber(itiOrder,phone),city:city.value.trim(),np_branch:branch.value.trim(),pay,items,total:cartTotal(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
+  const phoneFull=phoneNumber(itiOrder,phone);
+  const payload={type:'order',name:name.value.trim(),phone:phoneFull,email:emailVal,city:city.value.trim(),np_branch:branch.value.trim(),pay,items,total,utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
   const btn=e.submitter; const oldTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
     const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     if(!r.ok) throw new Error();
+    // дані для аналітики (подія 'lead' спрацює на /thanks)
+    try{ sessionStorage.setItem('lume_lead', JSON.stringify({lead_type:'order',customer_name:payload.name,customer_phone:phoneFull,customer_email:emailVal,value:total,currency:'UAH',items:dlItems})); }catch(e){}
     cart={};
     window.location.href='/thanks';
     return;
@@ -934,6 +948,8 @@ document.getElementById('contactForm').addEventListener('submit',async e=>{
     const first=getFirst();
     const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'contact',name:name.value.trim(),phone:phoneNumber(itiContact,phone),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href})});
     if(!r.ok) throw new Error();
+    window.dataLayer=window.dataLayer||[];
+    window.dataLayer.push({event:'lead',lead_type:'contact',customer_name:name.value.trim(),customer_phone:phoneNumber(itiContact,phone)});
     document.getElementById('contactForm').reset();
     showToast('Дякуємо! Ми зв\'яжемося з вами ✓');
   }catch(err){

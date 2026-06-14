@@ -66,6 +66,7 @@ export default async function handler(req, res) {
     const items = Array.isArray(body.items) ? body.items : [];
     const city = String(body.city || '').trim().slice(0, 160);
     const npBranch = String(body.np_branch || '').trim().slice(0, 200);
+    const email = String(body.email || '').trim().slice(0, 200);
 
     if (!isContact && !items.length) {
       res.status(400).json({ error: 'empty order' });
@@ -98,6 +99,7 @@ export default async function handler(req, res) {
         `🛍️ Нове замовлення — LUMÉ\n\n` +
         `👤 Ім'я: ${name}\n` +
         `📞 Телефон: ${phone}\n` +
+        `📧 Email: ${email || '—'}\n` +
         `🏙️ Місто: ${city || '—'}\n` +
         `🏤 Відділення НП: ${npBranch || '—'}\n` +
         `💳 Оплата: ${pay || '—'}\n\n` +
@@ -112,6 +114,7 @@ export default async function handler(req, res) {
     await saveOrder({
       type: isContact ? 'contact' : 'order',
       name, phone,
+      email: email || null,
       city: isContact ? null : (city || null),
       np_branch: isContact ? null : (npBranch || null),
       pay: isContact ? null : (pay || null),

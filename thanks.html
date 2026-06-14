@@ -9,8 +9,17 @@
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){if(!i)return;w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',window.GTM_ID);</script>
 <!-- End Google Tag Manager -->
-<!-- Подія конверсії: спрацьовує на сторінці подяки (для GA4 / Facebook) -->
-<script>window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'order_complete'});</script>
+<!-- Подія конверсії 'lead' з даними замовлення (для GA4 / Facebook Pixel) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+(function(){
+  try{
+    var lead=JSON.parse(sessionStorage.getItem('lume_lead')||'null');
+    if(lead){ lead.event='lead'; window.dataLayer.push(lead); sessionStorage.removeItem('lume_lead'); }
+    else { window.dataLayer.push({event:'lead',lead_type:'order'}); }
+  }catch(e){ window.dataLayer.push({event:'lead',lead_type:'order'}); }
+})();
+</script>
 <style>
 :root{--bg:#faf7f4;--ink:#2b2724;--muted:#8a8079;--accent:#c08a5e;--accent-dark:#a06d44;--line:#e7ddd3;--shadow:0 8px 30px rgba(40,30,20,.08);--radius:16px}
 *{box-sizing:border-box;margin:0;padding:0}

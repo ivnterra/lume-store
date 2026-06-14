@@ -516,7 +516,7 @@ function renderOrders(){
       <td style="white-space:nowrap">${esc(dt)}</td>
       <td>${(o.type||'order')==='contact'?'Заявка':'Замовлення'}</td>
       <td>${esc(o.name||'')}</td>
-      <td style="white-space:nowrap">${esc(o.phone||'')}</td>
+      <td style="white-space:nowrap">${esc(o.phone||'')}${o.email?'<br><span style="font-size:12px;color:var(--muted)">'+esc(o.email)+'</span>':''}</td>
       <td>${delivery}</td>
       <td class="cell-items">${items}</td>
       <td style="white-space:nowrap">${o.total?o.total.toLocaleString('uk-UA')+' грн.':'—'}</td>
@@ -560,7 +560,7 @@ function flattenOrder(o){
     id:o.id,
     Дата:o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'',
     Тип:(o.type||'order')==='contact'?'Заявка':'Замовлення',
-    "Ім'я":o.name||'', Телефон:o.phone||'',
+    "Ім'я":o.name||'', Телефон:o.phone||'', Email:o.email||'',
     Місто:o.city||'', Відділення_НП:o.np_branch||'', Оплата:o.pay||'',
     Товари:items, Сума:o.total||0, Статус:STATUS_LABEL[o.status||'new']||o.status||'',
     utm_source:o.utm_source||'', utm_medium:o.utm_medium||'', utm_campaign:o.utm_campaign||'',

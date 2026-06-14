@@ -9,6 +9,7 @@ create table if not exists public.orders (
   type         text default 'order',     -- 'order' | 'contact'
   name         text,
   phone        text,
+  email        text,                       -- email (з форми, необов'язково)
   city         text,                       -- місто доставки (з форми)
   np_branch    text,                       -- відділення Нової Пошти (з форми)
   pay          text,
