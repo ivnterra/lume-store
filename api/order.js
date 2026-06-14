@@ -9,7 +9,7 @@
 function countryName(code) {
   if (!code) return '';
   try {
-    return new Intl.DisplayNames(['uk'], { type: 'region' }).of(code) || code;
+    return new Intl.DisplayNames(['en'], { type: 'region' }).of(code) || code;
   } catch (e) {
     return code;
   }
