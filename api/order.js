@@ -5,6 +5,16 @@
 //   SUPABASE_URL               — URL проєкту Supabase (для збереження у базу замовлень)
 //   SUPABASE_SERVICE_ROLE_KEY  — service_role / secret ключ (обходить RLS; тримати у секреті!)
 
+// ISO-код країни (UA) -> повна назва (Україна). Якщо не вийде — повертаємо код.
+function countryName(code) {
+  if (!code) return '';
+  try {
+    return new Intl.DisplayNames(['uk'], { type: 'region' }).of(code) || code;
+  } catch (e) {
+    return code;
+  }
+}
+
 async function saveOrder(record) {
   const SB = process.env.SUPABASE_URL;
   const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -64,7 +74,8 @@ export default async function handler(req, res) {
 
     // ---- геолокація за IP (заголовки Vercel) ----
     const dec = v => { try { return decodeURIComponent(v); } catch (e) { return v; } };
-    const geoCountry = String(req.headers['x-vercel-ip-country'] || '').trim();
+    const geoCountryCode = String(req.headers['x-vercel-ip-country'] || '').trim();
+    const geoCountry = countryName(geoCountryCode); // повна назва, напр. "Україна"
     const geoRegion = String(req.headers['x-vercel-ip-country-region'] || '').trim();
     const geoCity = dec(String(req.headers['x-vercel-ip-city'] || '').trim());
 
