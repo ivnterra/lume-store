@@ -20,6 +20,28 @@ window.dataLayer=window.dataLayer||[];
   }catch(e){ window.dataLayer.push({event:'lead',lead_type:'order'}); }
 })();
 </script>
+<!-- Подія 'purchase' (відправка заявки = покупка) для ecom (Meta/GA4) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+(function(){
+  try{
+    var p=JSON.parse(sessionStorage.getItem('lume_purchase')||'null');
+    if(p){
+      window.dataLayer.push({ecommerce:null});
+      window.dataLayer.push({
+        event:'purchase',
+        currency:p.currency||'UAH', value:p.value,
+        content_type:'product', content_ids:p.content_ids, contents:p.contents,
+        content_name:p.content_name, num_items:p.num_items,
+        transaction_id:p.transaction_id, event_id:p.event_id,
+        customer_name:p.customer_name, customer_phone:p.customer_phone, customer_email:p.customer_email,
+        ecommerce:{transaction_id:p.transaction_id, currency:p.currency||'UAH', value:p.value, items:p.items}
+      });
+      sessionStorage.removeItem('lume_purchase');
+    }
+  }catch(e){}
+})();
+</script>
 <style>
 :root{--bg:#faf7f4;--ink:#2b2724;--muted:#8a8079;--accent:#c08a5e;--accent-dark:#a06d44;--line:#e7ddd3;--shadow:0 8px 30px rgba(40,30,20,.08);--radius:16px}
 *{box-sizing:border-box;margin:0;padding:0}

@@ -795,6 +795,7 @@ function addToCart(id,size){
   updateCart();
   showToast('Додано в кошик ✓');
   pulseCart();
+  pushEcom('add_to_cart',[{id:+id,size:size||'',qty:1}]);
 }
 function changeQty(k,d){
   if(!cart[k])return;
@@ -806,6 +807,35 @@ function removeItem(k){delete cart[k];updateCart();}
 
 function cartItemsCount(){return Object.values(cart).reduce((a,i)=>a+i.qty,0);}
 function cartTotal(){return Object.values(cart).reduce((s,i)=>s+PRODUCTS.find(p=>p.id===i.id).price*i.qty,0);}
+
+/* ---------- ECOMMERCE dataLayer (Meta CAPI + GA4) ---------- */
+function genEventId(){ return 'lume.'+Date.now()+'.'+Math.random().toString(36).slice(2,10); }
+function ecomData(entries){
+  var contents=[], ids=[], names=[], items=[], num=0, value=0;
+  entries.forEach(function(it){
+    var p=PRODUCTS.find(function(x){return x.id===it.id;});
+    if(!p) return;
+    var cid=p.sku||String(p.id);
+    contents.push({id:cid, quantity:it.qty, item_price:p.price});
+    ids.push(cid); names.push(p.title);
+    items.push({item_id:cid, item_name:p.title, price:p.price, quantity:it.qty, item_variant:it.size||''});
+    num+=it.qty; value+=p.price*it.qty;
+  });
+  return {content_ids:ids, contents:contents, content_name:names.join(', '), num_items:num, value:value, items:items};
+}
+function pushEcom(eventName, entries, extra){
+  var d=ecomData(entries);
+  window.dataLayer=window.dataLayer||[];
+  window.dataLayer.push({ecommerce:null});
+  window.dataLayer.push(Object.assign({
+    event:eventName,
+    currency:'UAH', value:d.value,
+    content_type:'product', content_ids:d.content_ids, contents:d.contents,
+    content_name:d.content_name, num_items:d.num_items,
+    event_id:genEventId(),
+    ecommerce:{currency:'UAH', value:d.value, items:d.items}
+  }, extra||{}));
+}
 
 function updateCart(){
   document.getElementById('cartCount').textContent=cartItemsCount();
@@ -860,6 +890,7 @@ function openOrder(){
     sum.innerHTML+=`<div class="row"><span>${p.title}${it.size?' ('+it.size+')':''} × ${it.qty}</span><span>${fmt(p.price*it.qty)}</span></div>`;
   });
   sum.innerHTML+=`<div class="row" style="font-weight:700;border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><span>Разом:</span><span>${fmt(cartTotal())}</span></div>`;
+  pushEcom('begin_checkout', Object.values(cart));
   document.getElementById('modal').classList.add('open');
   document.getElementById('overlay').classList.add('open');
 }
@@ -923,6 +954,7 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
     if(!r.ok) throw new Error();
     // дані для аналітики (подія 'lead' спрацює на /thanks)
     try{ sessionStorage.setItem('lume_lead', JSON.stringify({lead_type:'order',customer_name:payload.name,customer_phone:phoneFull,customer_email:emailVal,value:total,currency:'UAH',items:dlItems})); }catch(e){}
+    try{ var _pd=ecomData(Object.values(cart)); sessionStorage.setItem('lume_purchase', JSON.stringify({transaction_id:'order-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),event_id:genEventId(),value:total,currency:'UAH',content_ids:_pd.content_ids,contents:_pd.contents,content_name:_pd.content_name,num_items:_pd.num_items,items:_pd.items,customer_name:payload.name,customer_phone:phoneFull,customer_email:emailVal})); }catch(e){}
     cart={};
     window.location.href='/thanks';
     return;
