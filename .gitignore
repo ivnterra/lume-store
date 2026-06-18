@@ -1,0 +1,8 @@
+# Секрети (НЕ комітити) — Supabase service_role та інші ключі
+.supabase-service-key
+.env
+.env.local
+*.key
+
+# macOS
+.DS_Store
