@@ -43,7 +43,7 @@ a{color:inherit;text-decoration:none}
 /* HEADER */
 header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
-.logo{font-size:24px;font-weight:800;letter-spacing:3px}
+.logo{font-size:24px;font-weight:800;letter-spacing:3px;cursor:pointer}
 .logo span{color:var(--accent)}
 .nav-links{display:flex;gap:30px;align-items:center}
 .nav-links a{font-size:15px;font-weight:500;color:var(--ink);transition:.2s}
@@ -255,7 +255,7 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 <!-- HEADER -->
 <header>
   <div class="container nav">
-    <div class="logo">LUM<span>É</span></div>
+    <a href="/" class="logo" onclick="goHome(event)" aria-label="На головну">LUM<span>É</span></a>
     <nav class="nav-links" id="navLinks">
       <a href="#catalog" onclick="closeNav()">Каталог</a>
       <a href="#about" onclick="closeNav()">Про нас</a>
@@ -800,6 +800,15 @@ function closeDetail(fromRoute){
     // повертаємо каталог на те саме місце, звідки відкрили картку
     window.scrollTo(0, catalogScrollY);
   }
+}
+function goHome(e){
+  if(e) e.preventDefault();
+  closeNav();
+  const pv=document.getElementById('productView');
+  if(pv && pv.classList.contains('open')) closeDetail();
+  if(location.pathname!=='/'){ try{ history.pushState({},'','/'); }catch(err){} }
+  document.title='LUMÉ STORE — Магазин одягу та аксесуарів';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 function routeFromPath(){
   const m=location.pathname.match(/^\/product\/(\d+)/);
