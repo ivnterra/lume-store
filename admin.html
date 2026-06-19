@@ -67,6 +67,18 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 .size-pick{display:flex;flex-wrap:wrap;gap:8px}
 .size-pick label{display:inline-flex;align-items:center;gap:6px;font-weight:500;background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer;margin:0}
 .size-pick input{width:auto}
+.vcolor{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;background:#faf7f4}
+.vcolor.off{opacity:.55}
+.vcolor-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.vcolor-head input[type=text]{flex:1}
+.vcolor-head input[type=checkbox]{width:auto}
+.vsizes{display:flex;flex-wrap:wrap;gap:6px}
+.vsize{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:13px;font-weight:500;background:#fff}
+.vsize.off{opacity:.5;text-decoration:line-through}
+.vsize input{width:auto;margin:0}
+.vrm{background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px;padding:0 2px;line-height:1}
+.vadd-size{display:flex;gap:6px;margin-top:8px}
+.vadd-size input{max-width:180px}
 .gallery-edit{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
 .gthumb{width:84px}
 .gthumb .imgbox{position:relative;width:84px;height:108px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#efe7df}
@@ -239,9 +251,15 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
         </div>
       </div>
       <div class="field">
-        <label>Розміри</label>
+        <label>Розміри <span class="muted">(використовуються, якщо немає кольорів нижче)</span></label>
         <div class="size-pick" id="sizePick"></div>
         <input type="text" id="psizesCustom" placeholder="або введіть свої через кому: XL, 2XL, 3XL" style="margin-top:8px">
+      </div>
+      <div class="field">
+        <label>Кольори та розміри по кольору</label>
+        <div class="muted" style="margin-bottom:8px">Зніміть галочку, щоб вимкнути колір або окремий розмір (зникне на сайті). Якщо кольорів немає — на сайті показуються загальні розміри вище.</div>
+        <div id="variantsBox"></div>
+        <button type="button" class="btn btn-sm btn-ghost" id="addColorBtn">+ Додати колір</button>
       </div>
       <div class="field">
         <label>Опис</label>
@@ -421,7 +439,7 @@ async function loadList(){
       <div class="thumb">${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:'🛍️'}</div>
       <div class="pinfo">
         <div class="t">${esc(p.title)}${p.badge?`<span class="tag ${p.badge}">${BADGE_LABEL[p.badge]||esc(p.badge)}</span>`:''}${p.in_stock===false?'<span class="tag" style="background:#6f6a66">Немає в наявності</span>':''}</div>
-        <div class="m">${esc(p.category||'—')} · Арт: ${esc(p.sku||'—')} · ${(p.sizes||[]).join(', ')||'—'} · 📷 ${(Array.isArray(p.images)?p.images.length:(p.image_url?1:0))}</div>
+        <div class="m">${esc(p.category||'—')} · Арт: ${esc(p.sku||'—')} · ${(p.sizes||[]).join(', ')||'—'} · 📷 ${(Array.isArray(p.images)?p.images.length:(p.image_url?1:0))}${Array.isArray(p.variants)&&p.variants.length?` · 🎨 ${p.variants.length}`:''}</div>
         <div class="pr">${(p.price||0).toLocaleString('uk-UA')} грн.${p.old_price?`<span class="old">${p.old_price.toLocaleString('uk-UA')} грн.</span>`:''}</div>
       </div>
       <div class="prow-actions">
@@ -458,6 +476,8 @@ function openForm(id){
   const custom = sizes.filter(s=>!SIZES_PRESET.includes(s));
   if(custom.length) document.getElementById('psizesCustom').value=custom.join(', ');
   buildSizePicker(sizes);
+  formVariants = (p && Array.isArray(p.variants)) ? JSON.parse(JSON.stringify(p.variants)) : [];
+  renderVariants();
   document.getElementById('pinstock').checked = p ? (p.in_stock!==false) : true;
   formImages = p ? ((Array.isArray(p.images)&&p.images.length)?p.images.slice():(p.image_url?[p.image_url]:[])) : [];
   renderGallery();
@@ -498,6 +518,41 @@ function collectSizes(){
   return [...new Set([...checked,...custom])];
 }
 
+/* ---------- варіанти (кольори → розміри) ---------- */
+let formVariants=[];
+function renderVariants(){
+  const box=document.getElementById('variantsBox');
+  if(!formVariants.length){ box.innerHTML='<div class="muted" style="margin-bottom:8px">Кольорів ще немає. Натисніть «+ Додати колір».</div>'; return; }
+  box.innerHTML=formVariants.map((v,ci)=>`
+    <div class="vcolor${v.active===false?' off':''}">
+      <div class="vcolor-head">
+        <input type="checkbox" ${v.active!==false?'checked':''} onchange="vToggleColor(${ci},this.checked)" title="Колір активний">
+        <input type="text" value="${esc(v.color||'')}" oninput="vRename(${ci},this.value)" placeholder="Назва кольору (укр.)">
+        <button type="button" class="vrm" onclick="vDelColor(${ci})" title="Видалити колір">🗑️</button>
+      </div>
+      <div class="vsizes">
+        ${(v.sizes||[]).map((s,si)=>`<span class="vsize${s.active===false?' off':''}"><input type="checkbox" ${s.active!==false?'checked':''} onchange="vToggleSize(${ci},${si},this.checked)">${esc(s.size)}<button type="button" class="vrm" onclick="vDelSize(${ci},${si})" title="Видалити розмір">×</button></span>`).join('')}
+      </div>
+      <div class="vadd-size">
+        <input type="text" id="vAddSize${ci}" placeholder="Додати розмір: S, M, L-XL…" onkeydown="if(event.key==='Enter'){event.preventDefault();vAddSize(${ci});}">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="vAddSize(${ci})">+ розмір</button>
+      </div>
+    </div>`).join('');
+}
+function vToggleColor(ci,on){ formVariants[ci].active=on; renderVariants(); }
+function vRename(ci,val){ formVariants[ci].color=val; }
+function vDelColor(ci){ if(!confirm('Видалити колір «'+(formVariants[ci].color||'')+'»?'))return; formVariants.splice(ci,1); renderVariants(); }
+function vToggleSize(ci,si,on){ formVariants[ci].sizes[si].active=on; renderVariants(); }
+function vDelSize(ci,si){ formVariants[ci].sizes.splice(si,1); renderVariants(); }
+function vAddSize(ci){ const inp=document.getElementById('vAddSize'+ci); const val=(inp.value||'').trim(); if(!val)return; (formVariants[ci].sizes=formVariants[ci].sizes||[]).push({size:val,active:true}); inp.value=''; renderVariants(); document.getElementById('vAddSize'+ci).focus(); }
+document.getElementById('addColorBtn').onclick=()=>{ formVariants.push({color:'',active:true,sizes:[]}); renderVariants(); };
+function collectVariants(){
+  return formVariants
+    .map(v=>({color:(v.color||'').trim(), active:v.active!==false,
+              sizes:(v.sizes||[]).map(s=>({size:String(s.size||'').trim(), active:s.active!==false})).filter(s=>s.size)}))
+    .filter(v=>v.color || v.sizes.length);
+}
+
 document.getElementById('prodForm').addEventListener('submit', async e=>{
   e.preventDefault();
   const msg=document.getElementById('formMsg'); msg.className='msg err'; msg.textContent='';
@@ -512,6 +567,7 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
       badge:document.getElementById('pbadge').value||null,
       sort:parseInt(document.getElementById('psort').value)||0,
       sizes:collectSizes(),
+      variants:collectVariants(),
       description:document.getElementById('pdesc').value.trim()||null,
       in_stock:document.getElementById('pinstock').checked,
       images:formImages,

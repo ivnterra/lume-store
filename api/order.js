@@ -95,7 +95,10 @@ export default async function handler(req, res) {
         `📞 Телефон: ${phone}`;
     } else {
       const lines = items
-        .map(it => `• ${String(it.title || '').slice(0, 200)}${it.size ? ` (${it.size})` : ''} × ${Number(it.qty) || 1} — ${money(it.sum)} грн.`)
+        .map(it => {
+          const variant = [it.color, it.size].filter(Boolean).join(', ');
+          return `• ${String(it.title || '').slice(0, 200)}${variant ? ` (${variant})` : ''} × ${Number(it.qty) || 1} — ${money(it.sum)} грн.`;
+        })
         .join('\n');
       text =
         `🛍️ Нове замовлення — LUMÉ\n\n` +

@@ -107,9 +107,10 @@ async function sendToLpCrm(rec) {
       products = list;
     }
     items.forEach(it => {
-      const size = it.size ? ` (розмір ${it.size})` : '';
+      const variant = [it.color ? `колір ${it.color}` : '', it.size ? `розмір ${it.size}` : ''].filter(Boolean).join(', ');
+      const vlabel = variant ? ` (${variant})` : '';
       const sku = it.sku ? ` [${it.sku}]` : '';
-      commentLines.push(`• ${it.title || ''}${sku}${size} × ${Number(it.qty) || 1} — ${Math.round(Number(it.price) || 0)} грн.`);
+      commentLines.push(`• ${it.title || ''}${sku}${vlabel} × ${Number(it.qty) || 1} — ${Math.round(Number(it.price) || 0)} грн.`);
     });
     if (rec.total) commentLines.push(`Разом: ${Math.round(Number(rec.total))} грн.`);
     if (rec.pay) commentLines.push(`Оплата: ${rec.pay}`);

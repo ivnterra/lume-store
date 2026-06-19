@@ -91,10 +91,17 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .price-now{font-size:21px;font-weight:700;color:var(--ink)}
 .price-old{font-size:15px;color:var(--muted);text-decoration:line-through}
 .size-label{font-size:13px;color:var(--muted);margin-bottom:8px}
+.color-label{font-size:13px;color:var(--muted);margin-bottom:8px}
+.colors{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.color-chip{padding:7px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;color:var(--ink);text-transform:capitalize}
+.color-chip:hover{border-color:var(--accent)}
+.color-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .sizes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 .size-chip{min-width:44px;padding:8px 6px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:.15s;color:var(--ink)}
 .size-chip:hover{border-color:var(--accent)}
 .size-chip.active{border-color:var(--ink);border-width:1.5px}
+.size-chip.oos{text-decoration:line-through;color:var(--muted);background:#f5f5f5;border-style:dashed;cursor:not-allowed;opacity:.65}
+.size-chip.oos:hover{border-color:var(--line)}
 .card-actions{display:flex;gap:10px;margin-top:auto}
 .card-actions .btn{flex:1;padding:12px 8px;font-size:14px}
 .btn-detail{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
@@ -576,7 +583,9 @@ function getFirst(){ try{return JSON.parse(localStorage.getItem('lume_first')||'
 let cart = {};          // key "id|size" -> {id, size, qty}
 let currentFilter = 'Усі';
 let cardSize = {};      // product id -> chosen size (catalog cards)
+let cardColor = {};     // product id -> chosen color (catalog cards)
 let detailSize = null;  // chosen size in detail view
+let detailColor = '';   // chosen color in detail view
 let detailId = null;
 let detailImages = []; // gallery images of opened product
 let catalogScrollY = 0; // scroll position of the catalog before opening a product
@@ -608,7 +617,9 @@ async function loadProducts(){
       return {
         id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
         badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?sortSizes(r.sizes):ONE_SIZE,
-        images:imgs, image:imgs[0]||null, description:r.description||'', in_stock:r.in_stock!==false
+        images:imgs, image:imgs[0]||null, description:r.description||'', in_stock:r.in_stock!==false,
+        oos:(Array.isArray(r.oos_sizes)?r.oos_sizes:[]),
+        variants:Array.isArray(r.variants)?r.variants:[]
       };
     });
   }catch(e){
@@ -653,16 +664,46 @@ function sortSizes(arr){
   // сортуємо за початковим розміром (для діапазонів типу «2XL-3XL» — за «2XL»)
   return arr.slice().sort((a,b)=>sizeRank(String(a).split('-')[0])-sizeRank(String(b).split('-')[0]));
 }
-function sizeChips(p, selected, ctx){
-  return p.sizes.map(s=>{
+function isOOS(p,s){ return (p.oos||[]).some(x=>String(x).toUpperCase()===String(s).toUpperCase()); }
+function firstAvailable(p){ return p.sizes.find(s=>!isOOS(p,s)) || p.sizes[0]; }
+function jsq(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+/* ---------- ВАРІАНТИ (кольори → розміри) ---------- */
+function activeVariants(p){ return (p.variants||[]).filter(v=>v&&v.active!==false&&Array.isArray(v.sizes)&&v.sizes.some(s=>s&&s.active!==false)); }
+function hasColors(p){ return activeVariants(p).length>0; }
+function colorsOf(p){ return activeVariants(p).map(v=>v.color); }
+function variantByColor(p,c){ return activeVariants(p).find(v=>v.color===c); }
+function firstColor(p){ const a=activeVariants(p); return a.length?a[0].color:''; }
+function sizesOfColor(p,c){
+  const v=variantByColor(p,c)||activeVariants(p)[0];
+  return v ? sortSizes(v.sizes.filter(s=>s&&s.active!==false).map(s=>s.size)) : [];
+}
+function colorChips(p, selected, ctx){
+  return colorsOf(p).map(c=>{
+    const act = c===selected ? ' active' : '';
+    const handler = ctx==='card' ? `selectCardColor(${p.id},'${jsq(c)}',this)` : `selectDetailColor('${jsq(c)}',this)`;
+    return `<button type="button" class="color-chip${act}" onclick="${handler}">${c}</button>`;
+  }).join('');
+}
+function sizeChips(p, selected, ctx, sizesList){
+  const list = sizesList || p.sizes;
+  return list.map(s=>{
+    if(!sizesList && isOOS(p,s)) return `<button type="button" class="size-chip oos" disabled aria-disabled="true" title="Тимчасово немає в наявності">${s}</button>`;
     const act = s===selected ? ' active' : '';
-    const handler = ctx==='card' ? `selectCardSize(${p.id},'${s}',this)` : `selectDetailSize('${s}',this)`;
+    const handler = ctx==='card' ? `selectCardSize(${p.id},'${jsq(s)}',this)` : `selectDetailSize('${jsq(s)}',this)`;
     return `<button type="button" class="size-chip${act}" onclick="${handler}">${s}</button>`;
   }).join('');
 }
 
 function cardHTML(p){
-  if(cardSize[p.id]===undefined) cardSize[p.id]=p.sizes[0];
+  const colors = hasColors(p);
+  if(colors){
+    if(cardColor[p.id]===undefined) cardColor[p.id]=firstColor(p);
+    const szs=sizesOfColor(p,cardColor[p.id]);
+    if(cardSize[p.id]===undefined || !szs.includes(cardSize[p.id])) cardSize[p.id]=szs[0];
+  }else{
+    if(cardSize[p.id]===undefined) cardSize[p.id]=firstAvailable(p);
+  }
   const oos = p.in_stock===false;
   return `
     <div class="card-img" onclick="openDetail(${p.id})" style="cursor:pointer">
@@ -678,8 +719,9 @@ function cardHTML(p){
         <span class="price-now">${fmt(p.price)}</span>
         ${p.old?`<span class="price-old">${fmt(p.old)}</span>`:''}
       </div>
+      ${colors?`<div class="color-label">Колір</div><div class="colors">${colorChips(p, cardColor[p.id], 'card')}</div>`:''}
       <div class="size-label">Розмір</div>
-      <div class="sizes">${sizeChips(p, cardSize[p.id], 'card')}</div>
+      <div class="sizes">${colors?sizeChips(p, cardSize[p.id], 'card', sizesOfColor(p, cardColor[p.id])):sizeChips(p, cardSize[p.id], 'card')}</div>
       <div class="card-actions">
         ${oos
           ? `<button class="btn btn-detail" style="flex:1" onclick="openDetail(${p.id})">↘ Детальніше</button>`
@@ -704,8 +746,20 @@ function selectCardSize(id,size,el){
   el.parentElement.querySelectorAll('.size-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
 }
+function selectCardColor(id,color,el){
+  const p=PRODUCTS.find(x=>x.id===id); if(!p)return;
+  cardColor[id]=color;
+  const card=el.closest('.card');
+  card.querySelectorAll('.color-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const szs=sizesOfColor(p,color);
+  cardSize[id]=szs[0];
+  const sizesBox=card.querySelector('.sizes');
+  if(sizesBox) sizesBox.innerHTML=sizeChips(p, cardSize[id], 'card', szs);
+}
 function orderFromCard(id){
-  addToCart(id, cardSize[id]);
+  const p=PRODUCTS.find(x=>x.id===id);
+  addToCart(id, cardSize[id], (p&&hasColors(p))?cardColor[id]:'');
   openCart();
 }
 
@@ -723,7 +777,9 @@ function openDetail(id, fromRoute){
     catalogScrollY = window.scrollY || window.pageYOffset || 0;
   }
   detailId=p.id;
-  detailSize=p.sizes[0];
+  const colors = hasColors(p);
+  detailColor = colors ? firstColor(p) : '';
+  detailSize = colors ? sizesOfColor(p, detailColor)[0] : firstAvailable(p);
   const oos = p.in_stock===false;
   detailImages = imagesOf(p);
   const badgeHTML = p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:'';
@@ -745,8 +801,9 @@ function openDetail(id, fromRoute){
         <span class="price-now">${fmt(p.price)}</span>
         ${p.old?`<span class="price-old">${fmt(p.old)}</span>`:''}
       </div>
+      ${colors?`<div class="pv-section-label">Колір</div><div class="colors">${colorChips(p, detailColor, 'detail')}</div>`:''}
       <div class="pv-section-label">Розмір</div>
-      <div class="sizes">${sizeChips(p, detailSize, 'detail')}</div>
+      <div class="sizes">${colors?sizeChips(p, detailSize, 'detail', sizesOfColor(p, detailColor)):sizeChips(p, detailSize, 'detail')}</div>
       <div class="pv-desc">${descFor(p)}</div>
       ${oos
         ? `<button class="btn" disabled style="opacity:.5;cursor:not-allowed">Немає в наявності</button>`
@@ -765,6 +822,16 @@ function selectDetailSize(size,el){
   el.parentElement.querySelectorAll('.size-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
 }
+function selectDetailColor(color,el){
+  const p=PRODUCTS.find(x=>x.id===detailId); if(!p)return;
+  detailColor=color;
+  el.parentElement.querySelectorAll('.color-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const szs=sizesOfColor(p,color);
+  detailSize=szs[0];
+  const sizesBox=document.querySelector('#pvWrap .sizes');
+  if(sizesBox) sizesBox.innerHTML=sizeChips(p, detailSize, 'detail', szs);
+}
 function pvShow(i){
   const main=document.getElementById('pvMain');
   if(!main||!detailImages[i])return;
@@ -773,7 +840,8 @@ function pvShow(i){
   document.querySelectorAll('.pv-thumb').forEach((t,j)=>t.classList.toggle('active',j===i));
 }
 function orderFromDetail(){
-  addToCart(detailId, detailSize);
+  const p=PRODUCTS.find(x=>x.id===detailId);
+  addToCart(detailId, detailSize, (p&&hasColors(p))?detailColor:'');
   closeDetail();
   openCart();
 }
@@ -818,17 +886,17 @@ function routeFromPath(){
 window.addEventListener('popstate', routeFromPath);
 
 /* ---------- CART ---------- */
-function ckey(id,size){return id+'|'+(size||'');}
-function addToCart(id,size){
+function ckey(id,size,color){return id+'|'+(size||'')+'|'+(color||'');}
+function addToCart(id,size,color){
   const prod=PRODUCTS.find(x=>x.id==id);
   if(prod && prod.in_stock===false){ showToast('Товару немає в наявності'); return; }
-  const k=ckey(id,size);
+  const k=ckey(id,size,color);
   if(cart[k]) cart[k].qty++;
-  else cart[k]={id:+id,size:size||'',qty:1};
+  else cart[k]={id:+id,size:size||'',color:color||'',qty:1};
   updateCart();
   showToast('Додано в кошик ✓');
   pulseCart();
-  pushEcom('add_to_cart',[{id:+id,size:size||'',qty:1}]);
+  pushEcom('add_to_cart',[{id:+id,size:size||'',color:color||'',qty:1}]);
 }
 function changeQty(k,d){
   if(!cart[k])return;
@@ -851,7 +919,7 @@ function ecomData(entries){
     var cid=p.sku||String(p.id);
     contents.push({id:cid, quantity:it.qty, item_price:p.price});
     ids.push(cid); names.push(p.title);
-    items.push({item_id:cid, item_name:p.title, price:p.price, quantity:it.qty, item_variant:it.size||''});
+    items.push({item_id:cid, item_name:p.title, price:p.price, quantity:it.qty, item_variant:[it.color,it.size].filter(Boolean).join(' / ')});
     num+=it.qty; value+=p.price*it.qty;
   });
   return {content_ids:ids, contents:contents, content_name:names.join(', '), num_items:num, value:value, items:items};
@@ -888,6 +956,7 @@ function updateCart(){
         <div class="thumb" style="overflow:hidden;${p.image?'':'background:linear-gradient(135deg,'+prodColor(p)+','+shade(prodColor(p))+')'}">${p.image?`<img src="${p.image}" alt="" style="width:100%;height:100%;object-fit:cover">`:prodIcon(p)}</div>
         <div class="ci-info">
           <div class="ci-title">${p.title}</div>
+          ${it.color?`<div style="font-size:12px;color:var(--muted)">Колір: ${it.color}</div>`:''}
           ${it.size?`<div style="font-size:12px;color:var(--muted)">Розмір: ${it.size}</div>`:''}
           <div class="ci-price">${fmt(p.price)}</div>
           <div class="qty">
@@ -920,7 +989,8 @@ function openOrder(){
   sum.innerHTML='';
   Object.keys(cart).forEach(k=>{
     const it=cart[k];const p=PRODUCTS.find(x=>x.id===it.id);
-    sum.innerHTML+=`<div class="row"><span>${p.title}${it.size?' ('+it.size+')':''} × ${it.qty}</span><span>${fmt(p.price*it.qty)}</span></div>`;
+    const vlabel=[it.color,it.size].filter(Boolean).join(', ');
+    sum.innerHTML+=`<div class="row"><span>${p.title}${vlabel?' ('+vlabel+')':''} × ${it.qty}</span><span>${fmt(p.price*it.qty)}</span></div>`;
   });
   sum.innerHTML+=`<div class="row" style="font-weight:700;border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><span>Разом:</span><span>${fmt(cartTotal())}</span></div>`;
   pushEcom('begin_checkout', Object.values(cart));
@@ -974,8 +1044,8 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
   if(!ok)return;
   const pay=document.querySelector('input[name="pay"]:checked').value;
-  const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,sku:p.sku||'',price:p.price,size:it.size,qty:it.qty,sum:p.price*it.qty};});
-  const dlItems=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {item_name:p.title,item_id:p.sku||String(p.id),price:p.price,quantity:it.qty,size:it.size};});
+  const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,sku:p.sku||'',price:p.price,size:it.size,color:it.color||'',qty:it.qty,sum:p.price*it.qty};});
+  const dlItems=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {item_name:p.title,item_id:p.sku||String(p.id),price:p.price,quantity:it.qty,size:it.size,color:it.color||''};});
   const total=cartTotal();
   const first=getFirst();
   const phoneFull=phoneNumber(itiOrder,phone);
