@@ -577,6 +577,7 @@ let cardSize = {};      // product id -> chosen size (catalog cards)
 let detailSize = null;  // chosen size in detail view
 let detailId = null;
 let detailImages = []; // gallery images of opened product
+let catalogScrollY = 0; // scroll position of the catalog before opening a product
 
 /* ---------- RENDER CATALOG ---------- */
 const grid = document.getElementById('grid');
@@ -700,6 +701,10 @@ function descFor(p){
 function openDetail(id, fromRoute){
   const p=PRODUCTS.find(x=>x.id==id);
   if(!p)return;
+  // запам'ятовуємо позицію каталогу лише при першому вході (не при переході товар→товар)
+  if(!document.getElementById('productView').classList.contains('open')){
+    catalogScrollY = window.scrollY || window.pageYOffset || 0;
+  }
   detailId=p.id;
   detailSize=p.sizes[0];
   const oos = p.in_stock===false;
@@ -775,6 +780,8 @@ function closeDetail(fromRoute){
   if(wasOpen){
     document.title='LUMÉ STORE — Магазин одягу та аксесуарів';
     if(!fromRoute){ try{ history.pushState({},'','/'); }catch(e){} }
+    // повертаємо каталог на те саме місце, звідки відкрили картку
+    window.scrollTo(0, catalogScrollY);
   }
 }
 function routeFromPath(){
