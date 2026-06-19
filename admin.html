@@ -131,6 +131,7 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
       <div class="tabs">
         <button class="tab-btn active" data-tab="products">Товари</button>
         <button class="tab-btn" data-tab="orders">Замовлення</button>
+        <button class="tab-btn" data-tab="users" style="display:none">Користувачі</button>
       </div>
       <div class="topbar-actions">
         <a class="btn btn-ghost btn-sm" href="/" target="_blank">↗ Відкрити сайт</a>
@@ -173,6 +174,20 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
       <input type="text" id="oSearch" placeholder="Пошук: ім'я, телефон, UTM…">
     </div>
     <div id="ordersBox"></div>
+  </div>
+
+  <!-- TAB: користувачі -->
+  <div class="wrap" id="tabUsers" style="display:none">
+    <div class="head-row">
+      <h2>Користувачі адмін-панелі</h2>
+      <button class="btn" id="addUserBtn">+ Додати користувача</button>
+    </div>
+    <p class="muted" style="margin-bottom:16px">
+      <b>Адміністратор</b> — повний доступ і керування користувачами.
+      <b>Менеджер</b> — лише вкладка «Замовлення».
+      <b>Контент-менеджер</b> — лише вкладка «Товари».
+    </p>
+    <div id="usersBox"></div>
   </div>
 </div>
 
@@ -253,10 +268,52 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
   </div>
 </div>
 
+<!-- USER MODAL -->
+<div class="overlay" id="userOverlay">
+  <div class="modal" style="max-width:420px">
+    <button class="close" id="userModalClose">×</button>
+    <h3>Новий користувач</h3>
+    <form id="userForm">
+      <div class="field">
+        <label>Email *</label>
+        <input type="email" id="uEmail" autocomplete="off" required>
+      </div>
+      <div class="field">
+        <label>Пароль * <span class="muted">(мінімум 8 символів)</span></label>
+        <input type="text" id="uPassword" autocomplete="new-password" minlength="8" required>
+        <div class="muted" style="margin-top:6px">Передайте пароль користувачу — він зможе змінити його кнопкою «🔑 Пароль».</div>
+      </div>
+      <div class="field">
+        <label>Роль *</label>
+        <select id="uRole">
+          <option value="manager">Менеджер — лише Замовлення</option>
+          <option value="content">Контент-менеджер — лише Товари</option>
+          <option value="admin">Адміністратор — повний доступ</option>
+        </select>
+      </div>
+      <div class="msg err" id="userFormMsg"></div>
+      <div class="form-foot">
+        <button type="button" class="btn btn-ghost" id="userCancelBtn">Скасувати</button>
+        <button type="submit" class="btn" id="userSaveBtn">Створити</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 const SIZES_PRESET=['XL','2XL','3XL','4XL','5XL','Один розмір'];
 const BADGE_LABEL={new:'НОВИНКА',sale:'SALE',hit:'ХІТ'};
 let sb=null, products=[], formImages=[];
+
+/* ---------- ролі та доступ ---------- */
+const ROLE_LABELS={admin:'Адміністратор',manager:'Менеджер',content:'Контент-менеджер'};
+const ROLE_ACCESS={
+  admin:['products','orders','users'],
+  manager:['orders'],
+  content:['products']
+};
+let currentUser=null, currentRole='admin';
+function canAccess(tab){ return (ROLE_ACCESS[currentRole]||[]).includes(tab); }
 
 function renderGallery(){
   const box=document.getElementById('galleryEdit');
@@ -323,10 +380,26 @@ document.getElementById('pwdBtn').addEventListener('click', async ()=>{
   else{ alert('Пароль успішно змінено. Наступний вхід — з новим паролем.'); }
 });
 
-function showDashboard(){
+async function showDashboard(){
   document.getElementById('loginView').style.display='none';
   document.getElementById('dashView').style.display='block';
-  loadList();
+
+  // визначаємо роль поточного користувача
+  try{
+    const {data}=await sb.auth.getUser();
+    currentUser=data&&data.user||null;
+  }catch(e){ currentUser=null; }
+  const meta=(currentUser&&currentUser.app_metadata)||{};
+  currentRole = meta.role || 'admin'; // акаунт-власник без ролі трактуємо як admin
+  if(!ROLE_ACCESS[currentRole]) currentRole='admin';
+
+  // показуємо лише дозволені вкладки
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.style.display = canAccess(b.dataset.tab) ? '' : 'none';
+  });
+  // активуємо першу доступну вкладку
+  const first=(ROLE_ACCESS[currentRole]||['products'])[0];
+  switchTab(first);
 }
 
 /* ---------- list ---------- */
@@ -472,14 +545,17 @@ const STATUS_LABEL={new:'Новий',processing:'В обробці',done:'Вик
 let orders=[], ordersFiltered=[];
 
 // перемикання вкладок
-document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  const t=b.dataset.tab;
+function switchTab(t){
+  if(!canAccess(t)) return;
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.toggle('active', x.dataset.tab===t));
   document.getElementById('tabProducts').style.display = t==='products'?'block':'none';
   document.getElementById('tabOrders').style.display   = t==='orders'?'block':'none';
+  document.getElementById('tabUsers').style.display    = t==='users'?'block':'none';
+  if(t==='products' && !products.length) loadList();
   if(t==='orders' && !orders.length) loadOrders();
-});
+  if(t==='users') loadUsers();
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 
 async function loadOrders(){
   const box=document.getElementById('ordersBox');
@@ -610,6 +686,115 @@ document.getElementById('expXlsx').onclick=()=>{
   const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Замовлення');
   XLSX.writeFile(wb, `orders_${stamp()}.xlsx`);
 };
+
+/* ===================== КОРИСТУВАЧІ ===================== */
+let users=[];
+
+// виклик serverless /api/users з токеном поточного адміна
+async function usersApi(payload){
+  const {data}=await sb.auth.getSession();
+  const token=data&&data.session&&data.session.access_token;
+  if(!token) throw new Error('Сесія завершилась — увійдіть знову');
+  const r=await fetch('/api/users',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body:JSON.stringify(payload)
+  });
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error||('Помилка '+r.status));
+  return j;
+}
+
+async function loadUsers(){
+  const box=document.getElementById('usersBox');
+  box.innerHTML='<div class="loader">Завантаження…</div>';
+  try{
+    const j=await usersApi({action:'list'});
+    users=j.users||[];
+    renderUsers();
+  }catch(err){
+    box.innerHTML='<div class="loader">Помилка: '+esc(err.message)+'</div>';
+  }
+}
+
+function renderUsers(){
+  const box=document.getElementById('usersBox');
+  if(!users.length){ box.innerHTML='<div class="loader">Користувачів ще немає.</div>'; return; }
+  users.sort((a,b)=>String(a.email||'').localeCompare(String(b.email||'')));
+  const rows=users.map(u=>{
+    const me=currentUser&&u.id===currentUser.id;
+    const dt=u.created_at?new Date(u.created_at).toLocaleDateString('uk-UA'):'';
+    const last=u.last_sign_in_at?new Date(u.last_sign_in_at).toLocaleString('uk-UA'):'—';
+    const roleSel=me
+      ? `<b>${esc(ROLE_LABELS[u.role]||u.role||'—')}</b> <span class="muted">(ви)</span>`
+      : `<select data-urole="${esc(u.id)}">${Object.keys(ROLE_LABELS).map(r=>`<option value="${r}" ${u.role===r?'selected':''}>${ROLE_LABELS[r]}</option>`).join('')}</select>`;
+    const delBtn=me?'' :`<button class="btn btn-danger btn-sm" data-udel="${esc(u.id)}">✕</button>`;
+    return `<tr>
+      <td>${esc(u.email||'')}</td>
+      <td>${roleSel}</td>
+      <td style="white-space:nowrap">${esc(dt)}</td>
+      <td style="white-space:nowrap">${esc(last)}</td>
+      <td>${delBtn}</td>
+    </tr>`;
+  }).join('');
+  box.innerHTML=`<div class="table-wrap"><table class="otable">
+    <thead><tr><th>Email</th><th>Роль</th><th>Створено</th><th>Останній вхід</th><th></th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+  box.querySelectorAll('[data-urole]').forEach(s=>s.onchange=()=>setUserRole(s.dataset.urole,s.value));
+  box.querySelectorAll('[data-udel]').forEach(b=>b.onclick=()=>deleteUser(b.dataset.udel));
+}
+
+async function setUserRole(id,role){
+  try{
+    await usersApi({action:'setRole',id,role});
+    const u=users.find(x=>x.id===id); if(u) u.role=role;
+  }catch(err){ alert('Помилка: '+err.message); loadUsers(); }
+}
+
+async function deleteUser(id){
+  const u=users.find(x=>x.id===id);
+  if(!confirm('Видалити користувача «'+(u?u.email:'')+'»? Він втратить доступ до адмінки.')) return;
+  try{
+    await usersApi({action:'delete',id});
+    users=users.filter(x=>x.id!==id);
+    renderUsers();
+  }catch(err){ alert('Помилка: '+err.message); }
+}
+
+/* ----- модалка створення ----- */
+const userOverlay=document.getElementById('userOverlay');
+function openUserForm(){
+  document.getElementById('uEmail').value='';
+  document.getElementById('uPassword').value='';
+  document.getElementById('uRole').value='manager';
+  document.getElementById('userFormMsg').textContent='';
+  userOverlay.classList.add('open');
+}
+function closeUserForm(){ userOverlay.classList.remove('open'); }
+document.getElementById('addUserBtn').onclick=openUserForm;
+document.getElementById('userCancelBtn').onclick=closeUserForm;
+document.getElementById('userModalClose').onclick=closeUserForm;
+userOverlay.onclick=e=>{ if(e.target===userOverlay) closeUserForm(); };
+
+document.getElementById('userForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const msg=document.getElementById('userFormMsg'); msg.className='msg err'; msg.textContent='';
+  const btn=document.getElementById('userSaveBtn'); btn.disabled=true; btn.textContent='Створення…';
+  try{
+    await usersApi({
+      action:'create',
+      email:document.getElementById('uEmail').value.trim(),
+      password:document.getElementById('uPassword').value,
+      role:document.getElementById('uRole').value
+    });
+    closeUserForm();
+    loadUsers();
+  }catch(err){
+    msg.textContent='Помилка: '+(err.message||err);
+  }finally{
+    btn.disabled=false; btn.textContent='Створити';
+  }
+});
 </script>
 </body>
 </html>
