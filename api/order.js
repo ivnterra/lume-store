@@ -5,7 +5,7 @@
 //   SUPABASE_URL               — URL проєкту Supabase (для збереження у базу замовлень)
 //   SUPABASE_SERVICE_ROLE_KEY  — service_role / secret ключ (обходить RLS; тримати у секреті!)
 
-import { sendToLpCrm } from './lpcrm.js';
+import { sendToLpCrm, SKU_TO_ID } from './lpcrm.js';
 
 // ISO-код країни (UA) -> повна назва (Україна). Якщо не вийде — повертаємо код.
 function countryName(code) {
@@ -111,6 +111,17 @@ export default async function handler(req, res) {
     const geoStr = [geoCountry, geoCity].filter(Boolean).join(', ');
     if (geoStr) text += `\n\n🌍 Гео (IP): ${geoStr}`;
     if (utmLines.length) text += `\n\n🔗 UTM:\n${utmLines.join('\n')}`;
+
+    // ---- попередження: товар(и) без маппінгу в CRM (пішли як заглушка) ----
+    if (!isContact && process.env.LPCRM_KEY) {
+      const unmapped = items.filter(it => !SKU_TO_ID[String(it.sku || '').trim()]);
+      if (unmapped.length) {
+        const names = unmapped
+          .map(it => `• ${String(it.title || '').slice(0, 80)}${it.sku ? ` [${it.sku}]` : ' [без артикулу]'}`)
+          .join('\n');
+        text += `\n\n⚠️ Не заведено в CRM (пішло як заглушка):\n${names}\nДодайте пару sku:id у api/lpcrm.js`;
+      }
+    }
 
     // ---- зберігаємо у базу (не блокуючи замовлення) ----
     await saveOrder({
