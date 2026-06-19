@@ -605,7 +605,7 @@ async function loadProducts(){
       const imgs=(Array.isArray(r.images)&&r.images.length)?r.images:(r.image_url?[r.image_url]:[]);
       return {
         id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
-        badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?r.sizes:ONE_SIZE,
+        badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?sortSizes(r.sizes):ONE_SIZE,
         images:imgs, image:imgs[0]||null, description:r.description||'', in_stock:r.in_stock!==false
       };
     });
@@ -636,6 +636,21 @@ function imgBlock(p){
 }
 function imagesOf(p){return (p.images&&p.images.length)?p.images:(p.image?[p.image]:[]);}
 
+function sizeRank(tok){
+  // порядковий номер розміру для сортування (від малого до великого)
+  tok=String(tok).trim().toUpperCase();
+  const base={'XS':0,'S':1,'M':2,'L':3,'XL':4};
+  if(tok in base) return base[tok];
+  let m=tok.match(/^(\d+)XL$/);          // 2XL, 3XL, 4XL...
+  if(m) return 3+parseInt(m[1],10);
+  m=tok.match(/^(X+)L$/);                // XXL, XXXL...
+  if(m) return 3+m[1].length;
+  return 999;                            // «Універсальний» та інше — в кінець
+}
+function sortSizes(arr){
+  // сортуємо за початковим розміром (для діапазонів типу «2XL-3XL» — за «2XL»)
+  return arr.slice().sort((a,b)=>sizeRank(String(a).split('-')[0])-sizeRank(String(b).split('-')[0]));
+}
 function sizeChips(p, selected, ctx){
   return p.sizes.map(s=>{
     const act = s===selected ? ' active' : '';
