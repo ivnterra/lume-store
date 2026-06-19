@@ -96,6 +96,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .color-chip{padding:7px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;color:var(--ink);text-transform:capitalize}
 .color-chip:hover{border-color:var(--accent)}
 .color-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.color-chip.off{text-decoration:line-through;color:var(--muted);background:#f5f5f5;border-style:dashed;cursor:not-allowed;opacity:.6}
+.color-chip.off:hover{border-color:var(--line)}
 .sizes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 .size-chip{min-width:44px;padding:8px 6px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:.15s;color:var(--ink)}
 .size-chip:hover{border-color:var(--accent)}
@@ -669,29 +671,40 @@ function firstAvailable(p){ return p.sizes.find(s=>!isOOS(p,s)) || p.sizes[0]; }
 function jsq(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
 /* ---------- ВАРІАНТИ (кольори → розміри) ---------- */
-function activeVariants(p){ return (p.variants||[]).filter(v=>v&&v.active!==false&&Array.isArray(v.sizes)&&v.sizes.some(s=>s&&s.active!==false)); }
-function hasColors(p){ return activeVariants(p).length>0; }
-function colorsOf(p){ return activeVariants(p).map(v=>v.color); }
-function variantByColor(p,c){ return activeVariants(p).find(v=>v.color===c); }
-function firstColor(p){ const a=activeVariants(p); return a.length?a[0].color:''; }
-function sizesOfColor(p,c){
-  const v=variantByColor(p,c)||activeVariants(p)[0];
-  return v ? sortSizes(v.sizes.filter(s=>s&&s.active!==false).map(s=>s.size)) : [];
+function presentVariants(p){ return (p.variants||[]).filter(v=>v&&Array.isArray(v.sizes)&&v.sizes.length); }
+function colorEnabled(v){ return v && v.active!==false && (v.sizes||[]).some(s=>s&&s.active!==false); }
+function hasColors(p){ return presentVariants(p).length>0; }
+function colorsOf(p){ return presentVariants(p).map(v=>v.color); }
+function variantByColor(p,c){ return presentVariants(p).find(v=>v.color===c); }
+function firstColor(p){ const a=presentVariants(p); const en=a.find(colorEnabled); return (en||a[0]||{}).color||''; }
+function sizeObjsOfColor(p,c){
+  const v=variantByColor(p,c)||presentVariants(p)[0];
+  if(!v) return [];
+  return v.sizes.slice().sort((a,b)=>sizeRank(String(a.size).split('-')[0])-sizeRank(String(b.size).split('-')[0]));
 }
+function firstActiveSize(p,c){ const objs=sizeObjsOfColor(p,c); const o=objs.find(s=>s.active!==false); return (o||objs[0]||{}).size; }
 function colorChips(p, selected, ctx){
-  return colorsOf(p).map(c=>{
-    const act = c===selected ? ' active' : '';
-    const handler = ctx==='card' ? `selectCardColor(${p.id},'${jsq(c)}',this)` : `selectDetailColor('${jsq(c)}',this)`;
-    return `<button type="button" class="color-chip${act}" onclick="${handler}">${c}</button>`;
+  return presentVariants(p).map(v=>{
+    const en = colorEnabled(v);
+    const cls = `color-chip${(en && v.color===selected)?' active':''}${en?'':' off'}`;
+    if(!en) return `<button type="button" class="${cls}" disabled aria-disabled="true" title="Немає в наявності">${v.color}</button>`;
+    const handler = ctx==='card' ? `selectCardColor(${p.id},'${jsq(v.color)}',this)` : `selectDetailColor('${jsq(v.color)}',this)`;
+    return `<button type="button" class="${cls}" onclick="${handler}">${v.color}</button>`;
   }).join('');
 }
-function sizeChips(p, selected, ctx, sizesList){
-  const list = sizesList || p.sizes;
-  return list.map(s=>{
-    if(!sizesList && isOOS(p,s)) return `<button type="button" class="size-chip oos" disabled aria-disabled="true" title="Тимчасово немає в наявності">${s}</button>`;
+function sizeChips(p, selected, ctx, sizeObjs){
+  const handlerOf = s => ctx==='card' ? `selectCardSize(${p.id},'${jsq(s)}',this)` : `selectDetailSize('${jsq(s)}',this)`;
+  if(sizeObjs){
+    return sizeObjs.map(o=>{
+      if(o.active===false) return `<button type="button" class="size-chip oos" disabled aria-disabled="true" title="Немає в наявності">${o.size}</button>`;
+      const act = o.size===selected ? ' active' : '';
+      return `<button type="button" class="size-chip${act}" onclick="${handlerOf(o.size)}">${o.size}</button>`;
+    }).join('');
+  }
+  return p.sizes.map(s=>{
+    if(isOOS(p,s)) return `<button type="button" class="size-chip oos" disabled aria-disabled="true" title="Тимчасово немає в наявності">${s}</button>`;
     const act = s===selected ? ' active' : '';
-    const handler = ctx==='card' ? `selectCardSize(${p.id},'${jsq(s)}',this)` : `selectDetailSize('${jsq(s)}',this)`;
-    return `<button type="button" class="size-chip${act}" onclick="${handler}">${s}</button>`;
+    return `<button type="button" class="size-chip${act}" onclick="${handlerOf(s)}">${s}</button>`;
   }).join('');
 }
 
@@ -699,8 +712,8 @@ function cardHTML(p){
   const colors = hasColors(p);
   if(colors){
     if(cardColor[p.id]===undefined) cardColor[p.id]=firstColor(p);
-    const szs=sizesOfColor(p,cardColor[p.id]);
-    if(cardSize[p.id]===undefined || !szs.includes(cardSize[p.id])) cardSize[p.id]=szs[0];
+    const activeList=sizeObjsOfColor(p,cardColor[p.id]).filter(o=>o.active!==false).map(o=>o.size);
+    if(cardSize[p.id]===undefined || !activeList.includes(cardSize[p.id])) cardSize[p.id]=firstActiveSize(p,cardColor[p.id]);
   }else{
     if(cardSize[p.id]===undefined) cardSize[p.id]=firstAvailable(p);
   }
@@ -721,7 +734,7 @@ function cardHTML(p){
       </div>
       ${colors?`<div class="color-label">Колір</div><div class="colors">${colorChips(p, cardColor[p.id], 'card')}</div>`:''}
       <div class="size-label">Розмір</div>
-      <div class="sizes">${colors?sizeChips(p, cardSize[p.id], 'card', sizesOfColor(p, cardColor[p.id])):sizeChips(p, cardSize[p.id], 'card')}</div>
+      <div class="sizes">${colors?sizeChips(p, cardSize[p.id], 'card', sizeObjsOfColor(p, cardColor[p.id])):sizeChips(p, cardSize[p.id], 'card')}</div>
       <div class="card-actions">
         ${oos
           ? `<button class="btn btn-detail" style="flex:1" onclick="openDetail(${p.id})">↘ Детальніше</button>`
@@ -752,10 +765,10 @@ function selectCardColor(id,color,el){
   const card=el.closest('.card');
   card.querySelectorAll('.color-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
-  const szs=sizesOfColor(p,color);
-  cardSize[id]=szs[0];
+  const objs=sizeObjsOfColor(p,color);
+  cardSize[id]=firstActiveSize(p,color);
   const sizesBox=card.querySelector('.sizes');
-  if(sizesBox) sizesBox.innerHTML=sizeChips(p, cardSize[id], 'card', szs);
+  if(sizesBox) sizesBox.innerHTML=sizeChips(p, cardSize[id], 'card', objs);
 }
 function orderFromCard(id){
   const p=PRODUCTS.find(x=>x.id===id);
@@ -779,7 +792,7 @@ function openDetail(id, fromRoute){
   detailId=p.id;
   const colors = hasColors(p);
   detailColor = colors ? firstColor(p) : '';
-  detailSize = colors ? sizesOfColor(p, detailColor)[0] : firstAvailable(p);
+  detailSize = colors ? firstActiveSize(p, detailColor) : firstAvailable(p);
   const oos = p.in_stock===false;
   detailImages = imagesOf(p);
   const badgeHTML = p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:'';
@@ -803,7 +816,7 @@ function openDetail(id, fromRoute){
       </div>
       ${colors?`<div class="pv-section-label">Колір</div><div class="colors">${colorChips(p, detailColor, 'detail')}</div>`:''}
       <div class="pv-section-label">Розмір</div>
-      <div class="sizes">${colors?sizeChips(p, detailSize, 'detail', sizesOfColor(p, detailColor)):sizeChips(p, detailSize, 'detail')}</div>
+      <div class="sizes">${colors?sizeChips(p, detailSize, 'detail', sizeObjsOfColor(p, detailColor)):sizeChips(p, detailSize, 'detail')}</div>
       <div class="pv-desc">${descFor(p)}</div>
       ${oos
         ? `<button class="btn" disabled style="opacity:.5;cursor:not-allowed">Немає в наявності</button>`
@@ -827,10 +840,10 @@ function selectDetailColor(color,el){
   detailColor=color;
   el.parentElement.querySelectorAll('.color-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
-  const szs=sizesOfColor(p,color);
-  detailSize=szs[0];
+  const objs=sizeObjsOfColor(p,color);
+  detailSize=firstActiveSize(p,color);
   const sizesBox=document.querySelector('#pvWrap .sizes');
-  if(sizesBox) sizesBox.innerHTML=sizeChips(p, detailSize, 'detail', szs);
+  if(sizesBox) sizesBox.innerHTML=sizeChips(p, detailSize, 'detail', objs);
 }
 function pvShow(i){
   const main=document.getElementById('pvMain');
