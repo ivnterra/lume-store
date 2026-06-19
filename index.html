@@ -941,7 +941,7 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
   if(!ok)return;
   const pay=document.querySelector('input[name="pay"]:checked').value;
-  const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,size:it.size,qty:it.qty,sum:p.price*it.qty};});
+  const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,sku:p.sku||'',price:p.price,size:it.size,qty:it.qty,sum:p.price*it.qty};});
   const dlItems=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {item_name:p.title,item_id:p.sku||String(p.id),price:p.price,quantity:it.qty,size:it.size};});
   const total=cartTotal();
   const first=getFirst();

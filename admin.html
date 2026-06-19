@@ -134,6 +134,7 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
       </div>
       <div class="topbar-actions">
         <a class="btn btn-ghost btn-sm" href="/" target="_blank">↗ Відкрити сайт</a>
+        <button class="btn btn-ghost btn-sm" id="pwdBtn">🔑 Пароль</button>
         <button class="btn btn-ghost btn-sm" id="logoutBtn">Вийти</button>
       </div>
     </div>
@@ -308,6 +309,18 @@ document.getElementById('logoutBtn').addEventListener('click', async ()=>{
   await sb.auth.signOut();
   document.getElementById('dashView').style.display='none';
   document.getElementById('loginView').style.display='flex';
+});
+document.getElementById('pwdBtn').addEventListener('click', async ()=>{
+  if(!sb) return;
+  const p1=prompt('Новий пароль (мінімум 8 символів):');
+  if(p1===null) return;
+  if(p1.length<8){ alert('Пароль має містити щонайменше 8 символів.'); return; }
+  const p2=prompt('Повторіть новий пароль:');
+  if(p2===null) return;
+  if(p1!==p2){ alert('Паролі не співпадають.'); return; }
+  const {error}=await sb.auth.updateUser({password:p1});
+  if(error){ alert('Помилка зміни пароля: '+error.message); }
+  else{ alert('Пароль успішно змінено. Наступний вхід — з новим паролем.'); }
 });
 
 function showDashboard(){

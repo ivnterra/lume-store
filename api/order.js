@@ -5,6 +5,8 @@
 //   SUPABASE_URL               — URL проєкту Supabase (для збереження у базу замовлень)
 //   SUPABASE_SERVICE_ROLE_KEY  — service_role / secret ключ (обходить RLS; тримати у секреті!)
 
+import { sendToLpCrm } from './lpcrm.js';
+
 // ISO-код країни (UA) -> повна назва (Україна). Якщо не вийде — повертаємо код.
 function countryName(code) {
   if (!code) return '';
@@ -131,6 +133,27 @@ export default async function handler(req, res) {
       referrer: (body.referrer || '').toString().slice(0, 500) || null,
       landing_page: (body.landing || '').toString().slice(0, 500) || null
     });
+
+    // ---- надсилаємо у LP-CRM (лише покупки, не заявки; не блокуючи замовлення) ----
+    if (!isContact) {
+      try {
+        const crmRes = await sendToLpCrm({
+          type: 'order',
+          name, phone, email,
+          city, np_branch: npBranch, pay,
+          items, total: Number(body.total) || 0,
+          utm,
+          host: req.headers['host'] || '',
+          referrer: body.referrer || '',
+          landing: body.landing || ''
+        });
+        if (crmRes && crmRes.status !== 'ok') {
+          console.error('LP-CRM error:', crmRes.message);
+        }
+      } catch (e) {
+        console.error('LP-CRM send failed:', e && e.message);
+      }
+    }
 
     // ---- надсилаємо у Telegram ----
     const tg = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
