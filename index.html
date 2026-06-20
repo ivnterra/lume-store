@@ -229,6 +229,10 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 .pv-media{display:flex;flex-direction:column;gap:12px;min-width:0}
 .pv-main{position:relative;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:#f1ece7}
 .pv-main img{display:block;width:100%;height:auto}
+.pv-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.88);color:#2a2320;font-size:28px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;z-index:3;box-shadow:0 2px 10px rgba(0,0,0,.2);padding:0}
+.pv-nav.prev{left:14px}
+.pv-nav.next{right:14px}
+.pv-nav:hover{background:#fff;transform:translateY(-50%) scale(1.08)}
 .pv-main .ph{aspect-ratio:3/4;width:100%;display:flex;align-items:center;justify-content:center;font-size:120px;color:#fff}
 .pv-thumbs{display:flex;gap:10px;flex-wrap:wrap}
 .pv-thumb{width:64px;height:80px;border-radius:8px;overflow:hidden;border:2px solid transparent;cursor:pointer;transition:.15s}
@@ -602,6 +606,7 @@ let detailSize = null;  // chosen size in detail view
 let detailColor = '';   // chosen color in detail view
 let detailId = null;
 let detailImages = []; // gallery images of opened product
+let detailIdx = 0;     // current image index in detail view
 let catalogScrollY = 0; // scroll position of the catalog before opening a product
 
 /* ---------- RENDER CATALOG ---------- */
@@ -833,13 +838,17 @@ function openDetail(id, fromRoute){
   detailImages = imagesOf(p);
   const badgeHTML = p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:'';
   const oosHTML = oos?`<span class="badge oos">Немає в наявності</span>`:'';
+  detailIdx = 0;
   const mainInner = detailImages.length?`<img src="${detailImages[0]}" alt="${(p.title||'').replace(/"/g,'')}">`:imgBlock(p);
+  const navHTML = detailImages.length>1
+    ? `<button type="button" class="pv-nav prev" onclick="pvNav(-1)" aria-label="Попереднє фото">‹</button><button type="button" class="pv-nav next" onclick="pvNav(1)" aria-label="Наступне фото">›</button>`
+    : '';
   const thumbsHTML = detailImages.length>1
     ? `<div class="pv-thumbs">`+detailImages.map((u,i)=>`<div class="pv-thumb${i===0?' active':''}" onclick="pvShow(${i})"><img src="${u}" alt=""></div>`).join('')+`</div>`
     : '';
   document.getElementById('pvWrap').innerHTML=`
     <div class="pv-media">
-      <div class="pv-main" id="pvMain">${badgeHTML}${oosHTML}${mainInner}</div>
+      <div class="pv-main" id="pvMain">${badgeHTML}${oosHTML}${mainInner}${navHTML}</div>
       ${thumbsHTML}
     </div>
     <div class="pv-info">
@@ -884,9 +893,17 @@ function selectDetailColor(color,el){
 function pvShow(i){
   const main=document.getElementById('pvMain');
   if(!main||!detailImages[i])return;
+  detailIdx=i;
   const img=main.querySelector('img');
   if(img) img.src=detailImages[i];
   document.querySelectorAll('.pv-thumb').forEach((t,j)=>t.classList.toggle('active',j===i));
+}
+function pvNav(dir){
+  if(detailImages.length<=1)return;
+  let i=detailIdx+dir;
+  if(i<0) i=detailImages.length-1;
+  if(i>=detailImages.length) i=0;
+  pvShow(i);
 }
 function orderFromDetail(){
   const p=PRODUCTS.find(x=>x.id===detailId);
