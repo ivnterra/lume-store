@@ -80,6 +80,17 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(40,30,20,.14)}
 .card-img{position:relative;aspect-ratio:3/4;overflow:hidden}
 .card-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:54px;color:#fff}
+.card-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}
+.card-slide.active{opacity:1}
+.card-nav{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.8);color:#2a2320;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.75;transition:.2s;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.18);padding:0}
+.card-nav.prev{left:10px}
+.card-nav.next{right:10px}
+.card-img:hover .card-nav{opacity:1}
+.card-nav:hover{background:#fff;transform:translateY(-50%) scale(1.08)}
+.card-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:3;pointer-events:none}
+.card-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.6);transition:.2s;box-shadow:0 0 3px rgba(0,0,0,.25)}
+.card-dot.active{background:#fff;width:18px;border-radius:3px}
+@media(hover:none){.card-nav{opacity:.9}}
 .badge{position:absolute;top:14px;right:14px;background:#e8654f;color:#fff;font-size:12px;font-weight:700;padding:7px 16px;border-radius:24px;letter-spacing:.5px;z-index:2}
 .badge.sale{background:#c0564e}
 .badge.oos{top:14px;left:14px;right:auto;background:#6f6a66}
@@ -586,6 +597,7 @@ let cart = {};          // key "id|size" -> {id, size, qty}
 let currentFilter = 'Усі';
 let cardSize = {};      // product id -> chosen size (catalog cards)
 let cardColor = {};     // product id -> chosen color (catalog cards)
+let cardImg = {};       // product id -> current image index (catalog cards)
 let detailSize = null;  // chosen size in detail view
 let detailColor = '';   // chosen color in detail view
 let detailId = null;
@@ -650,6 +662,30 @@ function imgBlock(p){
   return `<div class="ph" style="background:linear-gradient(135deg,${prodColor(p)},${shade(prodColor(p))})">${prodIcon(p)}</div>`;
 }
 function imagesOf(p){return (p.images&&p.images.length)?p.images:(p.image?[p.image]:[]);}
+function cardImgBlock(p){
+  const imgs=imagesOf(p);
+  if(imgs.length<=1) return imgBlock(p);
+  if(cardImg[p.id]===undefined||cardImg[p.id]>=imgs.length) cardImg[p.id]=0;
+  const idx=cardImg[p.id];
+  const t=(p.title||'').replace(/"/g,'');
+  const slides=imgs.map((src,i)=>`<img src="${src}" alt="${t}" loading="lazy" class="card-slide${i===idx?' active':''}">`).join('');
+  const dots=imgs.map((_,i)=>`<span class="card-dot${i===idx?' active':''}"></span>`).join('');
+  return `${slides}
+    <button type="button" class="card-nav prev" onclick="event.stopPropagation();cardImgNav(${p.id},-1,this)" aria-label="Попереднє фото">‹</button>
+    <button type="button" class="card-nav next" onclick="event.stopPropagation();cardImgNav(${p.id},1,this)" aria-label="Наступне фото">›</button>
+    <div class="card-dots">${dots}</div>`;
+}
+function cardImgNav(id,dir,btn){
+  const p=PRODUCTS.find(x=>x.id===id); if(!p) return;
+  const imgs=imagesOf(p); if(imgs.length<=1) return;
+  let idx=(cardImg[id]||0)+dir;
+  if(idx<0) idx=imgs.length-1;
+  if(idx>=imgs.length) idx=0;
+  cardImg[id]=idx;
+  const wrap=btn.closest('.card-img');
+  wrap.querySelectorAll('.card-slide').forEach((s,i)=>s.classList.toggle('active',i===idx));
+  wrap.querySelectorAll('.card-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
 
 function sizeRank(tok){
   // порядковий номер розміру для сортування (від малого до великого)
@@ -722,7 +758,7 @@ function cardHTML(p){
     <div class="card-img" onclick="openDetail(${p.id})" style="cursor:pointer">
       ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:''}
       ${oos?'<span class="badge oos">Немає в наявності</span>':''}
-      ${imgBlock(p)}
+      ${cardImgBlock(p)}
     </div>
     <div class="card-body">
       <div class="card-cat">${p.cat}</div>
