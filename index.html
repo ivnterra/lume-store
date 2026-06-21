@@ -626,15 +626,20 @@ function buildFilters(){
 
 /* Завантаження товарів з Supabase (з fallback на демо) */
 async function loadProducts(){
-  const configured = window.SUPABASE_URL && window.SUPABASE_URL.indexOf('ВСТАВ')<0 && window.SUPABASE_URL.indexOf('YOUR')<0 && typeof supabase!=='undefined';
+  console.log('LUMÉ catalog loader: REST v3 (fetch, no-cdn)');
+  const url=window.SUPABASE_URL, key=window.SUPABASE_ANON_KEY;
+  // Завантаження товарів напряму через REST (fetch) — БЕЗ залежності від
+  // supabase-js CDN, який можуть блокувати розширення/мережа.
+  const configured = url && url.indexOf('ВСТАВ')<0 && url.indexOf('YOUR')<0 && key;
   if(configured){
-    const sb=supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    const endpoint = url.replace(/\/+$/,'') + '/rest/v1/products?select=*&order=sort.asc,id.asc';
     let loaded=false;
     for(let attempt=1; attempt<=3 && !loaded; attempt++){
       try{
-        const {data,error}=await sb.from('products').select('*').order('sort',{ascending:true}).order('id',{ascending:true});
-        if(error) throw error;
-        if(!data||!data.length) throw new Error('empty');
+        const res=await fetch(endpoint,{headers:{apikey:key, Authorization:'Bearer '+key}});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data=await res.json();
+        if(!Array.isArray(data)||!data.length) throw new Error('empty');
         PRODUCTS=data.map(r=>{
           const imgs=(Array.isArray(r.images)&&r.images.length)?r.images:(r.image_url?[r.image_url]:[]);
           return {
@@ -648,7 +653,7 @@ async function loadProducts(){
         loaded=true;
       }catch(e){
         console.error('loadProducts: спроба '+attempt+' не вдалася', e);
-        if(attempt<3) await new Promise(res=>setTimeout(res, 700*attempt));
+        if(attempt<3) await new Promise(done=>setTimeout(done, 700*attempt));
       }
     }
     if(!loaded){
