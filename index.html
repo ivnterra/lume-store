@@ -892,6 +892,7 @@ function openDetail(id, fromRoute){
   window.scrollTo(0,0);
   document.getElementById('productView').scrollTop=0;
   document.title = p.title + ' — LUMÉ STORE';
+  pushEcom('view_item', [{id:p.id, size:detailSize||'', color:detailColor||'', qty:1}]);
   if(!fromRoute){ try{ history.pushState({pid:p.id},'','/product/'+p.id); }catch(e){} }
 }
 function selectDetailSize(size,el){
