@@ -626,23 +626,38 @@ function buildFilters(){
 
 /* Завантаження товарів з Supabase (з fallback на демо) */
 async function loadProducts(){
-  try{
-    if(!window.SUPABASE_URL || window.SUPABASE_URL.indexOf('ВСТАВ')>-1 || window.SUPABASE_URL.indexOf('YOUR')>-1 || typeof supabase==='undefined') throw 0;
+  const configured = window.SUPABASE_URL && window.SUPABASE_URL.indexOf('ВСТАВ')<0 && window.SUPABASE_URL.indexOf('YOUR')<0 && typeof supabase!=='undefined';
+  if(configured){
     const sb=supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-    const {data,error}=await sb.from('products').select('*').order('sort',{ascending:true}).order('id',{ascending:true});
-    if(error||!data||!data.length) throw 0;
-    PRODUCTS=data.map(r=>{
-      const imgs=(Array.isArray(r.images)&&r.images.length)?r.images:(r.image_url?[r.image_url]:[]);
-      return {
-        id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
-        badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?sortSizes(r.sizes):ONE_SIZE,
-        images:imgs, image:imgs[0]||null, description:r.description||'', in_stock:r.in_stock!==false,
-        oos:(Array.isArray(r.oos_sizes)?r.oos_sizes:[]),
-        variants:Array.isArray(r.variants)?r.variants:[]
-      };
-    });
-  }catch(e){
-    PRODUCTS=DEMO_PRODUCTS;   // база ще не підключена — показуємо демо
+    let loaded=false;
+    for(let attempt=1; attempt<=3 && !loaded; attempt++){
+      try{
+        const {data,error}=await sb.from('products').select('*').order('sort',{ascending:true}).order('id',{ascending:true});
+        if(error) throw error;
+        if(!data||!data.length) throw new Error('empty');
+        PRODUCTS=data.map(r=>{
+          const imgs=(Array.isArray(r.images)&&r.images.length)?r.images:(r.image_url?[r.image_url]:[]);
+          return {
+            id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
+            badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?sortSizes(r.sizes):ONE_SIZE,
+            images:imgs, image:imgs[0]||null, description:r.description||'', in_stock:r.in_stock!==false,
+            oos:(Array.isArray(r.oos_sizes)?r.oos_sizes:[]),
+            variants:Array.isArray(r.variants)?r.variants:[]
+          };
+        });
+        loaded=true;
+      }catch(e){
+        console.error('loadProducts: спроба '+attempt+' не вдалася', e);
+        if(attempt<3) await new Promise(res=>setTimeout(res, 700*attempt));
+      }
+    }
+    if(!loaded){
+      // НЕ показуємо фейкові демо-товари при збої — показуємо чітке повідомлення
+      grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:50px 16px;color:var(--muted)">Не вдалося завантажити товари. Перевірте зʼєднання та <a href="#" onclick="location.reload();return false" style="color:var(--accent);text-decoration:underline">оновіть сторінку</a>.</div>';
+      return;
+    }
+  }else{
+    PRODUCTS=DEMO_PRODUCTS;   // ключі Supabase не налаштовані — демо для розробки
   }
   CATS=['Усі',...Array.from(new Set(PRODUCTS.map(p=>p.cat)))];
   buildFilters();
