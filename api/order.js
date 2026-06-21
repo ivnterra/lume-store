@@ -90,7 +90,7 @@ export default async function handler(req, res) {
     let text;
     if (isContact) {
       text =
-        `📩 Нова заявка (форма зв'язку) — LUMÉ\n\n` +
+        `📩 Нова заявка (форма зв'язку) — Talvyna\n\n` +
         `👤 Ім'я: ${name}\n` +
         `📞 Телефон: ${phone}`;
     } else {
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
         })
         .join('\n');
       text =
-        `🛍️ Нове замовлення — LUMÉ\n\n` +
+        `🛍️ Нове замовлення — Talvyna\n\n` +
         `👤 Ім'я: ${name}\n` +
         `📞 Телефон: ${phone}\n` +
         `📧 Email: ${email || '—'}\n` +

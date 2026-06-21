@@ -3,8 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LUMÉ STORE — Магазин одягу та аксесуарів</title>
-<meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів LUMÉ. Доставка по Україні Новою Поштою.">
+<title>Talvyna — Магазин одягу та аксесуарів</title>
+<meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів Talvyna. Доставка по Україні Новою Поштою.">
+<link rel="canonical" href="https://talvyna.com/">
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Talvyna">
+<meta property="og:url" content="https://talvyna.com/">
+<meta property="og:title" content="Talvyna — Магазин одягу та аксесуарів">
+<meta property="og:description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів Talvyna. Доставка по Україні Новою Поштою.">
+<meta property="og:locale" content="uk_UA">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Talvyna — Магазин одягу та аксесуарів">
+<meta name="twitter:description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів Talvyna. Доставка по Україні Новою Поштою.">
 <script src="/config.js"></script>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){if(!i)return;w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',window.GTM_ID);</script>
@@ -279,7 +291,7 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 <!-- HEADER -->
 <header>
   <div class="container nav">
-    <a href="/" class="logo" onclick="goHome(event)" aria-label="На головну">LUM<span>É</span></a>
+    <a href="/" class="logo" onclick="goHome(event)" aria-label="На головну">Talvyn<span>a</span></a>
     <nav class="nav-links" id="navLinks">
       <a href="#catalog" onclick="closeNav()">Каталог</a>
       <a href="#about" onclick="closeNav()">Про нас</a>
@@ -371,7 +383,7 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
   <div class="container about-wrap">
     <div class="about-text">
       <h2 style="text-align:left">Про нас</h2>
-      <p>Ми — інтернет-магазин жіночого одягу та аксесуарів LUMÉ, де можна знайти стильні, зручні та вдало підібрані моделі для будь-якого типу фігури.</p>
+      <p>Ми — інтернет-магазин жіночого одягу та аксесуарів Talvyna, де можна знайти стильні, зручні та вдало підібрані моделі для будь-якого типу фігури.</p>
       <p>Для нас важливо, щоб річ не просто гарно виглядала на фото, а й справді добре сиділа, підкреслювала переваги та дарувала комфорт і впевненість у собі.</p>
       <p>У нашому асортименті — повсякденний та святковий одяг, трикотаж, верхній одяг, сумки й прикраси. Ми уважно стежимо за трендами та поєднуємо гарний вигляд, якість і доступну ціну.</p>
       <p>Наша мета — щоб кожна знайшла саме свій образ: красивий, зручний і такий, у якому хочеться жити.</p>
@@ -464,9 +476,9 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 <!-- FOOTER -->
 <footer>
   <div class="container">
-    <div class="logo">LUM<span style="color:var(--accent)">É</span></div>
+    <div class="logo">Talvyn<span style="color:var(--accent)">a</span></div>
     <p>Відправка лише Новою Поштою • Доставка по всій Україні</p>
-    <p style="margin-top:8px;opacity:.6">© 2026 LUMÉ Store. Усі права захищено.</p>
+    <p style="margin-top:8px;opacity:.6">© 2026 Talvyna. Усі права захищено.</p>
   </div>
 </footer>
 
@@ -840,7 +852,7 @@ function orderFromCard(id){
 function descFor(p){
   if(p.description) return p.description.replace(/\n/g,'<br>');
   const name=p.title.replace(/[«»]/g,'');
-  return `${name} — стильна та зручна модель з нової колекції LUMÉ. Якісний матеріал приємний до тіла, добре тримає форму та підкреслює фігуру. Чудово пасує як для повсякдення, так і для особливих подій. Доступні розміри ${p.sizes.join(', ')}. Відправка по Україні Новою Поштою.`;
+  return `${name} — стильна та зручна модель з нової колекції Talvyna. Якісний матеріал приємний до тіла, добре тримає форму та підкреслює фігуру. Чудово пасує як для повсякдення, так і для особливих подій. Доступні розміри ${p.sizes.join(', ')}. Відправка по Україні Новою Поштою.`;
 }
 function openDetail(id, fromRoute){
   const p=PRODUCTS.find(x=>x.id==id);
@@ -891,7 +903,7 @@ function openDetail(id, fromRoute){
   document.body.style.overflow='hidden';
   window.scrollTo(0,0);
   document.getElementById('productView').scrollTop=0;
-  document.title = p.title + ' — LUMÉ STORE';
+  document.title = p.title + ' — Talvyna';
   if(!fromRoute){ try{ history.pushState({pid:p.id},'','/product/'+p.id); }catch(e){} }
 }
 function selectDetailSize(size,el){
@@ -948,7 +960,7 @@ function closeDetail(fromRoute){
   pv.classList.remove('open');
   document.body.style.overflow='';
   if(wasOpen){
-    document.title='LUMÉ STORE — Магазин одягу та аксесуарів';
+    document.title='Talvyna — Магазин одягу та аксесуарів';
     if(!fromRoute){ try{ history.pushState({},'','/'); }catch(e){} }
     // повертаємо каталог на те саме місце, звідки відкрили картку
     window.scrollTo(0, catalogScrollY);
@@ -960,7 +972,7 @@ function goHome(e){
   const pv=document.getElementById('productView');
   if(pv && pv.classList.contains('open')) closeDetail();
   if(location.pathname!=='/'){ try{ history.pushState({},'','/'); }catch(err){} }
-  document.title='LUMÉ STORE — Магазин одягу та аксесуарів';
+  document.title='Talvyna — Магазин одягу та аксесуарів';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function routeFromPath(){
