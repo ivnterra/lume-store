@@ -626,7 +626,6 @@ function buildFilters(){
 
 /* Завантаження товарів з Supabase (з fallback на демо) */
 async function loadProducts(){
-  console.log('LUMÉ catalog loader: REST v3 (fetch, no-cdn)');
   const url=window.SUPABASE_URL, key=window.SUPABASE_ANON_KEY;
   // Завантаження товарів напряму через REST (fetch) — БЕЗ залежності від
   // supabase-js CDN, який можуть блокувати розширення/мережа.
