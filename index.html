@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Прискорення з'єднань: дані та фото — з Supabase, аналітика — GTM/FB -->
+<link rel="preconnect" href="https://gwzywunqffubbmscmgam.supabase.co">
+<link rel="preconnect" href="https://gwzywunqffubbmscmgam.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<link rel="dns-prefetch" href="https://connect.facebook.net">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<!-- LCP: головне фото героя вантажиться першочергово -->
+<link rel="preload" as="image" fetchpriority="high" href="https://gwzywunqffubbmscmgam.supabase.co/storage/v1/render/image/public/product-images/kup-50-10/1.jpg?width=1200&quality=70">
 <meta name="facebook-domain-verification" content="cw46mzl5vnz83l5mlw0h01grxspn3l" />
 <title>Talvyna — Магазин одягу та аксесуарів</title>
 <meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів Talvyna. Доставка по Україні Новою Поштою.">
@@ -27,9 +35,8 @@
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){if(!i)return;w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',window.GTM_ID);</script>
 <!-- End Google Tag Manager -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.min.css">
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<!-- supabase-js прибрано: каталог вантажиться напряму через fetch (REST), бібліотека на вітрині не потрібна.
+     intl-tel-input підвантажується ліниво (тільки для форми) — див. loadITI() у скрипті. -->
 <style>
 :root{
   --bg:#faf7f4;
@@ -317,7 +324,7 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
 <section class="hero">
   <div class="slides" id="slides">
     <div class="slide">
-      <div class="slide-bg slide-1" style="background-image:linear-gradient(120deg,rgba(50,38,28,.6),rgba(50,38,28,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/kup-50-10/1.jpg')"></div>
+      <div class="slide-bg slide-1" style="background-image:linear-gradient(120deg,rgba(50,38,28,.6),rgba(50,38,28,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/render/image/public/product-images/kup-50-10/1.jpg?width=1200&quality=70')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Купальники 2026</div>
         <h1>Купальники, що пасують кожній</h1>
@@ -326,7 +333,7 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
       </div>
     </div>
     <div class="slide">
-      <div class="slide-bg slide-2" style="background-image:linear-gradient(120deg,rgba(45,42,40,.6),rgba(45,42,40,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/nak-13-11/1.png')"></div>
+      <div class="slide-bg slide-2" style="background-image:linear-gradient(120deg,rgba(45,42,40,.6),rgba(45,42,40,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/render/image/public/product-images/nak-13-11/1.png?width=1200&quality=70')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Пляжні накидки</div>
         <h1>Легкі накидки для пляжу</h1>
@@ -335,7 +342,7 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
       </div>
     </div>
     <div class="slide">
-      <div class="slide-bg slide-3" style="background-image:linear-gradient(120deg,rgba(40,48,44,.6),rgba(40,48,44,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/kup-50-42/1.jpg')"></div>
+      <div class="slide-bg slide-3" style="background-image:linear-gradient(120deg,rgba(40,48,44,.6),rgba(40,48,44,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/render/image/public/product-images/kup-50-42/1.jpg?width=1200&quality=70')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Великі розміри до 7XL</div>
         <h1>Купальники для пишних форм</h1>
@@ -699,8 +706,15 @@ function shade(hex){
 
 function prodColor(p){return p.color||FALLBACK_COLORS[(Number(p.id)||0)%FALLBACK_COLORS.length];}
 function prodIcon(p){return p.icon||CAT_ICON[p.cat]||'🛍️';}
+/* Ресайз/оптимізація фото через Supabase render/image (стискає + віддає WebP).
+   Для не-Supabase URL повертає як є. width — потрібна ширина у px. */
+function imgCDN(url, w){
+  if(!url || url.indexOf('/storage/v1/object/public/')<0) return url;
+  return url.replace('/storage/v1/object/public/','/storage/v1/render/image/public/')
+    + (url.indexOf('?')<0?'?':'&') + 'width='+w+'&quality=70';
+}
 function imgBlock(p){
-  if(p.image) return `<img src="${p.image}" alt="${(p.title||'').replace(/"/g,'')}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`;
+  if(p.image) return `<img src="${imgCDN(p.image,600)}" alt="${(p.title||'').replace(/"/g,'')}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`;
   return `<div class="ph" style="background:linear-gradient(135deg,${prodColor(p)},${shade(prodColor(p))})">${prodIcon(p)}</div>`;
 }
 function imagesOf(p){return (p.images&&p.images.length)?p.images:(p.image?[p.image]:[]);}
@@ -710,7 +724,7 @@ function cardImgBlock(p){
   if(cardImg[p.id]===undefined||cardImg[p.id]>=imgs.length) cardImg[p.id]=0;
   const idx=cardImg[p.id];
   const t=(p.title||'').replace(/"/g,'');
-  const slides=imgs.map((src,i)=>`<img src="${src}" alt="${t}" loading="lazy" class="card-slide${i===idx?' active':''}">`).join('');
+  const slides=imgs.map((src,i)=>`<img src="${imgCDN(src,600)}" alt="${t}" loading="lazy" class="card-slide${i===idx?' active':''}">`).join('');
   const dots=imgs.map((_,i)=>`<span class="card-dot${i===idx?' active':''}"></span>`).join('');
   return `${slides}
     <button type="button" class="card-nav prev" onclick="event.stopPropagation();cardImgNav(${p.id},-1,this)" aria-label="Попереднє фото">‹</button>
@@ -876,12 +890,12 @@ function openDetail(id, fromRoute){
   const badgeHTML = p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:'';
   const oosHTML = oos?`<span class="badge oos">Немає в наявності</span>`:'';
   detailIdx = 0;
-  const mainInner = detailImages.length?`<img src="${detailImages[0]}" alt="${(p.title||'').replace(/"/g,'')}">`:imgBlock(p);
+  const mainInner = detailImages.length?`<img src="${imgCDN(detailImages[0],900)}" alt="${(p.title||'').replace(/"/g,'')}" fetchpriority="high">`:imgBlock(p);
   const navHTML = detailImages.length>1
     ? `<button type="button" class="pv-nav prev" onclick="pvNav(-1)" aria-label="Попереднє фото">‹</button><button type="button" class="pv-nav next" onclick="pvNav(1)" aria-label="Наступне фото">›</button>`
     : '';
   const thumbsHTML = detailImages.length>1
-    ? `<div class="pv-thumbs">`+detailImages.map((u,i)=>`<div class="pv-thumb${i===0?' active':''}" onclick="pvShow(${i})"><img src="${u}" alt=""></div>`).join('')+`</div>`
+    ? `<div class="pv-thumbs">`+detailImages.map((u,i)=>`<div class="pv-thumb${i===0?' active':''}" onclick="pvShow(${i})"><img src="${imgCDN(u,160)}" alt="" loading="lazy"></div>`).join('')+`</div>`
     : '';
   document.getElementById('pvWrap').innerHTML=`
     <div class="pv-media">
@@ -932,7 +946,7 @@ function pvShow(i){
   if(!main||!detailImages[i])return;
   detailIdx=i;
   const img=main.querySelector('img');
-  if(img) img.src=detailImages[i];
+  if(img) img.src=imgCDN(detailImages[i],900);
   document.querySelectorAll('.pv-thumb').forEach((t,j)=>t.classList.toggle('active',j===i));
 }
 function pvNav(dir){
@@ -1056,7 +1070,7 @@ function updateCart(){
       const el=document.createElement('div');
       el.className='cart-item';
       el.innerHTML=`
-        <div class="thumb" style="overflow:hidden;${p.image?'':'background:linear-gradient(135deg,'+prodColor(p)+','+shade(prodColor(p))+')'}">${p.image?`<img src="${p.image}" alt="" style="width:100%;height:100%;object-fit:cover">`:prodIcon(p)}</div>
+        <div class="thumb" style="overflow:hidden;${p.image?'':'background:linear-gradient(135deg,'+prodColor(p)+','+shade(prodColor(p))+')'}">${p.image?`<img src="${imgCDN(p.image,120)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover">`:prodIcon(p)}</div>
         <div class="ci-info">
           <div class="ci-title">${p.title}</div>
           ${it.color?`<div style="font-size:12px;color:var(--muted)">Колір: ${it.color}</div>`:''}
@@ -1088,6 +1102,7 @@ function openCart(){document.getElementById('drawer').classList.add('open');docu
 function closeCart(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
 function openOrder(){
   if(Object.keys(cart).length===0)return;
+  loadITI(initPhones);   // гарантуємо віджет телефону у формі замовлення
   const sum=document.getElementById('orderSummary');
   sum.innerHTML='';
   Object.keys(cart).forEach(k=>{
@@ -1111,6 +1126,29 @@ function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());}
 
 /* ---------- Телефон з вибором коду країни (intl-tel-input) ---------- */
 let itiOrder=null, itiContact=null;
+/* Лінива підвантажка intl-tel-input (CSS+JS) — щоб не блокувати рендер.
+   Викликається при відкритті форми/в idle. До завантаження телефон валідується
+   простим regex (phoneValid/phoneNumber мають фолбек). */
+let __itiState=0; // 0 нема, 1 вантажиться, 2 готово
+const __itiCbs=[];
+function loadITI(cb){
+  if(__itiState===2){ cb&&cb(); return; }
+  if(cb) __itiCbs.push(cb);
+  if(__itiState===1) return;
+  __itiState=1;
+  const css=document.createElement('link');
+  css.rel='stylesheet'; css.href='https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.min.css';
+  document.head.appendChild(css);
+  const js=document.createElement('script');
+  js.src='https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js';
+  js.onload=function(){ __itiState=2; __itiCbs.splice(0).forEach(f=>{try{f();}catch(e){}}); };
+  js.onerror=function(){ __itiState=0; }; // фолбек: форма працює з простою валідацією
+  document.head.appendChild(js);
+}
+function initPhones(){
+  if(!itiOrder) itiOrder=initPhone(document.getElementById('oPhone'));
+  if(!itiContact) itiContact=initPhone(document.getElementById('cPhone'));
+}
 function initPhone(input){
   if(!input || typeof window.intlTelInput==='undefined') return null;
   return window.intlTelInput(input,{
@@ -1243,8 +1281,10 @@ document.querySelectorAll('.stat .num').forEach(el=>statObserver.observe(el));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
 
 /* ---------- INIT ---------- */
-itiOrder=initPhone(document.getElementById('oPhone'));
-itiContact=initPhone(document.getElementById('cPhone'));
+/* intl-tel-input вантажимо ліниво: при фокусі на телефон, при відкритті
+   замовлення, або в idle після завантаження сторінки (щоб не блокувати рендер). */
+['oPhone','cPhone'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('focus',()=>loadITI(initPhones),{once:true}); });
+window.addEventListener('load',function(){ (window.requestIdleCallback||function(f){setTimeout(f,1500);})(function(){ loadITI(initPhones); }); });
 loadProducts();
 </script>
 </body>
