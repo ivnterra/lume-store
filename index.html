@@ -951,6 +951,7 @@ function openDetail(id, fromRoute){
   window.scrollTo(0,0);
   document.getElementById('productView').scrollTop=0;
   document.title = p.title + ' — Talvyna';
+  pushEcom('view_content',[{id:p.id,size:detailSize||'',color:detailColor||'',qty:1}]);
   if(!fromRoute){ try{ history.pushState({pid:p.id},'','/product/'+productSlug(p)); }catch(e){} }
 }
 function selectDetailSize(size,el){
@@ -1065,7 +1066,9 @@ function ecomData(entries){
   entries.forEach(function(it){
     var p=PRODUCTS.find(function(x){return x.id===it.id;});
     if(!p) return;
-    var cid=p.sku||String(p.id);
+    // cid МАЄ збігатися з <g:id> у фіді /api/feed (артикул через дефіс, напр. 51-31),
+    // інакше Meta не зіставить події з каталогом (catalog match rate = 0%).
+    var cid=skuToUrl(p.sku)||String(p.id);
     contents.push({id:cid, quantity:it.qty, item_price:p.price});
     ids.push(cid); names.push(p.title);
     items.push({item_id:cid, item_name:p.title, price:p.price, quantity:it.qty, item_variant:[it.color,it.size].filter(Boolean).join(' / ')});
