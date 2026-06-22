@@ -874,6 +874,33 @@ function descFor(p){
   const name=p.title.replace(/[«»]/g,'');
   return `${name} — стильна та зручна модель з нової колекції Talvyna. Якісний матеріал приємний до тіла, добре тримає форму та підкреслює фігуру. Чудово пасує як для повсякдення, так і для особливих подій. Доступні розміри ${p.sizes.join(', ')}. Відправка по Україні Новою Поштою.`;
 }
+/* ---------- ЛЮДИНОЧИТНІ URL товару: /product/<артикул>-<транслітерація назви> ---------- */
+function translit(s){
+  const map={'а':'a','б':'b','в':'v','г':'h','ґ':'g','д':'d','е':'e','є':'ie','ж':'zh','з':'z',
+    'и':'y','і':'i','ї':'i','й':'i','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s',
+    'т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ь':'','ю':'iu','я':'ia',
+    'ъ':'','ы':'y','э':'e','ё':'e'};
+  return String(s).toLowerCase().split('').map(ch=>map[ch]!==undefined?map[ch]:ch).join('');
+}
+function slugify(s){
+  return translit(s)
+    .replace(/[«»"'’”“]/g,'')        // прибрати лапки
+    .replace(/[^a-z0-9]+/g,'-')      // решта не-латиниці/цифр -> дефіс
+    .replace(/-{2,}/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+function skuToUrl(sku){ return String(sku||'').trim().toLowerCase().replace(/[\/\s]+/g,'-').replace(/[^a-z0-9\-]/g,'').replace(/-{2,}/g,'-').replace(/^-+|-+$/g,''); }
+function productSlug(p){
+  const s=skuToUrl(p.sku)||String(p.id);
+  const t=slugify(p.title||'');
+  return t ? (s+'-'+t) : s;
+}
+function findByPathSeg(seg){
+  seg=decodeURIComponent(seg).replace(/\/+$/,'');
+  if(/^\d+$/.test(seg)){ const byId=PRODUCTS.find(x=>x.id==+seg); if(byId) return byId; } // старі /product/21
+  const exact=PRODUCTS.find(x=>productSlug(x)===seg); if(exact) return exact;             // точний новий слаг
+  return PRODUCTS.find(x=>{ const u=skuToUrl(x.sku); return u && (seg===u || seg.indexOf(u+'-')===0); }); // за артикулом
+}
 function openDetail(id, fromRoute){
   const p=PRODUCTS.find(x=>x.id==id);
   if(!p)return;
@@ -924,7 +951,7 @@ function openDetail(id, fromRoute){
   window.scrollTo(0,0);
   document.getElementById('productView').scrollTop=0;
   document.title = p.title + ' — Talvyna';
-  if(!fromRoute){ try{ history.pushState({pid:p.id},'','/product/'+p.id); }catch(e){} }
+  if(!fromRoute){ try{ history.pushState({pid:p.id},'','/product/'+productSlug(p)); }catch(e){} }
 }
 function selectDetailSize(size,el){
   detailSize=size;
@@ -996,9 +1023,14 @@ function goHome(e){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function routeFromPath(){
-  const m=location.pathname.match(/^\/product\/(\d+)/);
-  if(m && PRODUCTS.find(p=>p.id==+m[1])) openDetail(+m[1],true);
-  else closeDetail(true);
+  const m=location.pathname.match(/^\/product\/(.+)$/);
+  const p = m ? findByPathSeg(m[1]) : null;
+  if(p){
+    openDetail(p.id, true);
+    // якщо зайшли по старому /product/21 — підмінити адресу на красиву (без перезавантаження)
+    const nice='/product/'+productSlug(p);
+    if(location.pathname!==nice){ try{ history.replaceState({pid:p.id},'',nice); }catch(e){} }
+  } else closeDetail(true);
 }
 window.addEventListener('popstate', routeFromPath);
 
