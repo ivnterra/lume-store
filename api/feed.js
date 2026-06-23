@@ -116,6 +116,9 @@ function expand(p) {
     availability: inStock ? 'in stock' : 'out of stock',
     brand: BRAND, condition: 'new', gender: 'female', age_group: 'adult',
     google_product_category: googleCat,
+    // категорія магазину — для розподілу на набори в Meta (product set)
+    product_type: p.category || '',
+    custom_label_0: p.category || '',
     price: priceStr(regularPrice),
     sale_price: salePrice != null ? priceStr(salePrice) : null,
     sku: p.sku || ''
@@ -140,6 +143,8 @@ function rowToXml(r) {
   g('brand', r.brand);
   g('mpn', r.sku);
   g('google_product_category', r.google_product_category);
+  g('product_type', r.product_type);
+  g('custom_label_0', r.custom_label_0);
   g('gender', r.gender);
   g('age_group', r.age_group);
   t.push('    </item>');
@@ -161,7 +166,7 @@ function buildXml(rows) {
 function buildCsv(rows) {
   const cols = ['id', 'title', 'description', 'availability', 'condition',
     'price', 'sale_price', 'link', 'image_link', 'additional_image_link', 'brand', 'mpn',
-    'google_product_category', 'gender', 'age_group'];
+    'google_product_category', 'product_type', 'custom_label_0', 'gender', 'age_group'];
   const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
   const lines = [cols.join(',')];
   rows.forEach(r => {
@@ -171,6 +176,7 @@ function buildCsv(rows) {
       sale_price: r.sale_price || '', link: r.link, image_link: r.image_link,
       additional_image_link: (r.extra || []).join(','), brand: r.brand, mpn: r.sku,
       google_product_category: r.google_product_category,
+      product_type: r.product_type, custom_label_0: r.custom_label_0,
       gender: r.gender, age_group: r.age_group
     };
     lines.push(cols.map(c => q(m[c])).join(','));
