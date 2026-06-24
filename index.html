@@ -568,16 +568,6 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
         <span class="err-msg" id="oEmailErr">Невірний формат email</span>
       </div>
       <div class="form-group">
-        <label>Місто</label>
-        <input type="text" id="oCity" placeholder="Напр. Київ">
-        <span class="err-msg" id="oCityErr">Вкажіть місто</span>
-      </div>
-      <div class="form-group">
-        <label>Відділення Нової Пошти</label>
-        <input type="text" id="oBranch" placeholder="Напр. №12 або адреса">
-        <span class="err-msg" id="oBranchErr">Вкажіть відділення</span>
-      </div>
-      <div class="form-group">
         <label>Варіант оплати</label>
         <div class="pay-options">
           <label class="pay-opt"><input type="radio" name="pay" value="Передплата за реквізитами" checked> Передплата за реквізитами</label>
@@ -1245,7 +1235,7 @@ function setErr(input,err,show){
 document.getElementById('orderForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const name=document.getElementById('oName'),phone=document.getElementById('oPhone'),agree=document.getElementById('oAgree');
-  const city=document.getElementById('oCity'),branch=document.getElementById('oBranch'),email=document.getElementById('oEmail');
+  const email=document.getElementById('oEmail');
   let ok=true;
   setErr(name,document.getElementById('oNameErr'),!name.value.trim());if(!name.value.trim())ok=false;
   const oPhoneOk=phoneValid(itiOrder,phone);
@@ -1253,8 +1243,6 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   const emailVal=email.value.trim();
   const emailOk=!emailVal||validEmail(emailVal);   // email необов'язковий
   setErr(email,document.getElementById('oEmailErr'),!emailOk);if(!emailOk)ok=false;
-  setErr(city,document.getElementById('oCityErr'),!city.value.trim());if(!city.value.trim())ok=false;
-  setErr(branch,document.getElementById('oBranchErr'),!branch.value.trim());if(!branch.value.trim())ok=false;
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
   if(!ok)return;
   const pay=document.querySelector('input[name="pay"]:checked').value;
@@ -1263,7 +1251,7 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   const total=cartTotal();
   const first=getFirst();
   const phoneFull=phoneNumber(itiOrder,phone);
-  const payload={type:'order',name:name.value.trim(),phone:phoneFull,email:emailVal,city:city.value.trim(),np_branch:branch.value.trim(),pay,items,total,utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
+  const payload={type:'order',name:name.value.trim(),phone:phoneFull,email:emailVal,pay,items,total,utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
   const btn=e.submitter; const oldTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
