@@ -563,9 +563,9 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
         <span class="err-msg" id="oPhoneErr">Вкажіть коректний номер</span>
       </div>
       <div class="form-group">
-        <label>Email <span style="color:var(--muted);font-weight:400">(необов'язково)</span></label>
+        <label>Email</label>
         <input type="email" id="oEmail" placeholder="email@example.com">
-        <span class="err-msg" id="oEmailErr">Невірний формат email</span>
+        <span class="err-msg" id="oEmailErr">Вкажіть коректний email</span>
       </div>
       <div class="form-group">
         <label>Варіант оплати</label>
@@ -1241,7 +1241,7 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   const oPhoneOk=phoneValid(itiOrder,phone);
   setErr(phone,document.getElementById('oPhoneErr'),!oPhoneOk);if(!oPhoneOk)ok=false;
   const emailVal=email.value.trim();
-  const emailOk=!emailVal||validEmail(emailVal);   // email необов'язковий
+  const emailOk=validEmail(emailVal);   // email обов'язковий
   setErr(email,document.getElementById('oEmailErr'),!emailOk);if(!emailOk)ok=false;
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
   if(!ok)return;
