@@ -1005,9 +1005,14 @@ function shuffle(arr){
 }
 function renderRelated(p){
   const rel=document.getElementById('relatedGrid');
-  // спершу випадкові з тієї ж категорії, потім добираємо випадковими з інших
-  let pool=shuffle(PRODUCTS.filter(x=>x.cat===p.cat && x.id!==p.id));
-  if(pool.length<4) pool=pool.concat(shuffle(PRODUCTS.filter(x=>x.id!==p.id && x.cat!==p.cat)));
+  // завжди 2 купальники + 2 пляжні накидки (випадкові)
+  const pick=(cat,n)=>shuffle(PRODUCTS.filter(x=>x.cat===cat && x.id!==p.id)).slice(0,n);
+  let pool=pick('Купальники',2).concat(pick('Пляжні накидки',2));
+  // якщо десь бракує товарів — добираємо рештою випадкових
+  if(pool.length<4){
+    const extra=shuffle(PRODUCTS.filter(x=>x.id!==p.id && !pool.includes(x)));
+    pool=pool.concat(extra).slice(0,4);
+  }
   rel.innerHTML='';
   pool.slice(0,4).forEach(rp=>{
     const card=document.createElement('div');
