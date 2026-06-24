@@ -203,6 +203,9 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 /* FOOTER */
 footer{background:#211d1a;color:rgba(255,255,255,.6);padding:36px 0;text-align:center;font-size:14px}
 footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
+footer .footer-legal{margin:14px 0 6px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px}
+footer .footer-legal a{color:rgba(255,255,255,.7);text-decoration:none}
+footer .footer-legal a:hover{color:#fff;text-decoration:underline}
 
 /* CART DRAWER */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:.3s;z-index:90}
@@ -491,6 +494,11 @@ footer .logo{justify-content:center;margin-bottom:10px;color:#fff}
   <div class="container">
     <div class="logo">Talvyn<span style="color:var(--accent)">a</span></div>
     <p>Відправка лише Новою Поштою • Доставка по всій Україні</p>
+    <nav class="footer-legal">
+      <a href="/oferta">Публічна оферта</a>
+      <a href="/privacy">Політика конфіденційності</a>
+      <a href="/cookie">Файли cookie</a>
+    </nav>
     <p style="margin-top:8px;opacity:.6">© 2026 Talvyna. Усі права захищено.</p>
   </div>
 </footer>
