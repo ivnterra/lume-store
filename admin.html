@@ -659,6 +659,7 @@ function renderOrders(){
     const geo=[o.geo_country,o.geo_city].filter(Boolean).map(esc).join(', ')||'—';
     const dt=o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'';
     return `<tr>
+      <td style="text-align:center"><input type="checkbox" class="ord-check" data-id="${o.id}"></td>
       <td style="white-space:nowrap">${esc(dt)}</td>
       <td>${(o.type||'order')==='contact'?'Заявка':'Замовлення'}</td>
       <td>${esc(o.name||'')}</td>
@@ -674,11 +675,22 @@ function renderOrders(){
       <td><button class="btn btn-danger btn-sm" data-delorder="${o.id}">✕</button></td>
     </tr>`;
   }).join('');
-  box.innerHTML=`<div class="table-wrap"><table class="otable">
-    <thead><tr><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Email</th><th>Доставка</th><th>Товари</th><th>Артикул</th><th>Сума</th><th>UTM</th><th>Гео (IP)</th><th>Статус</th><th></th></tr></thead>
+  box.innerHTML=`
+    <div id="bulkBar" style="display:none;align-items:center;gap:12px;margin-bottom:12px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px">
+      <span>Вибрано: <b id="bulkCount">0</b></span>
+      <button class="btn btn-danger btn-sm" id="bulkDel">🗑️ Видалити вибрані</button>
+    </div>
+    <div class="table-wrap"><table class="otable">
+    <thead><tr><th style="width:34px;text-align:center"><input type="checkbox" id="ordCheckAll" title="Вибрати всі"></th><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Email</th><th>Доставка</th><th>Товари</th><th>Артикул</th><th>Сума</th><th>UTM</th><th>Гео (IP)</th><th>Статус</th><th></th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
   box.querySelectorAll('[data-status]').forEach(s=>s.onchange=()=>updateOrderStatus(+s.dataset.status,s.value));
   box.querySelectorAll('[data-delorder]').forEach(b=>b.onclick=()=>delOrder(+b.dataset.delorder));
+  box.querySelectorAll('.ord-check').forEach(c=>c.onchange=updateBulkBar);
+  const chkAll=document.getElementById('ordCheckAll');
+  if(chkAll) chkAll.onchange=()=>{ box.querySelectorAll('.ord-check').forEach(c=>c.checked=chkAll.checked); updateBulkBar(); };
+  const bulkDel=document.getElementById('bulkDel');
+  if(bulkDel) bulkDel.onclick=delSelectedOrders;
+  updateBulkBar();
 }
 
 async function updateOrderStatus(id,status){
@@ -692,6 +704,28 @@ async function delOrder(id){
   const {error}=await sb.from('orders').delete().eq('id',id);
   if(error){ alert('Помилка: '+error.message); return; }
   orders=orders.filter(o=>o.id!==id);
+  applyOrderFilters();
+}
+function selectedOrderIds(){
+  return Array.from(document.querySelectorAll('.ord-check:checked')).map(c=>+c.dataset.id);
+}
+function updateBulkBar(){
+  const ids=selectedOrderIds();
+  const bar=document.getElementById('bulkBar');
+  const cnt=document.getElementById('bulkCount');
+  const all=document.getElementById('ordCheckAll');
+  const boxes=document.querySelectorAll('.ord-check');
+  if(cnt) cnt.textContent=ids.length;
+  if(bar) bar.style.display=ids.length?'flex':'none';
+  if(all){ all.checked=boxes.length>0 && ids.length===boxes.length; all.indeterminate=ids.length>0 && ids.length<boxes.length; }
+}
+async function delSelectedOrders(){
+  const ids=selectedOrderIds();
+  if(!ids.length) return;
+  if(!confirm('Видалити вибрані записи ('+ids.length+' шт.)? Дію не можна скасувати.')) return;
+  const {error}=await sb.from('orders').delete().in('id',ids);
+  if(error){ alert('Помилка: '+error.message); return; }
+  orders=orders.filter(o=>!ids.includes(o.id));
   applyOrderFilters();
 }
 
