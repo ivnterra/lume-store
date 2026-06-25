@@ -661,6 +661,7 @@ function renderOrders(){
     const dt=o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'';
     return `<tr>
       <td style="text-align:center"><input type="checkbox" class="ord-check" data-id="${o.id}"></td>
+      <td style="white-space:nowrap;font-weight:600">#${esc(String(o.id))}</td>
       <td style="white-space:nowrap">${esc(dt)}</td>
       <td>${(o.type||'order')==='contact'?'Заявка':'Замовлення'}</td>
       <td>${esc(o.name||'')}</td>
@@ -682,7 +683,7 @@ function renderOrders(){
       <button class="btn btn-danger btn-sm" id="bulkDel">🗑️ Видалити вибрані</button>
     </div>
     <div class="table-wrap"><table class="otable">
-    <thead><tr><th style="width:34px;text-align:center"><input type="checkbox" id="ordCheckAll" title="Вибрати всі"></th><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Email</th><th>Доставка</th><th>Товари</th><th>Артикул</th><th>Сума</th><th>UTM</th><th>Гео (IP)</th><th>Статус</th><th></th></tr></thead>
+    <thead><tr><th style="width:34px;text-align:center"><input type="checkbox" id="ordCheckAll" title="Вибрати всі"></th><th>№</th><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Email</th><th>Доставка</th><th>Товари</th><th>Артикул</th><th>Сума</th><th>UTM</th><th>Гео (IP)</th><th>Статус</th><th></th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
   box.querySelectorAll('[data-status]').forEach(s=>s.onchange=()=>updateOrderStatus(+s.dataset.status,s.value));
   box.querySelectorAll('[data-delorder]').forEach(b=>b.onclick=()=>delOrder(+b.dataset.delorder));
