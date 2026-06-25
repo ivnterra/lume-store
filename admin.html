@@ -37,11 +37,11 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 
 /* DASHBOARD */
 .topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
-.topbar-in{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.topbar-in{max-width:1500px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .topbar .logo{font-size:20px;font-weight:800;letter-spacing:2px}
 .topbar .logo span{color:var(--accent)}
 .topbar-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.wrap{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+.wrap{max-width:1500px;margin:0 auto;padding:24px 20px 60px}
 .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
 .head-row h2{font-size:22px}
 
@@ -106,7 +106,8 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 .otable th{background:#f3ece4;font-weight:700;white-space:nowrap;position:sticky;top:0}
 .otable tr:last-child td{border-bottom:none}
 .otable .cell-items{max-width:260px;font-size:12px;color:#5a534d}
-.otable select{padding:6px 8px;border-radius:8px;font-size:12px}
+.otable .cell-utm{max-width:300px;font-size:12px;overflow-wrap:anywhere;word-break:break-word}
+.otable select{padding:6px 8px;border-radius:8px;font-size:12px;min-width:118px}
 .stat-pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .pill{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:13px}
 .pill b{font-size:16px;color:var(--accent)}
@@ -669,7 +670,7 @@ function renderOrders(){
       <td class="cell-items">${items}</td>
       <td style="white-space:nowrap;font-size:12px">${skus}</td>
       <td style="white-space:nowrap">${o.total?o.total.toLocaleString('uk-UA')+' грн.':'—'}</td>
-      <td style="font-size:12px">${utm}</td>
+      <td class="cell-utm">${utm}</td>
       <td style="white-space:nowrap">${geo}</td>
       <td><select data-status="${o.id}">${Object.keys(STATUS_LABEL).map(s=>`<option value="${s}" ${(o.status||'new')===s?'selected':''}>${STATUS_LABEL[s]}</option>`).join('')}</select></td>
       <td><button class="btn btn-danger btn-sm" data-delorder="${o.id}">✕</button></td>
