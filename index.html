@@ -121,7 +121,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .badge.oos{top:14px;left:14px;right:auto;background:#6f6a66}
 .card-body{padding:18px;display:flex;flex-direction:column;flex:1}
 .card-cat{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-.card-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.card-title{font-size:18px;font-weight:700;margin-bottom:6px;color:inherit;text-decoration:none;display:block}
+.card-title:hover{color:var(--accent)}
+.card-img .card-link{position:absolute;inset:0;z-index:2;display:block}
 .card-sku{font-size:13px;color:var(--muted);margin-bottom:12px}
 .card-price{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .price-now{font-size:21px;font-weight:700;color:var(--ink)}
@@ -815,14 +817,15 @@ function cardHTML(p){
   }
   const oos = p.in_stock===false;
   return `
-    <div class="card-img" onclick="openDetail(${p.id})" style="cursor:pointer">
+    <div class="card-img" style="cursor:pointer">
       ${p.badge?`<span class="badge ${p.badge==='sale'?'sale':''}">${BADGE_LABEL[p.badge]||p.badge}</span>`:''}
       ${oos?'<span class="badge oos">Немає в наявності</span>':''}
       ${cardImgBlock(p)}
+      <a class="card-link" href="/product/${productSlug(p)}" onclick="return cardClick(event,${p.id})" aria-label="${(p.title||'').replace(/"/g,'')}"></a>
     </div>
     <div class="card-body">
       <div class="card-cat">${p.cat}</div>
-      <div class="card-title">${p.title}</div>
+      <a class="card-title" href="/product/${productSlug(p)}" onclick="return cardClick(event,${p.id})">${p.title}</a>
       ${p.sku?`<div class="card-sku">Артикул: ${p.sku}</div>`:'<div class="card-sku">&nbsp;</div>'}
       <div class="card-price">
         <span class="price-now">${fmt(p.price)}</span>
@@ -916,6 +919,13 @@ function findByPathSeg(seg){
   if(/^\d+$/.test(seg)){ const byId=PRODUCTS.find(x=>x.id==+seg); if(byId) return byId; } // старі /product/21
   const exact=PRODUCTS.find(x=>productSlug(x)===seg); if(exact) return exact;             // точний новий слаг
   return PRODUCTS.find(x=>{ const u=skuToUrl(x.sku); return u && (seg===u || seg.indexOf(u+'-')===0); }); // за артикулом
+}
+function cardClick(e, id){
+  // ctrl/cmd/shift/середня кнопка — даємо браузеру відкрити у новій вкладці
+  if(e.metaKey||e.ctrlKey||e.shiftKey||e.button===1) return true;
+  e.preventDefault();
+  openDetail(id);
+  return false;
 }
 function openDetail(id, fromRoute){
   const p=PRODUCTS.find(x=>x.id==id);
