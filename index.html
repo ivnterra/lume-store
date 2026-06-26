@@ -650,10 +650,28 @@ function buildFilters(){
     const b=document.createElement('button');
     b.className='filter-btn'+(c===currentFilter?' active':'');
     b.textContent=c;
-    b.onclick=()=>{currentFilter=c;document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderGrid();};
+    b.onclick=()=>setFilter(c,true);
     filtersEl.appendChild(b);
   });
 }
+
+function setFilter(c,push){
+  currentFilter=c;
+  document.querySelectorAll('.filter-btn').forEach(x=>x.classList.toggle('active', x.textContent===c));
+  renderGrid();
+  if(push){
+    const sp=new URLSearchParams(location.search);
+    if(c==='Усі') sp.delete('cat'); else sp.set('cat', slugify(c));
+    const qs=sp.toString();
+    try{ history.pushState({}, '', location.pathname+(qs?('?'+qs):'')); }catch(e){}
+  }
+}
+function catFromURL(){
+  const slug=new URLSearchParams(location.search).get('cat');
+  if(!slug) return 'Усі';
+  return CATS.find(c=>slugify(c)===slug) || 'Усі';
+}
+function applyCategoryFromURL(){ setFilter(catFromURL(), false); }
 
 /* Завантаження товарів з Supabase (з fallback на демо) */
 async function loadProducts(){
@@ -696,8 +714,13 @@ async function loadProducts(){
   }
   CATS=['Усі',...Array.from(new Set(PRODUCTS.map(p=>p.cat)))];
   buildFilters();
-  renderGrid();
-  routeFromPath();   // якщо відкрито /product/<id> — показати картку товару
+  applyCategoryFromURL();   // якщо в URL ?cat=<категорія> — увімкнути відповідний фільтр
+  routeFromPath();          // якщо відкрито /product/<id> — показати картку товару
+  // прийшли по посиланню на категорію (і не відкрито товар) — прокрутити до каталогу
+  if(catFromURL()!=='Усі' && !document.getElementById('productView').classList.contains('open')){
+    const el=document.getElementById('catalog');
+    if(el) requestAnimationFrame(()=>el.scrollIntoView());
+  }
 }
 
 function fmt(n){return n.toLocaleString('uk-UA')+' грн.';}
@@ -1071,7 +1094,7 @@ function routeFromPath(){
     if(location.pathname!==nice){ try{ history.replaceState({pid:p.id},'',nice); }catch(e){} }
   } else closeDetail(true);
 }
-window.addEventListener('popstate', routeFromPath);
+window.addEventListener('popstate', ()=>{ applyCategoryFromURL(); routeFromPath(); });
 
 /* ---------- CART ---------- */
 function ckey(id,size,color){return id+'|'+(size||'')+'|'+(color||'');}
