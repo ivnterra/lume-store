@@ -98,8 +98,10 @@ export default async function handler(req, res) {
         .map(it => {
           const variant = [it.color, it.size].filter(Boolean).join(', ');
           const sku = String(it.sku || '').trim();
+          const url = String(it.url || '').trim();
           const skuStr = sku ? `\n   🔖 Артикул: ${sku}` : '';
-          return `• ${String(it.title || '').slice(0, 200)}${variant ? ` (${variant})` : ''} × ${Number(it.qty) || 1} — ${money(it.sum)} грн.${skuStr}`;
+          const urlStr = url ? `\n   🔗 ${url}` : '';
+          return `• ${String(it.title || '').slice(0, 200)}${variant ? ` (${variant})` : ''} × ${Number(it.qty) || 1} — ${money(it.sum)} грн.${skuStr}${urlStr}`;
         })
         .join('\n');
       text =
