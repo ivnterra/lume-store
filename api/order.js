@@ -101,9 +101,17 @@ export default async function handler(req, res) {
           const url = String(it.url || '').trim();
           const skuStr = sku ? `\n   🔖 Артикул: ${sku}` : '';
           const urlStr = url ? `\n   🔗 ${url}` : '';
-          return `• ${String(it.title || '').slice(0, 200)}${variant ? ` (${variant})` : ''} × ${Number(it.qty) || 1} — ${money(it.sum)} грн.${skuStr}${urlStr}`;
+          const disc = Number(it.discount) || 0;
+          const priceStr = disc > 0
+            ? `${money(it.sum)} → ${money(it.final)} грн. (🎁 −${Number(it.disc_pct) || 0}%: −${money(disc)} грн.)`
+            : `${money(it.sum)} грн.`;
+          return `• ${String(it.title || '').slice(0, 200)}${variant ? ` (${variant})` : ''} × ${Number(it.qty) || 1} — ${priceStr}${skuStr}${urlStr}`;
         })
         .join('\n');
+      const discountTotal = Number(body.discount) || 0;
+      const totalsStr = discountTotal > 0
+        ? `💵 Сума: ${money(body.subtotal)} грн.\n🎁 Знижка за акцією: −${money(discountTotal)} грн.\n💰 Разом: ${money(body.total)} грн.`
+        : `💰 Разом: ${money(body.total)} грн.`;
       text =
         `🛍️ Нове замовлення — Talvyna\n\n` +
         `👤 Ім'я: ${name}\n` +
@@ -113,7 +121,7 @@ export default async function handler(req, res) {
         `🏤 Відділення НП: ${npBranch || '—'}\n` +
         `💳 Оплата: ${pay || '—'}\n\n` +
         `🧾 Товари:\n${lines}\n\n` +
-        `💰 Разом: ${money(body.total)} грн.`;
+        totalsStr;
     }
     const geoStr = [geoCountry, geoCity].filter(Boolean).join(', ');
     if (geoStr) text += `\n\n🌍 Гео (IP): ${geoStr}`;
@@ -160,6 +168,8 @@ export default async function handler(req, res) {
           name, phone, email,
           city, np_branch: npBranch, pay,
           items, total: Number(body.total) || 0,
+          subtotal: Number(body.subtotal) || 0,
+          discount: Number(body.discount) || 0,
           utm,
           host: req.headers['host'] || '',
           referrer: body.referrer || '',

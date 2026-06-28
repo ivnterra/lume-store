@@ -76,10 +76,15 @@ function buildProducts(items) {
   (items || []).forEach(it => {
     const pid = SKU_TO_ID[String(it.sku || '').trim()];
     if (!pid) return; // немає у маппінгу — пропускаємо (деталі лишаться у коментарі)
+    const qty = Number(it.qty) || 1;
+    // ціна за одиницю з урахуванням акційної знижки (щоб сума в CRM збігалася з оплатою)
+    const unitPrice = (Number(it.discount) > 0 && it.final != null)
+      ? Math.round((Number(it.final) || 0) / qty)
+      : Math.round(Number(it.price) || 0);
     list.push({
       product_id: pid,
-      price: String(Math.round(Number(it.price) || 0)),
-      count: String(Number(it.qty) || 1),
+      price: String(unitPrice),
+      count: String(qty),
     });
   });
   return list;
@@ -110,8 +115,16 @@ async function sendToLpCrm(rec) {
       const variant = [it.color ? `колір ${it.color}` : '', it.size ? `розмір ${it.size}` : ''].filter(Boolean).join(', ');
       const vlabel = variant ? ` (${variant})` : '';
       const sku = it.sku ? ` [${it.sku}]` : '';
-      commentLines.push(`• ${it.title || ''}${sku}${vlabel} × ${Number(it.qty) || 1} — ${Math.round(Number(it.price) || 0)} грн.`);
+      const disc = Number(it.discount) || 0;
+      const priceStr = disc > 0
+        ? `${Math.round(Number(it.sum) || 0)} → ${Math.round(Number(it.final) || 0)} грн. (акція -${Number(it.disc_pct) || 0}%: -${Math.round(disc)} грн.)`
+        : `${Math.round(Number(it.price) || 0)} грн.`;
+      commentLines.push(`• ${it.title || ''}${sku}${vlabel} × ${Number(it.qty) || 1} — ${priceStr}`);
     });
+    if (Number(rec.discount) > 0) {
+      commentLines.push(`Сума: ${Math.round(Number(rec.subtotal) || 0)} грн.`);
+      commentLines.push(`Знижка за акцією: -${Math.round(Number(rec.discount))} грн.`);
+    }
     if (rec.total) commentLines.push(`Разом: ${Math.round(Number(rec.total))} грн.`);
     if (rec.pay) commentLines.push(`Оплата: ${rec.pay}`);
   }

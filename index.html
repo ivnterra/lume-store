@@ -540,6 +540,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
     <p class="cart-empty">Ваш кошик порожній 🛍️</p>
   </div>
   <div class="drawer-foot">
+    <div id="cartSummary"></div>
     <div class="cart-total"><span>Разом:</span><span id="cartTotal">0 грн.</span></div>
     <button class="btn" id="checkoutBtn" onclick="openOrder()" disabled style="opacity:.5">Оформити замовлення</button>
     <button class="btn btn-outline" onclick="closeCart()" style="width:100%;margin-top:10px">Продовжити покупки</button>
@@ -1120,9 +1121,35 @@ function removeItem(k){delete cart[k];updateCart();}
 function cartItemsCount(){return Object.values(cart).reduce((a,i)=>a+i.qty,0);}
 function cartTotal(){return Object.values(cart).reduce((s,i)=>s+PRODUCTS.find(p=>p.id===i.id).price*i.qty,0);}
 
+/* ---------- АКЦІЇ (знижки) ----------
+   • 2+ купальники → -10% на всі, крім одного найдорожчого.
+   • є хоча б 1 купальник → -15% на всі пляжні накидки.            */
+function promoBreakdown(){
+  const entries=Object.keys(cart).map(k=>{const it=cart[k];const p=PRODUCTS.find(x=>x.id===it.id);return {k,price:p.price,qty:it.qty,cat:p.cat};});
+  const disc={}; entries.forEach(e=>disc[e.k]={amount:0,pct:0});
+  const swim=entries.filter(e=>e.cat==='Купальники');
+  const swimUnits=swim.reduce((s,e)=>s+e.qty,0);
+  if(swimUnits>=2){
+    let exemptKey=null,maxPrice=-1;
+    swim.forEach(e=>{ if(e.price>maxPrice){maxPrice=e.price;exemptKey=e.k;} });
+    swim.forEach(e=>{
+      let units=e.qty; if(e.k===exemptKey) units-=1; // один найдорожчий — без знижки
+      if(units>0){ disc[e.k].amount+=Math.round(e.price*units*0.10); disc[e.k].pct=10; }
+    });
+  }
+  if(swimUnits>=1){
+    entries.filter(e=>e.cat==='Пляжні накидки').forEach(e=>{
+      disc[e.k].amount+=Math.round(e.price*e.qty*0.15); disc[e.k].pct=15;
+    });
+  }
+  const subtotal=entries.reduce((s,e)=>s+e.price*e.qty,0);
+  const discount=Object.values(disc).reduce((s,d)=>s+d.amount,0);
+  return {disc, subtotal, discount, total:subtotal-discount};
+}
+
 /* ---------- ECOMMERCE dataLayer (Meta CAPI + GA4) ---------- */
 function genEventId(){ return 'lume.'+Date.now()+'.'+Math.random().toString(36).slice(2,10); }
-function ecomData(entries){
+function ecomData(entries, discMap){
   var contents=[], ids=[], names=[], items=[], num=0, value=0;
   entries.forEach(function(it){
     var p=PRODUCTS.find(function(x){return x.id===it.id;});
@@ -1130,10 +1157,13 @@ function ecomData(entries){
     // cid МАЄ збігатися з <g:id> у фіді /api/feed (артикул через дефіс, напр. 51-31),
     // інакше Meta не зіставить події з каталогом (catalog match rate = 0%).
     var cid=skuToUrl(p.sku)||String(p.id);
-    contents.push({id:cid, quantity:it.qty, item_price:p.price});
+    // ціна за одиницю з урахуванням акційної знижки (для коректної суми в Purchase/Lead)
+    var unit=p.price;
+    if(discMap){ var d=discMap[ckey(it.id,it.size,it.color)]; if(d&&d.amount>0&&it.qty){ unit=Math.round((p.price*it.qty-d.amount)/it.qty); } }
+    contents.push({id:cid, quantity:it.qty, item_price:unit});
     ids.push(cid); names.push(p.title);
-    items.push({item_id:cid, item_name:p.title, price:p.price, quantity:it.qty, item_variant:[it.color,it.size].filter(Boolean).join(' / ')});
-    num+=it.qty; value+=p.price*it.qty;
+    items.push({item_id:cid, item_name:p.title, price:unit, quantity:it.qty, item_variant:[it.color,it.size].filter(Boolean).join(' / ')});
+    num+=it.qty; value+=unit*it.qty;
   });
   return {content_ids:ids, contents:contents, content_name:names.join(', '), num_items:num, value:value, items:items};
 }
@@ -1161,8 +1191,14 @@ function updateCart(){
     document.getElementById('checkoutBtn').style.opacity=.5;
   }else{
     body.innerHTML='';
+    const promo=promoBreakdown();
     keys.forEach(k=>{
       const it=cart[k];const p=PRODUCTS.find(x=>x.id===it.id);
+      const d=promo.disc[k]||{amount:0,pct:0};
+      const priceHTML=d.amount>0
+        ? `<div class="ci-price"><s style="color:var(--muted);font-weight:400">${fmt(p.price*it.qty)}</s> ${fmt(p.price*it.qty-d.amount)}</div>
+           <div style="font-size:12px;color:#2e9e6b;font-weight:600">🎁 Акція −${d.pct}%: −${fmt(d.amount)}</div>`
+        : `<div class="ci-price">${fmt(p.price)}</div>`;
       const el=document.createElement('div');
       el.className='cart-item';
       el.innerHTML=`
@@ -1171,7 +1207,7 @@ function updateCart(){
           <div class="ci-title">${p.title}</div>
           ${it.color?`<div style="font-size:12px;color:var(--muted)">Колір: ${it.color}</div>`:''}
           ${it.size?`<div style="font-size:12px;color:var(--muted)">Розмір: ${it.size}</div>`:''}
-          <div class="ci-price">${fmt(p.price)}</div>
+          ${priceHTML}
           <div class="qty">
             <button onclick="changeQty('${k}',-1)">−</button>
             <span>${it.qty}</span>
@@ -1184,7 +1220,13 @@ function updateCart(){
     document.getElementById('checkoutBtn').disabled=false;
     document.getElementById('checkoutBtn').style.opacity=1;
   }
-  document.getElementById('cartTotal').textContent=fmt(cartTotal());
+  const promo=promoBreakdown();
+  const summaryEl=document.getElementById('cartSummary');
+  summaryEl.innerHTML = promo.discount>0
+    ? `<div class="cart-total" style="font-size:15px;font-weight:400"><span>Сума:</span><span>${fmt(promo.subtotal)}</span></div>
+       <div class="cart-total" style="font-size:15px;font-weight:600;color:#2e9e6b"><span>Знижка за акцією:</span><span>−${fmt(promo.discount)}</span></div>`
+    : '';
+  document.getElementById('cartTotal').textContent=fmt(promo.total);
 }
 
 function pulseCart(){
@@ -1200,13 +1242,22 @@ function openOrder(){
   if(Object.keys(cart).length===0)return;
   loadITI(initPhones);   // гарантуємо віджет телефону у формі замовлення
   const sum=document.getElementById('orderSummary');
+  const promo=promoBreakdown();
   sum.innerHTML='';
   Object.keys(cart).forEach(k=>{
     const it=cart[k];const p=PRODUCTS.find(x=>x.id===it.id);
     const vlabel=[it.color,it.size].filter(Boolean).join(', ');
-    sum.innerHTML+=`<div class="row"><span>${p.title}${vlabel?' ('+vlabel+')':''} × ${it.qty}</span><span>${fmt(p.price*it.qty)}</span></div>`;
+    const d=promo.disc[k]||{amount:0,pct:0};
+    const priceCell=d.amount>0
+      ? `<span><s style="color:var(--muted)">${fmt(p.price*it.qty)}</s> ${fmt(p.price*it.qty-d.amount)}</span>`
+      : `<span>${fmt(p.price*it.qty)}</span>`;
+    sum.innerHTML+=`<div class="row"><span>${p.title}${vlabel?' ('+vlabel+')':''} × ${it.qty}${d.amount>0?` <span style="color:#2e9e6b;font-weight:600">(−${d.pct}%)</span>`:''}</span>${priceCell}</div>`;
   });
-  sum.innerHTML+=`<div class="row" style="font-weight:700;border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><span>Разом:</span><span>${fmt(cartTotal())}</span></div>`;
+  if(promo.discount>0){
+    sum.innerHTML+=`<div class="row"><span>Сума:</span><span>${fmt(promo.subtotal)}</span></div>`;
+    sum.innerHTML+=`<div class="row" style="color:#2e9e6b;font-weight:600"><span>Знижка за акцією:</span><span>−${fmt(promo.discount)}</span></div>`;
+  }
+  sum.innerHTML+=`<div class="row" style="font-weight:700;border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><span>Разом:</span><span>${fmt(promo.total)}</span></div>`;
   pushEcom('begin_checkout', Object.values(cart));
   document.getElementById('modal').classList.add('open');
   document.getElementById('overlay').classList.add('open');
@@ -1279,12 +1330,13 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
   if(!ok)return;
   const pay=document.querySelector('input[name="pay"]:checked').value;
-  const items=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {title:p.title,sku:p.sku||'',url:location.origin+'/product/'+productSlug(p),price:p.price,size:it.size,color:it.color||'',qty:it.qty,sum:p.price*it.qty};});
-  const dlItems=Object.values(cart).map(it=>{const p=PRODUCTS.find(x=>x.id===it.id);return {item_name:p.title,item_id:p.sku||String(p.id),price:p.price,quantity:it.qty,size:it.size,color:it.color||''};});
-  const total=cartTotal();
+  const promo=promoBreakdown();
+  const items=Object.entries(cart).map(([k,it])=>{const p=PRODUCTS.find(x=>x.id===it.id);const d=promo.disc[k]||{amount:0,pct:0};return {title:p.title,sku:p.sku||'',url:location.origin+'/product/'+productSlug(p),price:p.price,size:it.size,color:it.color||'',qty:it.qty,sum:p.price*it.qty,discount:d.amount,disc_pct:d.pct,final:p.price*it.qty-d.amount};});
+  const dlItems=Object.entries(cart).map(([k,it])=>{const p=PRODUCTS.find(x=>x.id===it.id);const d=promo.disc[k]||{amount:0};const unit=d.amount>0?Math.round((p.price*it.qty-d.amount)/it.qty):p.price;return {item_name:p.title,item_id:p.sku||String(p.id),price:unit,quantity:it.qty,size:it.size,color:it.color||''};});
+  const total=promo.total;
   const first=getFirst();
   const phoneFull=phoneNumber(itiOrder,phone);
-  const payload={type:'order',name:name.value.trim(),phone:phoneFull,email:emailVal,pay,items,total,utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
+  const payload={type:'order',name:name.value.trim(),phone:phoneFull,email:emailVal,pay,items,total,subtotal:promo.subtotal,discount:promo.discount,utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href};
   const btn=e.submitter; const oldTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
@@ -1292,7 +1344,7 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
     if(!r.ok) throw new Error();
     // дані для аналітики (подія 'lead' спрацює на /thanks)
     try{ sessionStorage.setItem('lume_lead', JSON.stringify({lead_type:'order',customer_name:payload.name,customer_phone:phoneFull,customer_email:emailVal,value:total,currency:'UAH',items:dlItems})); }catch(e){}
-    try{ var _pd=ecomData(Object.values(cart)); sessionStorage.setItem('lume_purchase', JSON.stringify({transaction_id:'order-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),event_id:genEventId(),value:total,currency:'UAH',content_ids:_pd.content_ids,contents:_pd.contents,content_name:_pd.content_name,num_items:_pd.num_items,items:_pd.items,customer_name:payload.name,customer_phone:phoneFull,customer_email:emailVal})); }catch(e){}
+    try{ var _pd=ecomData(Object.values(cart), promo.disc); sessionStorage.setItem('lume_purchase', JSON.stringify({transaction_id:'order-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),event_id:genEventId(),value:total,currency:'UAH',content_ids:_pd.content_ids,contents:_pd.contents,content_name:_pd.content_name,num_items:_pd.num_items,items:_pd.items,customer_name:payload.name,customer_phone:phoneFull,customer_email:emailVal})); }catch(e){}
     cart={};
     window.location.href='/thanks';
     return;
