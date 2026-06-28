@@ -838,6 +838,13 @@ document.getElementById('expXlsx').onclick=()=>{
   XLSX.writeFile(wb, `orders_${stamp()}.xlsx`);
 };
 
+/* посилання на картку товару (відкривається на сайті у новій вкладці) */
+function prodCell(id, label){
+  return id!=null
+    ? `<a href="/product/${id}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">${esc(label)}</a>`
+    : esc(label);
+}
+
 /* ===================== ТОП ПРОДАЖІВ ===================== */
 let salesInited=false;
 async function initSales(){
@@ -882,7 +889,7 @@ function loadSales(){
   });
   let rows=Object.values(map).map(r=>{
     const p=r.sku?products.find(x=>String(x.sku||'').trim()===r.sku):null;
-    return {title:r.title||(p?p.title:''), sku:r.sku, category:p?p.category:'—', units:r.units, revenue:r.revenue};
+    return {id:p?p.id:null, title:r.title||(p?p.title:''), sku:r.sku, category:p?p.category:'—', units:r.units, revenue:r.revenue};
   });
   if(catF) rows=rows.filter(r=>r.category===catF);
   rows.sort((a,b)=>b.units-a.units || b.revenue-a.revenue);
@@ -895,7 +902,7 @@ function loadSales(){
   if(!rows.length){ box.innerHTML='<div class="loader">Немає продажів за період.</div>'; return; }
   const trs=rows.map((r,i)=>`<tr>
       <td>${i+1}</td>
-      <td>${esc(r.title)}</td>
+      <td>${prodCell(r.id, r.title)}</td>
       <td style="white-space:nowrap">${esc(r.sku||'—')}</td>
       <td>${esc(r.category||'—')}</td>
       <td style="text-align:right;font-weight:600">${r.units}</td>
@@ -960,7 +967,7 @@ async function loadViews(){
   if(!rows.length){ box.innerHTML='<div class="loader">Немає товарів за фільтром.</div>'; return; }
   const trs=rows.map((r,i)=>`<tr>
       <td>${i+1}</td>
-      <td>${esc(r.p.title||'')}</td>
+      <td>${prodCell(r.p.id, r.p.title||'')}</td>
       <td style="white-space:nowrap">${esc(r.p.sku||'—')}</td>
       <td>${esc(r.p.category||'—')}</td>
       <td style="text-align:right;font-weight:600">${r.views}</td>
