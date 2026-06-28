@@ -468,9 +468,10 @@ async function showDashboard(){
   document.querySelectorAll('.tab-btn').forEach(b=>{
     b.style.display = canAccess(b.dataset.tab) ? '' : 'none';
   });
-  // активуємо першу доступну вкладку
+  // активуємо вкладку з URL (#tab) або першу доступну
+  const fromHash=(location.hash||'').replace(/^#/,'');
   const first=(ROLE_ACCESS[currentRole]||['products'])[0];
-  switchTab(first);
+  switchTab(canAccess(fromHash) ? fromHash : first);
 }
 
 /* ---------- list ---------- */
@@ -656,6 +657,7 @@ let orders=[], ordersFiltered=[];
 // перемикання вкладок
 function switchTab(t){
   if(!canAccess(t)) return;
+  if((location.hash||'').replace(/^#/,'')!==t){ try{ history.replaceState(null,'','#'+t); }catch(e){ location.hash=t; } }
   document.querySelectorAll('.tab-btn').forEach(x=>x.classList.toggle('active', x.dataset.tab===t));
   document.getElementById('tabProducts').style.display = t==='products'?'block':'none';
   document.getElementById('tabOrders').style.display   = t==='orders'?'block':'none';
@@ -669,6 +671,7 @@ function switchTab(t){
   if(t==='users') loadUsers();
 }
 document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+window.addEventListener('hashchange',()=>{ const t=(location.hash||'').replace(/^#/,''); if(t && canAccess(t)) switchTab(t); });
 
 async function loadOrders(){
   const box=document.getElementById('ordersBox');
