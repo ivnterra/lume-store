@@ -278,10 +278,10 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
 .pv-price .price-old{font-size:19px}
 .pv-section-label{font-size:14px;color:var(--muted);margin-bottom:10px}
 .pv-desc{color:#5a534d;margin:24px 0;line-height:1.7}
-.pv-promo{background:#211d1a;color:#fff;border-radius:14px;padding:20px 22px;margin:24px 0}
-.pv-promo h4{font-size:15px;font-weight:800;letter-spacing:.3px;margin:0 0 12px;text-transform:uppercase;line-height:1.4}
+.pv-promo{background:#f7ede2;color:var(--ink);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:20px 22px;margin:24px 0}
+.pv-promo h4{font-size:15px;font-weight:800;letter-spacing:.3px;margin:0 0 12px;text-transform:uppercase;line-height:1.4;color:var(--accent-dark)}
 .pv-promo ul{margin:0;padding-left:20px}
-.pv-promo li{margin:7px 0;color:rgba(255,255,255,.82);font-size:14px;line-height:1.5}
+.pv-promo li{margin:7px 0;color:var(--muted);font-size:14px;line-height:1.5}
 .pv-info .btn{margin-top:8px;padding:15px 44px}
 .related{border-top:1px solid var(--line);padding:50px 0 70px;margin-top:20px}
 .related h2{font-size:26px;font-weight:700;text-align:center;margin-bottom:36px}
@@ -903,12 +903,12 @@ function orderFromCard(id){
 function promoFor(p){
   if(p.cat==='Купальники'){
     return `<div class="pv-promo"><h4>При купівлі 2-х купальників — знижка 10% на другий</h4><ul>`
-      +`<li>Знижку рахує менеджер під час підтвердження замовлення — в кошику не відображається.</li>`
-      +`<li>Знижка діє на купальник з меншою вартістю.</li></ul></div>`;
+      +`<li>Знижка діє на купальник з меншою вартістю.</li>`
+      +`<li>Знижку буде показано в кошику та при оформленні замовлення.</li></ul></div>`;
   }
   if(p.cat==='Пляжні накидки'){
     return `<div class="pv-promo"><h4>При купівлі купальника — знижка на пляжну накидку -15%</h4><ul>`
-      +`<li>Знижку рахує менеджер під час підтвердження замовлення — в кошику не відображається.</li></ul></div>`;
+      +`<li>Знижку буде показано в кошику та при оформленні замовлення.</li></ul></div>`;
   }
   return '';
 }
