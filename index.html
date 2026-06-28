@@ -1003,7 +1003,28 @@ function openDetail(id, fromRoute){
   document.getElementById('productView').scrollTop=0;
   document.title = p.title + ' — Talvyna';
   pushEcom('view_content',[{id:p.id,size:detailSize||'',color:detailColor||'',qty:1}]);
+  trackView(p);
   if(!fromRoute){ try{ history.pushState({pid:p.id},'','/product/'+productSlug(p)); }catch(e){} }
+}
+/* лічильник переглядів товару — унікально в межах сесії (Supabase) */
+function viewSession(){
+  let s=sessionStorage.getItem('lume_sid');
+  if(!s){ s='s.'+Date.now()+'.'+Math.random().toString(36).slice(2,10); sessionStorage.setItem('lume_sid',s); }
+  return s;
+}
+function trackView(p){
+  try{
+    const url=window.SUPABASE_URL, key=window.SUPABASE_ANON_KEY;
+    if(!url||!key||!p) return;
+    const seen=JSON.parse(sessionStorage.getItem('lume_viewed')||'[]');
+    if(seen.indexOf(p.id)>=0) return;           // вже рахували цей товар у цій сесії
+    seen.push(p.id); sessionStorage.setItem('lume_viewed', JSON.stringify(seen));
+    fetch(url.replace(/\/+$/,'')+'/rest/v1/product_views',{
+      method:'POST',
+      headers:{apikey:key, Authorization:'Bearer '+key, 'Content-Type':'application/json', Prefer:'resolution=ignore-duplicates,return=minimal'},
+      body:JSON.stringify({product_id:p.id, sku:p.sku||null, session_id:viewSession()})
+    }).catch(()=>{});
+  }catch(e){}
 }
 function selectDetailSize(size,el){
   detailSize=size;

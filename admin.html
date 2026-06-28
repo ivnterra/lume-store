@@ -144,6 +144,7 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
       <div class="tabs">
         <button class="tab-btn active" data-tab="products">Товари</button>
         <button class="tab-btn" data-tab="orders">Замовлення</button>
+        <button class="tab-btn" data-tab="views">Перегляди</button>
         <button class="tab-btn" data-tab="users" style="display:none">Користувачі</button>
       </div>
       <div class="topbar-actions">
@@ -187,6 +188,31 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
       <input type="text" id="oSearch" placeholder="Пошук: ім'я, телефон, UTM…">
     </div>
     <div id="ordersBox"></div>
+  </div>
+
+  <!-- TAB: перегляди -->
+  <div class="wrap" id="tabViews" style="display:none">
+    <div class="head-row">
+      <h2>Перегляди товарів</h2>
+      <button class="btn btn-sm" id="refreshViews">↻ Оновити</button>
+    </div>
+    <div class="filters-row" id="viewPresets">
+      <button class="btn btn-ghost btn-sm" data-range="today">Сьогодні</button>
+      <button class="btn btn-ghost btn-sm" data-range="week">Цей тиждень</button>
+      <button class="btn btn-ghost btn-sm" data-range="lastweek">Минулий тиждень</button>
+      <button class="btn btn-ghost btn-sm" data-range="month">Цей місяць</button>
+      <button class="btn btn-ghost btn-sm" data-range="lastmonth">Минулий місяць</button>
+      <button class="btn btn-ghost btn-sm" data-range="all">За весь час</button>
+    </div>
+    <div class="filters-row">
+      <span class="muted">Період:</span>
+      <input type="date" id="vFrom" title="Від">
+      <input type="date" id="vTo" title="До">
+      <select id="vCat"><option value="">Усі категорії</option></select>
+      <button class="btn btn-sm" id="applyViews">Показати</button>
+    </div>
+    <div class="stat-pills" id="viewStats"></div>
+    <div id="viewsBox"></div>
   </div>
 
   <!-- TAB: користувачі -->
@@ -327,9 +353,9 @@ let sb=null, products=[], formImages=[];
 /* ---------- ролі та доступ ---------- */
 const ROLE_LABELS={admin:'Адміністратор',manager:'Менеджер',content:'Контент-менеджер'};
 const ROLE_ACCESS={
-  admin:['products','orders','users'],
-  manager:['orders'],
-  content:['products']
+  admin:['products','orders','views','users'],
+  manager:['orders','views'],
+  content:['products','views']
 };
 let currentUser=null, currentRole='admin';
 function canAccess(tab){ return (ROLE_ACCESS[currentRole]||[]).includes(tab); }
@@ -607,9 +633,11 @@ function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach(x=>x.classList.toggle('active', x.dataset.tab===t));
   document.getElementById('tabProducts').style.display = t==='products'?'block':'none';
   document.getElementById('tabOrders').style.display   = t==='orders'?'block':'none';
+  document.getElementById('tabViews').style.display    = t==='views'?'block':'none';
   document.getElementById('tabUsers').style.display    = t==='users'?'block':'none';
   if(t==='products' && !products.length) loadList();
   if(t==='orders' && !orders.length) loadOrders();
+  if(t==='views') initViews();
   if(t==='users') loadUsers();
 }
 document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
@@ -781,6 +809,70 @@ document.getElementById('expXlsx').onclick=()=>{
   const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Замовлення');
   XLSX.writeFile(wb, `orders_${stamp()}.xlsx`);
 };
+
+/* ===================== ПЕРЕГЛЯДИ ТОВАРІВ ===================== */
+let viewsInited=false;
+function ymd(d){ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),da=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${da}`; }
+function weekStart(d){ const x=new Date(d); const wd=(x.getDay()+6)%7; x.setDate(x.getDate()-wd); return x; } // понеділок
+function viewRange(key){
+  const now=new Date(); let from,to=new Date(now);
+  if(key==='today'){ from=new Date(now); }
+  else if(key==='week'){ from=weekStart(now); }
+  else if(key==='lastweek'){ const ws=weekStart(now); to=new Date(ws); to.setDate(to.getDate()-1); from=new Date(to); from.setDate(from.getDate()-6); }
+  else if(key==='month'){ from=new Date(now.getFullYear(),now.getMonth(),1); }
+  else if(key==='lastmonth'){ from=new Date(now.getFullYear(),now.getMonth()-1,1); to=new Date(now.getFullYear(),now.getMonth(),0); }
+  else { from=new Date(2020,0,1); } // за весь час
+  return {from:ymd(from), to:ymd(to)};
+}
+async function initViews(){
+  if(!products.length) await loadList();  // потрібні назви/категорії товарів
+  const sel=document.getElementById('vCat');
+  if(sel.options.length<=1){
+    [...new Set(products.map(p=>p.category).filter(Boolean))].forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+  }
+  if(!viewsInited){
+    viewsInited=true;
+    const r=viewRange('month'); document.getElementById('vFrom').value=r.from; document.getElementById('vTo').value=r.to;
+    document.getElementById('applyViews').onclick=loadViews;
+    document.getElementById('refreshViews').onclick=loadViews;
+    document.querySelectorAll('#viewPresets [data-range]').forEach(b=>b.onclick=()=>{
+      const rr=viewRange(b.dataset.range);
+      document.getElementById('vFrom').value=rr.from; document.getElementById('vTo').value=rr.to;
+      loadViews();
+    });
+  }
+  loadViews();
+}
+async function loadViews(){
+  const box=document.getElementById('viewsBox');
+  box.innerHTML='<div class="loader">Завантаження…</div>';
+  const d_from=document.getElementById('vFrom').value, d_to=document.getElementById('vTo').value;
+  if(!d_from||!d_to){ box.innerHTML='<div class="loader">Вкажіть період.</div>'; return; }
+  const {data,error}=await sb.rpc('product_view_stats',{d_from,d_to});
+  if(error){ box.innerHTML='<div class="loader">Помилка: '+esc(error.message)+'</div>'; return; }
+  const stats=data||[];
+  const byId={}; stats.forEach(s=>byId[s.product_id]=Number(s.views));
+  const cat=document.getElementById('vCat').value;
+  const rows=products
+    .filter(p=>!cat||p.category===cat)
+    .map(p=>({p, views:byId[p.id]||0}))
+    .sort((a,b)=>b.views-a.views);
+  const totalViews=stats.reduce((s,x)=>s+Number(x.views),0);
+  document.getElementById('viewStats').innerHTML=
+    `<div class="pill">Усього переглядів: <b>${totalViews}</b></div>`+
+    `<div class="pill">Товарів з переглядами: <b>${stats.length}</b></div>`;
+  if(!rows.length){ box.innerHTML='<div class="loader">Немає товарів за фільтром.</div>'; return; }
+  const trs=rows.map((r,i)=>`<tr>
+      <td>${i+1}</td>
+      <td>${esc(r.p.title||'')}</td>
+      <td style="white-space:nowrap">${esc(r.p.sku||'—')}</td>
+      <td>${esc(r.p.category||'—')}</td>
+      <td style="text-align:right;font-weight:600">${r.views}</td>
+    </tr>`).join('');
+  box.innerHTML=`<div class="table-wrap"><table class="otable">
+    <thead><tr><th style="width:40px">#</th><th>Товар</th><th>Артикул</th><th>Категорія</th><th style="text-align:right">Перегляди</th></tr></thead>
+    <tbody>${trs}</tbody></table></div>`;
+}
 
 /* ===================== КОРИСТУВАЧІ ===================== */
 let users=[];
