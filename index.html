@@ -1021,7 +1021,7 @@ function trackView(p){
     seen.push(p.id); sessionStorage.setItem('lume_viewed', JSON.stringify(seen));
     fetch(url.replace(/\/+$/,'')+'/rest/v1/product_views',{
       method:'POST',
-      headers:{apikey:key, Authorization:'Bearer '+key, 'Content-Type':'application/json', Prefer:'resolution=ignore-duplicates,return=minimal'},
+      headers:{apikey:key, Authorization:'Bearer '+key, 'Content-Type':'application/json', Prefer:'return=minimal'},
       body:JSON.stringify({product_id:p.id, sku:p.sku||null, session_id:viewSession()})
     }).catch(()=>{});
   }catch(e){}
