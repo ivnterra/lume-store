@@ -144,6 +144,7 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
       <div class="tabs">
         <button class="tab-btn active" data-tab="products">Товари</button>
         <button class="tab-btn" data-tab="orders">Замовлення</button>
+        <button class="tab-btn" data-tab="sales">Топ продажів</button>
         <button class="tab-btn" data-tab="views">Перегляди</button>
         <button class="tab-btn" data-tab="users" style="display:none">Користувачі</button>
       </div>
@@ -188,6 +189,31 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
       <input type="text" id="oSearch" placeholder="Пошук: ім'я, телефон, UTM…">
     </div>
     <div id="ordersBox"></div>
+  </div>
+
+  <!-- TAB: топ продажів -->
+  <div class="wrap" id="tabSales" style="display:none">
+    <div class="head-row">
+      <h2>Топ продажів</h2>
+      <button class="btn btn-sm" id="refreshSales">↻ Оновити</button>
+    </div>
+    <div class="filters-row" id="salePresets">
+      <button class="btn btn-ghost btn-sm" data-range="today">Сьогодні</button>
+      <button class="btn btn-ghost btn-sm" data-range="week">Цей тиждень</button>
+      <button class="btn btn-ghost btn-sm" data-range="lastweek">Минулий тиждень</button>
+      <button class="btn btn-ghost btn-sm" data-range="month">Цей місяць</button>
+      <button class="btn btn-ghost btn-sm" data-range="lastmonth">Минулий місяць</button>
+      <button class="btn btn-ghost btn-sm" data-range="all">За весь час</button>
+    </div>
+    <div class="filters-row">
+      <span class="muted">Період:</span>
+      <input type="date" id="sFrom" title="Від">
+      <input type="date" id="sTo" title="До">
+      <select id="sCat"><option value="">Усі категорії</option></select>
+      <button class="btn btn-sm" id="applySales">Показати</button>
+    </div>
+    <div class="stat-pills" id="saleStats"></div>
+    <div id="salesBox"></div>
   </div>
 
   <!-- TAB: перегляди -->
@@ -353,8 +379,8 @@ let sb=null, products=[], formImages=[];
 /* ---------- ролі та доступ ---------- */
 const ROLE_LABELS={admin:'Адміністратор',manager:'Менеджер',content:'Контент-менеджер'};
 const ROLE_ACCESS={
-  admin:['products','orders','views','users'],
-  manager:['orders','views'],
+  admin:['products','orders','sales','views','users'],
+  manager:['orders','sales','views'],
   content:['products','views']
 };
 let currentUser=null, currentRole='admin';
@@ -633,10 +659,12 @@ function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach(x=>x.classList.toggle('active', x.dataset.tab===t));
   document.getElementById('tabProducts').style.display = t==='products'?'block':'none';
   document.getElementById('tabOrders').style.display   = t==='orders'?'block':'none';
+  document.getElementById('tabSales').style.display    = t==='sales'?'block':'none';
   document.getElementById('tabViews').style.display    = t==='views'?'block':'none';
   document.getElementById('tabUsers').style.display    = t==='users'?'block':'none';
   if(t==='products' && !products.length) loadList();
   if(t==='orders' && !orders.length) loadOrders();
+  if(t==='sales') initSales();
   if(t==='views') initViews();
   if(t==='users') loadUsers();
 }
@@ -809,6 +837,74 @@ document.getElementById('expXlsx').onclick=()=>{
   const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Замовлення');
   XLSX.writeFile(wb, `orders_${stamp()}.xlsx`);
 };
+
+/* ===================== ТОП ПРОДАЖІВ ===================== */
+let salesInited=false;
+async function initSales(){
+  if(!orders.length) await loadOrders();   // агрегуємо із замовлень
+  if(!products.length) await loadList();    // для категорій товарів
+  const sel=document.getElementById('sCat');
+  if(sel.options.length<=1){
+    [...new Set(products.map(p=>p.category).filter(Boolean))].forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+  }
+  if(!salesInited){
+    salesInited=true;
+    const r=viewRange('month'); document.getElementById('sFrom').value=r.from; document.getElementById('sTo').value=r.to;
+    document.getElementById('applySales').onclick=loadSales;
+    document.getElementById('refreshSales').onclick=async()=>{ await loadOrders(); loadSales(); };
+    document.querySelectorAll('#salePresets [data-range]').forEach(b=>b.onclick=()=>{
+      const rr=viewRange(b.dataset.range);
+      document.getElementById('sFrom').value=rr.from; document.getElementById('sTo').value=rr.to;
+      loadSales();
+    });
+  }
+  loadSales();
+}
+function loadSales(){
+  const box=document.getElementById('salesBox');
+  const from=document.getElementById('sFrom').value, to=document.getElementById('sTo').value;
+  if(!from||!to){ box.innerHTML='<div class="loader">Вкажіть період.</div>'; return; }
+  const catF=document.getElementById('sCat').value;
+  const map={};
+  orders.filter(o=>(o.type||'order')!=='contact').forEach(o=>{
+    const d=(o.created_at||'').slice(0,10);
+    if(d<from||d>to) return;
+    (Array.isArray(o.items)?o.items:[]).forEach(it=>{
+      const sku=String(it.sku||'').trim();
+      const key=sku||('t:'+String(it.title||''));
+      if(!map[key]) map[key]={title:String(it.title||''), sku, units:0, revenue:0};
+      const qty=Number(it.qty)||1;
+      // виручка з урахуванням акційної знижки (final), інакше — стара сума
+      const rev = it.final!=null ? Number(it.final) : (Number(it.sum) || (Number(it.price)||0)*qty);
+      map[key].units+=qty;
+      map[key].revenue+=rev;
+    });
+  });
+  let rows=Object.values(map).map(r=>{
+    const p=r.sku?products.find(x=>String(x.sku||'').trim()===r.sku):null;
+    return {title:r.title||(p?p.title:''), sku:r.sku, category:p?p.category:'—', units:r.units, revenue:r.revenue};
+  });
+  if(catF) rows=rows.filter(r=>r.category===catF);
+  rows.sort((a,b)=>b.units-a.units || b.revenue-a.revenue);
+  const totalUnits=rows.reduce((s,r)=>s+r.units,0);
+  const totalRev=rows.reduce((s,r)=>s+r.revenue,0);
+  document.getElementById('saleStats').innerHTML=
+    `<div class="pill">Продано одиниць: <b>${totalUnits}</b></div>`+
+    `<div class="pill">Виручка: <b>${Math.round(totalRev).toLocaleString('uk-UA')} грн.</b></div>`+
+    `<div class="pill">Позицій: <b>${rows.length}</b></div>`;
+  if(!rows.length){ box.innerHTML='<div class="loader">Немає продажів за період.</div>'; return; }
+  const trs=rows.map((r,i)=>`<tr>
+      <td>${i+1}</td>
+      <td>${esc(r.title)}</td>
+      <td style="white-space:nowrap">${esc(r.sku||'—')}</td>
+      <td>${esc(r.category||'—')}</td>
+      <td style="text-align:right;font-weight:600">${r.units}</td>
+      <td style="text-align:right;white-space:nowrap">${Math.round(r.revenue).toLocaleString('uk-UA')} грн.</td>
+    </tr>`).join('');
+  box.innerHTML=`<div class="table-wrap"><table class="otable">
+    <thead><tr><th style="width:40px">#</th><th>Товар</th><th>Артикул</th><th>Категорія</th><th style="text-align:right">Продано</th><th style="text-align:right">Виручка</th></tr></thead>
+    <tbody>${trs}</tbody></table></div>`;
+}
 
 /* ===================== ПЕРЕГЛЯДИ ТОВАРІВ ===================== */
 let viewsInited=false;
