@@ -126,10 +126,6 @@ export default async function handler(req, res) {
     const geoStr = [geoCountry, geoCity].filter(Boolean).join(', ');
     if (geoStr) text += `\n\n🌍 Гео (IP): ${geoStr}`;
     if (utmLines.length) text += `\n\n🔗 UTM:\n${utmLines.join('\n')}`;
-    const refStr = String(body.referrer || '').trim();
-    const landStr = String(body.landing || '').trim();
-    if (refStr) text += `\n\n↩️ Реферер: ${refStr.slice(0, 300)}`;
-    if (landStr) text += `\n🔗 Лендінг: ${landStr.slice(0, 300)}`;
 
     // ---- попередження: товар(и) без маппінгу в CRM (пішли як заглушка) ----
     if (!isContact && process.env.LPCRM_KEY) {
