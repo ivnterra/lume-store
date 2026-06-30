@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Прискорення з'єднань: дані та фото — з Supabase, аналітика — GTM/FB -->
-<link rel="preconnect" href="https://gwzywunqffubbmscmgam.supabase.co">
-<link rel="preconnect" href="https://gwzywunqffubbmscmgam.supabase.co" crossorigin>
+<link rel="preconnect" href="https://img.talvyna.com">
+<link rel="preconnect" href="https://img.talvyna.com" crossorigin>
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 <link rel="dns-prefetch" href="https://connect.facebook.net">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <!-- LCP: головне фото героя вантажиться першочергово -->
-<link rel="preload" as="image" fetchpriority="high" href="https://gwzywunqffubbmscmgam.supabase.co/storage/v1/render/image/public/product-images/kup-50-10/1.jpg?width=1200&quality=70">
+<link rel="preload" as="image" fetchpriority="high" href="https://img.talvyna.com/storage/v1/render/image/public/product-images/kup-50-10/1.jpg?width=1200&quality=70">
 <meta name="facebook-domain-verification" content="cw46mzl5vnz83l5mlw0h01grxspn3l" />
 <title>Talvyna — Магазин одягу та аксесуарів</title>
 <meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів Talvyna. Доставка по Україні Новою Поштою.">
@@ -335,7 +335,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
 <section class="hero">
   <div class="slides" id="slides">
     <div class="slide">
-      <div class="slide-bg slide-1" style="background-image:linear-gradient(120deg,rgba(50,38,28,.6),rgba(50,38,28,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/render/image/public/product-images/kup-50-10/1.jpg?width=1200&quality=70')"></div>
+      <div class="slide-bg slide-1" style="background-image:linear-gradient(120deg,rgba(50,38,28,.6),rgba(50,38,28,.15)),url('https://img.talvyna.com/storage/v1/render/image/public/product-images/kup-50-10/1.jpg?width=1200&quality=70')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Купальники 2026</div>
         <h1>Купальники, що пасують кожній</h1>
@@ -344,7 +344,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
       </div>
     </div>
     <div class="slide">
-      <div class="slide-bg slide-2" style="background-image:linear-gradient(120deg,rgba(45,42,40,.6),rgba(45,42,40,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/render/image/public/product-images/nak-13-11/1.png?width=1200&quality=70')"></div>
+      <div class="slide-bg slide-2" style="background-image:linear-gradient(120deg,rgba(45,42,40,.6),rgba(45,42,40,.15)),url('https://img.talvyna.com/storage/v1/render/image/public/product-images/nak-13-11/1.png?width=1200&quality=70')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Пляжні накидки</div>
         <h1>Легкі накидки для пляжу</h1>
@@ -353,7 +353,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
       </div>
     </div>
     <div class="slide">
-      <div class="slide-bg slide-3" style="background-image:linear-gradient(120deg,rgba(40,48,44,.6),rgba(40,48,44,.15)),url('https://gwzywunqffubbmscmgam.supabase.co/storage/v1/render/image/public/product-images/kup-50-42/1.jpg?width=1200&quality=70')"></div>
+      <div class="slide-bg slide-3" style="background-image:linear-gradient(120deg,rgba(40,48,44,.6),rgba(40,48,44,.15)),url('https://img.talvyna.com/storage/v1/render/image/public/product-images/kup-50-42/1.jpg?width=1200&quality=70')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Великі розміри до 7XL</div>
         <h1>Купальники для пишних форм</h1>
@@ -770,10 +770,13 @@ function shade(hex){
 function prodColor(p){return p.color||FALLBACK_COLORS[(Number(p.id)||0)%FALLBACK_COLORS.length];}
 function prodIcon(p){return p.icon||CAT_ICON[p.cat]||'🛍️';}
 /* Ресайз/оптимізація фото через Supabase render/image (стискає + віддає WebP).
+   Віддача йде через Cloudflare (img.talvyna.com) — безкоштовний egress + кеш.
    Для не-Supabase URL повертає як є. width — потрібна ширина у px. */
+const IMG_HOST='img.talvyna.com';
 function imgCDN(url, w){
   if(!url || url.indexOf('/storage/v1/object/public/')<0) return url;
   return url.replace('/storage/v1/object/public/','/storage/v1/render/image/public/')
+    .replace('gwzywunqffubbmscmgam.supabase.co', IMG_HOST)
     + (url.indexOf('?')<0?'?':'&') + 'width='+w+'&quality=70';
 }
 function imgBlock(p){
