@@ -98,3 +98,36 @@ event_id:     'lume…'             // для дедупликации Pixel ↔
 2. Meta **Events Manager → Test Events** → ViewContent/AddToCart/Purchase
    приходят с `content_type=product` и `content_ids`.
 3. Через 1–2 дня трафика **Catalog → Events / Match rate** должен расти к 90%+.
+
+## Server-side GTM (Stape) + Conversions API
+
+Настроен серверный контейнер на **Stape** (план Pro) с кастомным доменом для
+first-party отслеживания и Conversions API.
+
+- **Server (tagging) URL:** `https://data.talvyna.com` — статус Ready.
+  - CDN: Stape Global CDN включён.
+  - DNS (Cloudflare, обе записи — Proxy OFF / DNS only):
+    - `CNAME  data.talvyna.com       -> eug.stape.io`
+    - `CNAME  load.data.talvyna.com  -> leug.stape.io`
+- Pixel ID: **1504239990677358**.
+
+### Что осталось настроить в GTM (задача для cowork)
+1. **Веб-контейнер (GTM-577GH9TH):** направить отправку событий Meta на
+   серверный домен — first-party через `https://data.talvyna.com`
+   (server container URL / `transport_url`), чтобы события шли через свой домен,
+   а не напрямую в Facebook.
+2. **Серверный контейнер GTM:** прописать Server Container URL
+   `https://data.talvyna.com`, настроить клиент (GA4/Meta) на приём событий.
+3. **Facebook Conversions API** (тег в серверном контейнере):
+   - события `ViewContent`, `AddToCart`, `Purchase`;
+   - `content_type=product`, `content_ids` в формате фида (`51-31`);
+   - **тот же `event_id`, что и у браузерного пикселя** — для дедупликации
+     (браузер + сервер не должны считаться дважды).
+4. Проверка: Meta **Events Manager → Test Events** — события приходят и
+   помечены как Browser + Server с одним Event ID (deduplicated).
+
+### Сторона кода сайта
+Маршрутизация через `data.talvyna.com` настраивается в GTM (`transport_url`),
+правок в коде сайта, как правило, не требует. dataLayer уже шлёт нужные поля
+(`content_ids`, `event_id`, `value`, `currency` — см. выше). Если при настройке
+sGTM понадобится правка на сайте — согласовать отдельно.
