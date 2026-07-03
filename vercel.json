@@ -4,6 +4,7 @@
     { "path": "/api/img-usage-check", "schedule": "0 9 * * *" }
   ],
   "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/product/:id", "destination": "/" }
   ],
   "headers": [
