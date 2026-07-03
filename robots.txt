@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /thanks
+
+Sitemap: https://talvyna.com/sitemap.xml
