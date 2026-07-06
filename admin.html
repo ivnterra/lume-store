@@ -52,7 +52,7 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 .prow .pinfo .m{font-size:12px;color:var(--muted);margin-top:2px}
 .prow .pinfo .pr{font-size:14px;font-weight:600;margin-top:3px}
 .prow .pr .old{color:var(--muted);text-decoration:line-through;font-weight:400;margin-left:6px;font-size:12px}
-.prow-actions{display:flex;gap:8px}
+.prow-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:20px;padding:2px 9px;margin-left:6px}
 .tag.sale{background:#c0564e}.tag.new{background:#e8654f}.tag.hit{background:#a06d44}
 
@@ -299,8 +299,8 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
           </select>
         </div>
         <div class="field">
-          <label>Порядок (менше = вище)</label>
-          <input type="number" id="psort" value="0">
+          <label>Порядок (менше = вище; порожньо — на початок категорії)</label>
+          <input type="number" id="psort" placeholder="авто">
         </div>
       </div>
       <div class="field">
@@ -497,6 +497,8 @@ async function loadList(){
         <div class="pr">${(p.price||0).toLocaleString('uk-UA')} грн.${p.old_price?`<span class="old">${p.old_price.toLocaleString('uk-UA')} грн.</span>`:''}</div>
       </div>
       <div class="prow-actions">
+        <button class="btn btn-ghost btn-sm" data-up="${p.id}" title="Пересунути вище">▲</button>
+        <button class="btn btn-ghost btn-sm" data-down="${p.id}" title="Пересунути нижче">▼</button>
         <button class="btn btn-ghost btn-sm" data-edit="${p.id}">Редагувати</button>
         <button class="btn btn-danger btn-sm" data-del="${p.id}">✕</button>
       </div>`;
@@ -504,6 +506,33 @@ async function loadList(){
   });
   box.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openForm(+b.dataset.edit));
   box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delProduct(+b.dataset.del));
+  box.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>moveProduct(+b.dataset.up,-1));
+  box.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>moveProduct(+b.dataset.down,1));
+}
+
+// нове місце в порядку: на початок своєї категорії; нова категорія — в кінець каталогу
+function autoSort(cat){
+  const nums=a=>a.map(p=>p.sort).filter(s=>typeof s==='number');
+  const same=nums(products.filter(p=>p.category===cat));
+  if(same.length) return Math.min(...same)-1;
+  const all=nums(products);
+  return all.length ? Math.max(...all)+1 : 100;
+}
+
+// поміняти картку місцями із сусідом у межах своєї категорії
+async function moveProduct(id,dir){
+  const p=products.find(x=>x.id===id); if(!p) return;
+  const same=products.filter(x=>x.category===p.category);
+  const i=same.findIndex(x=>x.id===id), j=i+dir;
+  if(j<0||j>=same.length) return;
+  const b=same[j];
+  const sa=p.sort??0, sb=b.sort??0;
+  const upd = sa!==sb ? [[p.id,sb],[b.id,sa]] : [[p.id,sa+dir]];
+  for(const [pid,s] of upd){
+    const {error}=await sb.from('products').update({sort:s}).eq('id',pid);
+    if(error){ alert('Помилка: '+error.message); return; }
+  }
+  loadList();
 }
 
 /* ---------- form ---------- */
@@ -522,7 +551,7 @@ function openForm(id){
   document.getElementById('pprice').value = p?p.price:'';
   document.getElementById('pold').value = p?(p.old_price||''):'';
   document.getElementById('pbadge').value = p?(p.badge||''):'';
-  document.getElementById('psort').value = p?(p.sort||0):0;
+  document.getElementById('psort').value = p?(p.sort||0):'';
   document.getElementById('pdesc').value = p?(p.description||''):'';
   document.getElementById('psizesCustom').value='';
   const sizes = p?(p.sizes||[]):['XL','2XL','3XL','4XL','5XL'];
@@ -612,14 +641,23 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
   const msg=document.getElementById('formMsg'); msg.className='msg err'; msg.textContent='';
   const saveBtn=document.getElementById('saveBtn'); saveBtn.disabled=true; saveBtn.textContent='Збереження…';
   try{
+    const id=document.getElementById('pid').value;
+    const category=document.getElementById('pcat').value.trim()||null;
+    // порядок: якщо поле порожнє — для нового товару ставимо на початок його категорії,
+    // для існуючого лишаємо як було
+    let sortVal=parseInt(document.getElementById('psort').value);
+    if(isNaN(sortVal)){
+      if(id){ const cur=products.find(x=>x.id===+id); sortVal=cur?(cur.sort||0):0; }
+      else sortVal=autoSort(category);
+    }
     const payload={
       title:document.getElementById('ptitle').value.trim(),
       sku:document.getElementById('psku').value.trim()||null,
-      category:document.getElementById('pcat').value.trim()||null,
+      category,
       price:parseInt(document.getElementById('pprice').value)||0,
       old_price:document.getElementById('pold').value?parseInt(document.getElementById('pold').value):null,
       badge:document.getElementById('pbadge').value||null,
-      sort:parseInt(document.getElementById('psort').value)||0,
+      sort:sortVal,
       sizes:collectSizes(),
       variants:collectVariants(),
       description:document.getElementById('pdesc').value.trim()||null,
@@ -627,7 +665,6 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
       images:formImages,
       image_url:formImages[0]||null
     };
-    const id=document.getElementById('pid').value;
     let res;
     if(id) res=await sb.from('products').update(payload).eq('id',id);
     else   res=await sb.from('products').insert(payload);
