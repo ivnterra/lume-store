@@ -107,6 +107,7 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 .otable tr:last-child td{border-bottom:none}
 .otable .cell-items{max-width:260px;font-size:12px;color:#5a534d}
 .otable .cell-utm{width:280px;min-width:280px;font-size:12px;white-space:normal;overflow-wrap:break-word;line-height:1.5}
+.otable .cell-comment{max-width:280px;font-size:12px;color:#5a534d;white-space:normal;overflow-wrap:break-word;line-height:1.5}
 .otable select{padding:6px 8px;border-radius:8px;font-size:12px;min-width:118px}
 .stat-pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .pill{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:13px}
@@ -730,7 +731,7 @@ function applyOrderFilters(){
     if(from && d<from) return false;
     if(to && d>to) return false;
     if(q){
-      const hay=[o.name,o.phone,o.utm_source,o.utm_medium,o.utm_campaign].filter(Boolean).join(' ').toLowerCase();
+      const hay=[o.name,o.phone,o.comment,o.utm_source,o.utm_medium,o.utm_campaign].filter(Boolean).join(' ').toLowerCase();
       if(hay.indexOf(q)<0) return false;
     }
     return true;
@@ -755,6 +756,7 @@ function renderOrders(){
     const utm=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].filter(k=>o[k]).map(k=>`${k}: ${esc(o[k])}`).join('<br>')||'—';
     const geo=[o.geo_country,o.geo_city].filter(Boolean).map(esc).join(', ')||'—';
     const dt=o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'';
+    const comment=o.comment?esc(o.comment).replace(/\n/g,'<br>'):'—';
     return `<tr>
       <td style="text-align:center"><input type="checkbox" class="ord-check" data-id="${o.id}"></td>
       <td style="white-space:nowrap;font-weight:600">#${esc(String(o.id))}</td>
@@ -763,6 +765,7 @@ function renderOrders(){
       <td>${esc(o.name||'')}</td>
       <td style="white-space:nowrap">${esc(o.phone||'')}</td>
       <td>${o.email?esc(o.email):'—'}</td>
+      <td class="cell-comment">${comment}</td>
       <td>${delivery}</td>
       <td class="cell-items">${items}</td>
       <td style="white-space:nowrap;font-size:12px">${skus}</td>
@@ -779,7 +782,7 @@ function renderOrders(){
       <button class="btn btn-danger btn-sm" id="bulkDel">🗑️ Видалити вибрані</button>
     </div>
     <div class="table-wrap"><table class="otable">
-    <thead><tr><th style="width:34px;text-align:center"><input type="checkbox" id="ordCheckAll" title="Вибрати всі"></th><th>№</th><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Email</th><th>Доставка</th><th>Товари</th><th>Артикул</th><th>Сума</th><th>UTM</th><th>Гео (IP)</th><th>Статус</th><th></th></tr></thead>
+    <thead><tr><th style="width:34px;text-align:center"><input type="checkbox" id="ordCheckAll" title="Вибрати всі"></th><th>№</th><th>Дата</th><th>Тип</th><th>Ім'я</th><th>Телефон</th><th>Email</th><th>Повідомлення</th><th>Доставка</th><th>Товари</th><th>Артикул</th><th>Сума</th><th>UTM</th><th>Гео (IP)</th><th>Статус</th><th></th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
   box.querySelectorAll('[data-status]').forEach(s=>s.onchange=()=>updateOrderStatus(+s.dataset.status,s.value));
   box.querySelectorAll('[data-delorder]').forEach(b=>b.onclick=()=>delOrder(+b.dataset.delorder));
@@ -842,6 +845,7 @@ function flattenOrder(o){
     Дата:o.created_at?new Date(o.created_at).toLocaleString('uk-UA'):'',
     Тип:(o.type||'order')==='contact'?'Заявка':'Замовлення',
     "Ім'я":o.name||'', Телефон:o.phone||'', Email:o.email||'',
+    Повідомлення:o.comment||'',
     Місто:o.city||'', Відділення_НП:o.np_branch||'', Оплата:o.pay||'',
     Товари:items, Артикул:skus, Сума:o.total||0, Статус:STATUS_LABEL[o.status||'new']||o.status||'',
     utm_source:o.utm_source||'', utm_medium:o.utm_medium||'', utm_campaign:o.utm_campaign||'',

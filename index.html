@@ -196,8 +196,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .iti__selected-dial-code{color:var(--muted)}
 
 /* INPUTS */
-input,select{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
-input:focus,select:focus{outline:none;border-color:var(--accent)}
+input,select,textarea{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{resize:vertical;min-height:96px;line-height:1.5}
 .field-err{border-color:#c0564e!important}
 .err-msg{color:#ffb4ae;font-size:13px;display:none}
 .contact-form label,.modal label{font-size:14px;font-weight:500;display:block;margin-bottom:6px}
@@ -475,7 +476,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
 <section class="section contact" id="contacts">
   <div class="container">
     <h2>Маєте питання?</h2>
-    <p class="sub">Залиште контакти — наш менеджер зв'яжеться з вами</p>
+    <p class="sub">Залиште контакти та опишіть, що вас цікавить — наш менеджер зв'яжеться з вами</p>
     <form class="contact-form" id="contactForm" novalidate>
       <div>
         <input type="text" id="cName" placeholder="Ім'я">
@@ -484,6 +485,9 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
       <div>
         <input type="tel" id="cPhone" placeholder="Ваш телефон">
         <span class="err-msg" id="cPhoneErr">Вкажіть коректний номер</span>
+      </div>
+      <div>
+        <textarea id="cComment" rows="4" maxlength="1000" placeholder="Ваше запитання або побажання — напишіть, що вас цікавить (необов'язково)"></textarea>
       </div>
       <label class="checkbox-row">
         <input type="checkbox" id="cAgree">
@@ -1420,6 +1424,7 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
 document.getElementById('contactForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const name=document.getElementById('cName'),phone=document.getElementById('cPhone'),agree=document.getElementById('cAgree');
+  const comment=document.getElementById('cComment');
   let ok=true;
   setErr(name,document.getElementById('cNameErr'),!name.value.trim());if(!name.value.trim())ok=false;
   const cPhoneOk=phoneValid(itiContact,phone);
@@ -1430,7 +1435,7 @@ document.getElementById('contactForm').addEventListener('submit',async e=>{
   if(btn){btn.disabled=true;btn.textContent='Відправлення…';}
   try{
     const first=getFirst();
-    const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'contact',name:name.value.trim(),phone:phoneNumber(itiContact,phone),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href})});
+    const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'contact',name:name.value.trim(),phone:phoneNumber(itiContact,phone),comment:comment.value.trim(),utm:getUTM(),referrer:first.referrer||document.referrer||'',landing:first.landing||location.href})});
     if(!r.ok) throw new Error();
     window.dataLayer=window.dataLayer||[];
     window.dataLayer.push({event:'lead',lead_type:'contact',customer_name:name.value.trim(),customer_phone:phoneNumber(itiContact,phone)});

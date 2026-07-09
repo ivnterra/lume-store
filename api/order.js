@@ -21,17 +21,24 @@ async function saveOrder(record) {
   const SB = process.env.SUPABASE_URL;
   const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!SB || !KEY) return; // база не налаштована — пропускаємо, замовлення все одно піде у Telegram
+  const post = body => fetch(`${SB.replace(/\/$/, '')}/rest/v1/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': KEY,
+      'Authorization': 'Bearer ' + KEY,
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify(body)
+  });
   try {
-    await fetch(`${SB.replace(/\/$/, '')}/rest/v1/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': KEY,
-        'Authorization': 'Bearer ' + KEY,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(record)
-    });
+    let r = await post(record);
+    // поки колонку comment не додано в orders — повторюємо без неї, щоб не втратити заявку
+    if (!r.ok && 'comment' in record) {
+      const { comment, ...rest } = record;
+      r = await post(rest);
+    }
+    if (!r.ok) console.error('saveOrder failed:', r.status, await r.text());
   } catch (e) {
     // не зриваємо замовлення через помилку запису у базу
     console.error('saveOrder failed:', e);
@@ -69,6 +76,7 @@ export default async function handler(req, res) {
     const city = String(body.city || '').trim().slice(0, 160);
     const npBranch = String(body.np_branch || '').trim().slice(0, 200);
     const email = String(body.email || '').trim().slice(0, 200);
+    const comment = String(body.comment || '').trim().slice(0, 1000);
 
     if (!isContact && !items.length) {
       res.status(400).json({ error: 'empty order' });
@@ -92,7 +100,8 @@ export default async function handler(req, res) {
       text =
         `📩 Нова заявка (форма зв'язку) — Talvyna\n\n` +
         `👤 Ім'я: ${name}\n` +
-        `📞 Телефон: ${phone}`;
+        `📞 Телефон: ${phone}` +
+        (comment ? `\n\n💬 Повідомлення:\n${comment}` : '');
     } else {
       const lines = items
         .map(it => {
@@ -143,6 +152,7 @@ export default async function handler(req, res) {
       type: isContact ? 'contact' : 'order',
       name, phone,
       email: email || null,
+      comment: comment || null,
       city: isContact ? null : (city || null),
       np_branch: isContact ? null : (npBranch || null),
       pay: isContact ? null : (pay || null),
