@@ -28,15 +28,17 @@ window.dataLayer=window.dataLayer||[];
     var p=JSON.parse(sessionStorage.getItem('lume_purchase')||'null');
     if(p){
       window.dataLayer.push({ecommerce:null});
-      window.dataLayer.push({
+      var ev={
         event:'purchase',
         currency:p.currency||'UAH', value:p.value,
         content_type:'product', content_ids:p.content_ids, contents:p.contents,
         content_name:p.content_name, num_items:p.num_items,
         transaction_id:p.transaction_id, event_id:p.event_id,
-        customer_name:p.customer_name, customer_phone:p.customer_phone, customer_email:p.customer_email,
+        customer_name:p.customer_name, customer_phone:p.customer_phone,
         ecommerce:{transaction_id:p.transaction_id, currency:p.currency||'UAH', value:p.value, items:p.items}
-      });
+      };
+      if(p.customer_email) ev.customer_email=p.customer_email;
+      window.dataLayer.push(ev);
       sessionStorage.removeItem('lume_purchase');
     }
   }catch(e){}
