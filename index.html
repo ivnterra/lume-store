@@ -242,6 +242,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
 .modal .order-summary{background:#fff;border-radius:12px;padding:14px;margin-bottom:16px;font-size:14px;max-height:150px;overflow-y:auto}
 .modal .order-summary .row{display:flex;justify-content:between;justify-content:space-between;margin-bottom:6px}
 .modal .form-group{margin-bottom:14px}
+.opt-hint{color:var(--muted,#8a8a8a);font-weight:400;font-size:13px}
 .pay-options{display:flex;flex-direction:column;gap:10px}
 .pay-opt{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
 .pay-opt input{width:auto}
@@ -566,7 +567,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
         <span class="err-msg" id="oPhoneErr">Вкажіть коректний номер</span>
       </div>
       <div class="form-group">
-        <label>Email</label>
+        <label>Email <span class="opt-hint">— необов'язково</span></label>
         <input type="email" id="oEmail" placeholder="email@example.com">
         <span class="err-msg" id="oEmailErr">Вкажіть коректний email</span>
       </div>
@@ -1385,7 +1386,7 @@ document.getElementById('orderForm').addEventListener('submit',async e=>{
   const oPhoneOk=phoneValid(itiOrder,phone);
   setErr(phone,document.getElementById('oPhoneErr'),!oPhoneOk);if(!oPhoneOk)ok=false;
   const emailVal=email.value.trim();
-  const emailOk=validEmail(emailVal);   // email обов'язковий
+  const emailOk=!emailVal||validEmail(emailVal);   // email необов'язковий, але якщо вказаний — має бути коректним
   setErr(email,document.getElementById('oEmailErr'),!emailOk);if(!emailOk)ok=false;
   if(!agree.checked){ok=false;agree.parentElement.style.color='#c0564e';}else{agree.parentElement.style.color='';}
   if(!ok)return;
