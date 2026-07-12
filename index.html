@@ -727,7 +727,8 @@ async function loadProducts(){
         if(!res.ok) throw new Error('HTTP '+res.status);
         const data=await res.json();
         if(!Array.isArray(data)||!data.length) throw new Error('empty');
-        PRODUCTS=data.map(r=>{
+        // published=false — товар прихований в адмінці, на сайті його немає зовсім
+        PRODUCTS=data.filter(r=>r.published!==false).map(r=>{
           const imgs=(Array.isArray(r.images)&&r.images.length)?r.images:(r.image_url?[r.image_url]:[]);
           return {
             id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,

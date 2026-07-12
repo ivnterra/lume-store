@@ -201,6 +201,7 @@ export default async function handler(req, res) {
     // лише товари з валідним посиланням і фото
     const rows = [];
     products.forEach(p => {
+      if (p.published === false) return; // прихований в адмінці — у рекламний фід не потрапляє
       const imgs = (Array.isArray(p.images) && p.images.length) ? p.images : (p.image_url ? [p.image_url] : []);
       if (!imgs.length) return; // Meta вимагає image_link — без фото пропускаємо
       expand(p).forEach(r => { if (r.id && r.image_link) rows.push(r); });

@@ -54,6 +54,9 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 .prow .pr .old{color:var(--muted);text-decoration:line-through;font-weight:400;margin-left:6px;font-size:12px}
 .prow-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:20px;padding:2px 9px;margin-left:6px}
+.tag-hidden{background:#8a3f38}
+.prow-hidden{background:#faf6f5;border-style:dashed;border-color:#e0c9c5}
+.prow-hidden .thumb,.prow-hidden .pinfo{opacity:.55}
 .tag.sale{background:#c0564e}.tag.new{background:#e8654f}.tag.hit{background:#a06d44}
 
 /* MODAL */
@@ -351,6 +354,10 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
           <input type="checkbox" id="pinstock" checked>
           <label for="pinstock">В наявності <span class="muted">(зніміть галочку — буде «Немає в наявності»)</span></label>
         </div>
+        <div class="stock-row">
+          <input type="checkbox" id="ppublished" checked>
+          <label for="ppublished">Опубліковано на сайті <span class="muted">(зніміть галочку — товар зникне з сайту, але лишиться тут)</span></label>
+        </div>
       </div>
       <div class="field">
         <label>Фотографії (перша — головна; порядок змінюється стрілками ← →)</label>
@@ -517,18 +524,20 @@ async function loadList(){
   if(!products.length){ box.innerHTML='<div class="loader">Товарів ще немає. Натисніть «Додати товар».</div>'; return; }
   box.innerHTML='';
   products.forEach(p=>{
+    const hidden=p.published===false;
     const row=document.createElement('div');
-    row.className='prow';
+    row.className='prow'+(hidden?' prow-hidden':'');
     row.innerHTML=`
       <div class="thumb">${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:'🛍️'}</div>
       <div class="pinfo">
-        <div class="t">${esc(p.title)}${p.badge?`<span class="tag ${p.badge}">${BADGE_LABEL[p.badge]||esc(p.badge)}</span>`:''}${p.in_stock===false?'<span class="tag" style="background:#6f6a66">Немає в наявності</span>':''}</div>
+        <div class="t">${esc(p.title)}${p.badge?`<span class="tag ${p.badge}">${BADGE_LABEL[p.badge]||esc(p.badge)}</span>`:''}${p.in_stock===false?'<span class="tag" style="background:#6f6a66">Немає в наявності</span>':''}${hidden?'<span class="tag tag-hidden">🚫 Приховано з сайту</span>':''}</div>
         <div class="m">${esc(p.category||'—')} · Арт: ${esc(p.sku||'—')} · ${(p.sizes||[]).join(', ')||'—'} · 📷 ${(Array.isArray(p.images)?p.images.length:(p.image_url?1:0))}${Array.isArray(p.variants)&&p.variants.length?` · 🎨 ${p.variants.length}`:''}</div>
         <div class="pr">${(p.price||0).toLocaleString('uk-UA')} грн.${p.old_price?`<span class="old">${p.old_price.toLocaleString('uk-UA')} грн.</span>`:''}</div>
       </div>
       <div class="prow-actions">
         <button class="btn btn-ghost btn-sm" data-up="${p.id}" title="Пересунути вище">▲</button>
         <button class="btn btn-ghost btn-sm" data-down="${p.id}" title="Пересунути нижче">▼</button>
+        <button class="btn btn-ghost btn-sm" data-pub="${p.id}" title="${hidden?'Показати товар на сайті':'Прибрати товар із сайту'}">${hidden?'👁 Опублікувати':'🚫 Приховати'}</button>
         <button class="btn btn-ghost btn-sm" data-edit="${p.id}">Редагувати</button>
         <button class="btn btn-danger btn-sm" data-del="${p.id}">✕</button>
       </div>`;
@@ -536,6 +545,7 @@ async function loadList(){
   });
   box.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openForm(+b.dataset.edit));
   box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delProduct(+b.dataset.del));
+  box.querySelectorAll('[data-pub]').forEach(b=>b.onclick=()=>togglePublished(+b.dataset.pub));
   box.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>moveProduct(+b.dataset.up,-1));
   box.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>moveProduct(+b.dataset.down,1));
 }
@@ -592,6 +602,7 @@ function openForm(id){
   formVariants = (p && Array.isArray(p.variants)) ? JSON.parse(JSON.stringify(p.variants)) : [];
   renderVariants();
   document.getElementById('pinstock').checked = p ? (p.in_stock!==false) : true;
+  document.getElementById('ppublished').checked = p ? (p.published!==false) : true;
   formImages = p ? ((Array.isArray(p.images)&&p.images.length)?p.images.slice():(p.image_url?[p.image_url]:[])) : [];
   renderGallery();
   document.getElementById('pimage').value='';
@@ -692,6 +703,7 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
       variants:collectVariants(),
       description:document.getElementById('pdesc').value.trim()||null,
       in_stock:document.getElementById('pinstock').checked,
+      published:document.getElementById('ppublished').checked,
       images:formImages,
       image_url:formImages[0]||null
     };
@@ -709,9 +721,20 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
 
 async function delProduct(id){
   const p=products.find(x=>x.id===id);
-  if(!confirm('Видалити товар «'+(p?p.title:'')+'»?')) return;
+  if(!confirm('Видалити товар «'+(p?p.title:'')+'»?\n\nЦе назавжди. Щоб просто прибрати товар із сайту — натисніть «Приховати».')) return;
   const {error}=await sb.from('products').delete().eq('id',id);
   if(error){ alert('Помилка: '+error.message); return; }
+  loadList();
+}
+
+// приховати/показати товар на сайті (з бази не видаляємо)
+async function togglePublished(id){
+  const p=products.find(x=>x.id===id);
+  if(!p) return;
+  const next=p.published===false;   // прихований → публікуємо, і навпаки
+  const {error}=await sb.from('products').update({published:next}).eq('id',id);
+  if(error){ alert('Помилка: '+error.message); return; }
+  p.published=next;
   loadList();
 }
 
