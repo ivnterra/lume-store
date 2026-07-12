@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>Talvyna — Адмін-панель</title>
-<script src="config.js"></script>
+<title>Адмін-панель</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
@@ -40,6 +39,11 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 .topbar-in{max-width:1500px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .topbar .logo{font-size:20px;font-weight:800;letter-spacing:2px}
 .topbar .logo span{color:var(--accent)}
+/* перемикач магазинів (одна адмінка на всі магазини) */
+.store-switch{display:flex;gap:4px;background:#efe7df;border-radius:30px;padding:4px}
+.store-switch button{border:none;background:none;padding:7px 16px;border-radius:26px;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;color:var(--muted)}
+.store-switch button.active{background:var(--accent);color:#fff}
+.login-box .store-switch{width:max-content;margin:0 auto 18px}
 .topbar-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .wrap{max-width:1500px;margin:0 auto;padding:24px 20px 60px}
 .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
@@ -127,7 +131,8 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 <!-- LOGIN -->
 <div class="login-wrap" id="loginView">
   <div class="login-box">
-    <div class="logo">Talvyn<span>a</span></div>
+    <div class="store-switch" id="storeSwitchLogin"></div>
+    <div class="logo" id="loginLogo">Talvyn<span>a</span></div>
     <h1>Адмін-панель</h1>
     <form id="loginForm">
       <div class="field">
@@ -148,7 +153,8 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
 <div id="dashView" style="display:none">
   <div class="topbar">
     <div class="topbar-in">
-      <div class="logo">Talvyn<span>a</span> · адмін</div>
+      <div class="logo" id="topLogo">Talvyn<span>a</span> · адмін</div>
+      <div class="store-switch" id="storeSwitchTop"></div>
       <div class="tabs">
         <button class="tab-btn active" data-tab="products">Товари</button>
         <button class="tab-btn" data-tab="orders">Замовлення</button>
@@ -158,7 +164,7 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(-
         <button class="tab-btn" data-tab="users" style="display:none">Користувачі</button>
       </div>
       <div class="topbar-actions">
-        <a class="btn btn-ghost btn-sm" href="/" target="_blank">↗ Відкрити сайт</a>
+        <a class="btn btn-ghost btn-sm" id="siteLink" href="/" target="_blank">↗ Відкрити сайт</a>
         <button class="btn btn-ghost btn-sm" id="pwdBtn">🔑 Пароль</button>
         <button class="btn btn-ghost btn-sm" id="logoutBtn">Вийти</button>
       </div>
@@ -411,6 +417,38 @@ const SIZES_PRESET=['S','M','L','XL','2XL','3XL','4XL','5XL','Один розм�
 const BADGE_LABEL={new:'НОВИНКА',sale:'SALE',hit:'ХІТ'};
 let sb=null, products=[], formImages=[];
 
+/* ---------- магазини: одна адмінка на всі, дані фізично роздільні ---------- */
+const STORES=[
+  {id:'talvyna',  name:'Talvyna',  logo:'Talvyn<span>a</span>',  site:'https://talvyna.com',
+   sbUrl:'https://gwzywunqffubbmscmgam.supabase.co', sbKey:'sb_publishable_agwV8VZz7vSQ_xQSONg22w_upAe5lQA',
+   accent:'#c08a5e', accentDark:'#a06d44'},
+  {id:'majestic', name:'Majestic', logo:'Majesti<span>c</span>', site:'https://majestic.talvyna.com',
+   sbUrl:'https://rsjdvvhhcvqhthvxtuzp.supabase.co', sbKey:'sb_publishable_mBJZz5tbBM89FIkqY3Y_sg_tTBZJtZW',
+   accent:'#4a6fa5', accentDark:'#38547f'}
+];
+const STORE=(()=>{  // збережений вибір; першого разу — за доменом
+  const saved=localStorage.getItem('admin_store');
+  const byHost=location.hostname.indexOf('majestic')>=0?'majestic':'talvyna';
+  return STORES.find(s=>s.id===(saved||byHost))||STORES[0];
+})();
+function setStore(id){
+  if(id===STORE.id) return;
+  localStorage.setItem('admin_store',id);
+  try{ history.replaceState(null,'',location.pathname); }catch(e){}
+  location.reload();   // повний перезапуск — стан магазинів не змішується
+}
+(function applyStore(){
+  document.title=STORE.name+' — Адмін-панель';
+  document.documentElement.style.setProperty('--accent',STORE.accent);
+  document.documentElement.style.setProperty('--accent-dark',STORE.accentDark);
+  const sw=STORES.map(s=>`<button type="button" class="${s.id===STORE.id?'active':''}" onclick="setStore('${s.id}')">${s.name}</button>`).join('');
+  document.getElementById('storeSwitchLogin').innerHTML=sw;
+  document.getElementById('storeSwitchTop').innerHTML=sw;
+  document.getElementById('loginLogo').innerHTML=STORE.logo;
+  document.getElementById('topLogo').innerHTML=STORE.logo+' · адмін';
+  document.getElementById('siteLink').href=STORE.site;
+})();
+
 /* ---------- ролі та доступ ---------- */
 const ROLE_LABELS={admin:'Адміністратор',manager:'Менеджер',content:'Контент-менеджер'};
 const ROLE_ACCESS={
@@ -445,14 +483,12 @@ function moveImg(i,d){
 function removeImg(i){ formImages.splice(i,1); renderGallery(); }
 
 /* ---------- init ---------- */
-function configured(){
-  return window.SUPABASE_URL && window.SUPABASE_URL.indexOf('YOUR')<0 && typeof supabase!=='undefined';
-}
-if(!configured()){
+if(typeof supabase==='undefined'){
   document.getElementById('loginMsg').className='msg err';
-  document.getElementById('loginMsg').textContent='Спочатку заповніть config.js (ключі Supabase).';
+  document.getElementById('loginMsg').textContent='Не завантажилась бібліотека Supabase — перевірте інтернет і оновіть сторінку.';
 }else{
-  sb=supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+  // сесії різних магазинів зберігаються незалежно (ключ прив'язаний до проєкту Supabase)
+  sb=supabase.createClient(STORE.sbUrl, STORE.sbKey);
   sb.auth.getSession().then(({data})=>{ if(data.session) showDashboard(); });
 }
 
@@ -707,6 +743,8 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
       images:formImages,
       image_url:formImages[0]||null
     };
+    // якщо в базі цього магазину ще немає колонки published (міграцію не виконано) — не надсилаємо її
+    if(products.length && !('published' in products[0])) delete payload.published;
     let res;
     if(id) res=await sb.from('products').update(payload).eq('id',id);
     else   res=await sb.from('products').insert(payload);
@@ -731,6 +769,7 @@ async function delProduct(id){
 async function togglePublished(id){
   const p=products.find(x=>x.id===id);
   if(!p) return;
+  if(!('published' in p)){ alert('У базі цього магазину ще немає колонки published — виконайте supabase-admin-parity.sql у Supabase → SQL Editor.'); return; }
   const next=p.published===false;   // прихований → публікуємо, і навпаки
   const {error}=await sb.from('products').update({published:next}).eq('id',id);
   if(error){ alert('Помилка: '+error.message); return; }
@@ -1060,7 +1099,7 @@ document.getElementById('expXlsx').onclick=()=>{
 /* посилання на картку товару (відкривається на сайті у новій вкладці) */
 function prodCell(id, label){
   return id!=null
-    ? `<a href="/product/${id}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">${esc(label)}</a>`
+    ? `<a href="${STORE.site}/product/${id}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">${esc(label)}</a>`
     : esc(label);
 }
 
@@ -1204,7 +1243,7 @@ async function usersApi(payload){
   const {data}=await sb.auth.getSession();
   const token=data&&data.session&&data.session.access_token;
   if(!token) throw new Error('Сесія завершилась — увійдіть знову');
-  const r=await fetch('/api/users',{
+  const r=await fetch(STORE.site+'/api/users',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
     body:JSON.stringify(payload)
