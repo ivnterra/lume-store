@@ -138,7 +138,7 @@ async function sendToLpCrm(rec) {
   // ── тіло запиту (multipart, як у curl-прикладі документації) ──
   const fd = new FormData();
   fd.append('key', KEY);
-  fd.append('order_id', genOrderId());
+  fd.append('order_id', rec.crmOrderId || genOrderId());
   fd.append('country', 'UA');
   fd.append('office', DEFAULT_OFFICE);
   fd.append('products', encodeURIComponent(phpSerializeProducts(products)));
@@ -172,4 +172,4 @@ async function sendToLpCrm(rec) {
   return data;
 }
 
-export { sendToLpCrm, phpSerializeProducts, SKU_TO_ID };
+export { sendToLpCrm, phpSerializeProducts, SKU_TO_ID, genOrderId };

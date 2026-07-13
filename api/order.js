@@ -5,7 +5,7 @@
 //   SUPABASE_URL               — URL проєкту Supabase (для збереження у базу замовлень)
 //   SUPABASE_SERVICE_ROLE_KEY  — service_role / secret ключ (обходить RLS; тримати у секреті!)
 
-import { sendToLpCrm, SKU_TO_ID } from './lpcrm.js';
+import { sendToLpCrm, SKU_TO_ID, genOrderId } from './lpcrm.js';
 
 // ISO-код країни (UA) -> повна назва (Україна). Якщо не вийде — повертаємо код.
 function countryName(code) {
@@ -33,9 +33,9 @@ async function saveOrder(record) {
   });
   try {
     let r = await post(record);
-    // поки колонку comment не додано в orders — повторюємо без неї, щоб не втратити заявку
-    if (!r.ok && 'comment' in record) {
-      const { comment, ...rest } = record;
+    // поки колонку comment/crm_order_id не додано в orders — повторюємо без них, щоб не втратити заявку
+    if (!r.ok && ('comment' in record || 'crm_order_id' in record)) {
+      const { comment, crm_order_id, ...rest } = record;
       r = await post(rest);
     }
     if (!r.ok) console.error('saveOrder failed:', r.status, await r.text());
@@ -148,8 +148,12 @@ export default async function handler(req, res) {
     }
 
     // ---- зберігаємо у базу (не блокуючи замовлення) ----
+    // Зовнішній номер LP-CRM («ID-o») генеруємо заздалегідь і зберігаємо разом із
+    // замовленням: єдиний спосіб потім читати замовлення з CRM API (getOrdersByID).
+    const crmOrderId = (!isContact && process.env.LPCRM_KEY) ? genOrderId() : null;
     await saveOrder({
       type: isContact ? 'contact' : 'order',
+      crm_order_id: crmOrderId,
       name, phone,
       email: email || null,
       comment: comment || null,
@@ -175,6 +179,7 @@ export default async function handler(req, res) {
       try {
         const crmRes = await sendToLpCrm({
           type: 'order',
+          crmOrderId,
           name, phone, email,
           city, np_branch: npBranch, pay,
           items, total: Number(body.total) || 0,
