@@ -75,11 +75,14 @@ function genOrderId() {
 }
 
 // Збирає масив товарів для CRM з позицій замовлення.
+// Товар без маппінгу в SKU_TO_ID НЕ пропускається — йде як службова позиція
+// (ZAYAVKA_PRODUCT_ID) зі своєю ціною, щоб сума замовлення в CRM завжди збігалася
+// з оплатою, навіть якщо новий товар забули занести в SKU_TO_ID. Назва товару
+// в такому разі лишається лише в comment (де вона й так завжди є).
 function buildProducts(items) {
   const list = [];
   (items || []).forEach(it => {
-    const pid = SKU_TO_ID[String(it.sku || '').trim()];
-    if (!pid) return; // немає у маппінгу — пропускаємо (деталі лишаться у коментарі)
+    const pid = SKU_TO_ID[String(it.sku || '').trim()] || ZAYAVKA_PRODUCT_ID;
     const qty = Number(it.qty) || 1;
     // ціна за одиницю з урахуванням акційної знижки (щоб сума в CRM збігалася з оплатою)
     const unitPrice = (Number(it.discount) > 0 && it.final != null)
