@@ -224,7 +224,7 @@ export default async function handler(req, res) {
           '',                                             // C № заказа в CRM
           i === 0 ? dateStr : '',                       // D Дата
           i === 0 ? name : '',                           // E ФІО
-          '',                                             // F
+          i === 0 ? phone : '',                           // F Номер телефону
           i === 0 ? (email || '') : '',                  // G Email
           '', '', '',                                     // H, I, J
           it.sku || '',                                   // K Артикул

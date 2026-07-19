@@ -70,15 +70,12 @@ async function findFirstEmptyRow(token, spreadsheetId, title, col) {
   return 2 + i;
 }
 
-// rows — масив рядків, кожен рядок = 16 значень для колонок B..Q (порожні
-// колонки C,F,H,I,J,O передавати як '').
-export async function writeOrderRows(spreadsheetId, gid, rows) {
+// Пише рядки у точно вказаний рядок (для бекфілу/корекції вже записаних даних —
+// на відміну від writeOrderRows не шукає першу порожню, а перезаписує задане місце).
+export async function writeOrderRowsAt(spreadsheetId, gid, startRow, rows) {
   const sa = JSON.parse(process.env.GOOGLE_SA_JSON);
   const token = await getAccessToken(sa);
   const title = await resolveSheetTitle(token, spreadsheetId, gid);
-  // "зайнятість" рядка перевіряємо за колонкою D (Дата) — надійніший маркер,
-  // ніж B, бо B історично міг лишатись порожнім у ручному процесі.
-  const startRow = await findFirstEmptyRow(token, spreadsheetId, title, 'D');
   const endRow = startRow + rows.length - 1;
   const range = `'${title}'!B${startRow}:Q${endRow}`;
 
@@ -94,4 +91,16 @@ export async function writeOrderRows(spreadsheetId, gid, rows) {
   const j = await r.json();
   if (!r.ok) throw new Error('gsheet update: ' + JSON.stringify(j));
   return j;
+}
+
+// rows — масив рядків, кожен рядок = 16 значень для колонок B..Q (порожні
+// колонки C,F,H,I,J,O передавати як '').
+export async function writeOrderRows(spreadsheetId, gid, rows) {
+  const sa = JSON.parse(process.env.GOOGLE_SA_JSON);
+  const token = await getAccessToken(sa);
+  const title = await resolveSheetTitle(token, spreadsheetId, gid);
+  // "зайнятість" рядка перевіряємо за колонкою D (Дата) — надійніший маркер,
+  // ніж B, бо B історично міг лишатись порожнім у ручному процесі.
+  const startRow = await findFirstEmptyRow(token, spreadsheetId, title, 'D');
+  return writeOrderRowsAt(spreadsheetId, gid, startRow, rows);
 }
