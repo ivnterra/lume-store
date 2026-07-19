@@ -6,6 +6,13 @@
 //   SUPABASE_SERVICE_ROLE_KEY  — service_role / secret ключ (обходить RLS; тримати у секреті!)
 
 import { sendToLpCrm, SKU_TO_ID, genOrderId } from './lpcrm.js';
+import { appendRows } from './gsheet.js';
+
+// Робоча таблиця менеджера (lite-версія автосинку): дата/ФІО/email + по товару в
+// заказі (артикул/назва/колір/розмір/ціна/знижка%). D,E,G заповнюються лише в
+// першому рядку замовлення; далі — порожні (щоб не дублювати на кожен товар).
+const MANAGER_SHEET_ID = '1DPZB24GYyzBfLQvEiAOiYSsuUdKYyQRa0Fo3pixVkLE';
+const MANAGER_SHEET_GID = '1059855693';
 
 // ISO-код країни (UA) -> повна назва (Україна). Якщо не вийде — повертаємо код.
 function countryName(code) {
@@ -195,6 +202,32 @@ export default async function handler(req, res) {
         }
       } catch (e) {
         console.error('LP-CRM send failed:', e && e.message);
+      }
+    }
+
+    // ---- дублюємо в робочу Google-таблицю менеджера (не блокуючи замовлення) ----
+    if (!isContact && process.env.GOOGLE_SA_JSON) {
+      try {
+        const d = new Date();
+        const dateStr = String(d.getDate()).padStart(2, '0') + '.' +
+          String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+        const rows = (items.length ? items : [{}]).map((it, i) => ([
+          i === 0 ? dateStr : '',                       // D Дата
+          i === 0 ? name : '',                           // E ФІО
+          '',                                             // F
+          i === 0 ? (email || '') : '',                  // G Email
+          '', '', '',                                     // H, I, J
+          it.sku || '',                                   // K Артикул
+          it.title || '',                                 // L Найменування
+          it.color || '',                                 // M Колір
+          it.size || '',                                  // N Розмір
+          '',                                              // O
+          it.price != null ? it.price : '',               // P Ціна (за 1 шт.)
+          it.disc_pct ? it.disc_pct + '%' : '',            // Q Знижка (%)
+        ]));
+        await appendRows(MANAGER_SHEET_ID, MANAGER_SHEET_GID, 'D:Q', rows);
+      } catch (e) {
+        console.error('Google Sheet sync failed:', e && e.message);
       }
     }
 
