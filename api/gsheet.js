@@ -70,15 +70,17 @@ async function findFirstEmptyRow(token, spreadsheetId, title, col) {
   return 2 + i;
 }
 
-// rows — масив рядків, кожен рядок = 14 значень для колонок D..Q (порожні
-// колонки F,H,I,J,O передавати як '').
+// rows — масив рядків, кожен рядок = 16 значень для колонок B..Q (порожні
+// колонки C,F,H,I,J,O передавати як '').
 export async function writeOrderRows(spreadsheetId, gid, rows) {
   const sa = JSON.parse(process.env.GOOGLE_SA_JSON);
   const token = await getAccessToken(sa);
   const title = await resolveSheetTitle(token, spreadsheetId, gid);
+  // "зайнятість" рядка перевіряємо за колонкою D (Дата) — надійніший маркер,
+  // ніж B, бо B історично міг лишатись порожнім у ручному процесі.
   const startRow = await findFirstEmptyRow(token, spreadsheetId, title, 'D');
   const endRow = startRow + rows.length - 1;
-  const range = `'${title}'!D${startRow}:Q${endRow}`;
+  const range = `'${title}'!B${startRow}:Q${endRow}`;
 
   const r = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}` +

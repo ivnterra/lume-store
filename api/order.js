@@ -24,17 +24,19 @@ function countryName(code) {
   }
 }
 
+// Повертає id щойно створеного рядка в orders (потрібен для колонки "№ заказа
+// в адмінці" у Google-таблиці менеджера) або null, якщо запис не вдався.
 async function saveOrder(record) {
   const SB = process.env.SUPABASE_URL;
   const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!SB || !KEY) return; // база не налаштована — пропускаємо, замовлення все одно піде у Telegram
+  if (!SB || !KEY) return null; // база не налаштована — пропускаємо, замовлення все одно піде у Telegram
   const post = body => fetch(`${SB.replace(/\/$/, '')}/rest/v1/orders`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'apikey': KEY,
       'Authorization': 'Bearer ' + KEY,
-      'Prefer': 'return=minimal'
+      'Prefer': 'return=representation'
     },
     body: JSON.stringify(body)
   });
@@ -45,10 +47,16 @@ async function saveOrder(record) {
       const { comment, crm_order_id, ...rest } = record;
       r = await post(rest);
     }
-    if (!r.ok) console.error('saveOrder failed:', r.status, await r.text());
+    if (!r.ok) {
+      console.error('saveOrder failed:', r.status, await r.text());
+      return null;
+    }
+    const rows = await r.json();
+    return (rows && rows[0] && rows[0].id) || null;
   } catch (e) {
     // не зриваємо замовлення через помилку запису у базу
     console.error('saveOrder failed:', e);
+    return null;
   }
 }
 
@@ -158,7 +166,7 @@ export default async function handler(req, res) {
     // Зовнішній номер LP-CRM («ID-o») генеруємо заздалегідь і зберігаємо разом із
     // замовленням: єдиний спосіб потім читати замовлення з CRM API (getOrdersByID).
     const crmOrderId = (!isContact && process.env.LPCRM_KEY) ? genOrderId() : null;
-    await saveOrder({
+    const savedOrderId = await saveOrder({
       type: isContact ? 'contact' : 'order',
       crm_order_id: crmOrderId,
       name, phone,
@@ -212,6 +220,8 @@ export default async function handler(req, res) {
         const dateStr = String(d.getDate()).padStart(2, '0') + '.' +
           String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
         const rows = (items.length ? items : [{}]).map((it, i) => ([
+          i === 0 ? (savedOrderId != null ? String(savedOrderId) : '') : '', // B № заказа в адмінці
+          '',                                             // C № заказа в CRM
           i === 0 ? dateStr : '',                       // D Дата
           i === 0 ? name : '',                           // E ФІО
           '',                                             // F
