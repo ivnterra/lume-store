@@ -3,6 +3,12 @@
 // заказів у робочу таблицю менеджера.
 //
 // Env: GOOGLE_SA_JSON — повний JSON-ключ service account (Vercel → Sensitive).
+//
+// НЕ використовуємо values:append — у таблиці менеджера вже є попередньо
+// відформатовані порожні рядки з формулами в інших колонках (Маржа тощо), і
+// евристика "автовизначення таблиці" в append мавпує зі зсувом колонок (перевірено
+// емпірично: замість D:Q писало в B:O). Тому: знаходимо перший порожній рядок за
+// колонкою D (Дата) і пишемо в точну адресу через values:update.
 import crypto from 'node:crypto';
 
 const SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
@@ -39,11 +45,7 @@ async function getAccessToken(sa) {
   return j.access_token;
 }
 
-let cachedSheetTitle = null; // кешуємо назву вкладки на весь час життя функції
-
-// Знаходить назву вкладки (sheet tab) за її числовим sheetId (gid з URL).
 async function resolveSheetTitle(token, spreadsheetId, gid) {
-  if (cachedSheetTitle) return cachedSheetTitle;
   const r = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties`,
     { headers: { Authorization: 'Bearer ' + token } }
@@ -51,28 +53,43 @@ async function resolveSheetTitle(token, spreadsheetId, gid) {
   const j = await r.json();
   const sheet = (j.sheets || []).find(s => String(s.properties.sheetId) === String(gid));
   if (!sheet) throw new Error('gsheet: вкладку з gid=' + gid + ' не знайдено: ' + JSON.stringify(j));
-  cachedSheetTitle = sheet.properties.title;
-  return cachedSheetTitle;
+  return sheet.properties.title;
 }
 
-// rows — масив рядків (кожен рядок — масив значень для колонок у межах colRange,
-// напр. colRange='D:Q' -> кожен рядок містить 14 значень D,E,F,...,Q; порожні
-// колонки (F,H,I,J,O) передавати як '').
-export async function appendRows(spreadsheetId, gid, colRange, rows) {
+// Перший порожній рядок за колонкою D (Дата), рахуючи з 2 (1 — заголовок).
+async function findFirstEmptyRow(token, spreadsheetId, title, col) {
+  const range = `'${title}'!${col}2:${col}2000`;
+  const r = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`,
+    { headers: { Authorization: 'Bearer ' + token } }
+  );
+  const j = await r.json();
+  const values = j.values || [];
+  let i = 0;
+  while (i < values.length && values[i][0]) i++;
+  return 2 + i;
+}
+
+// rows — масив рядків, кожен рядок = 14 значень для колонок D..Q (порожні
+// колонки F,H,I,J,O передавати як '').
+export async function writeOrderRows(spreadsheetId, gid, rows) {
   const sa = JSON.parse(process.env.GOOGLE_SA_JSON);
   const token = await getAccessToken(sa);
   const title = await resolveSheetTitle(token, spreadsheetId, gid);
-  const range = `'${title}'!${colRange}`;
+  const startRow = await findFirstEmptyRow(token, spreadsheetId, title, 'D');
+  const endRow = startRow + rows.length - 1;
+  const range = `'${title}'!D${startRow}:Q${endRow}`;
+
   const r = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}:append` +
-      '?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}` +
+      '?valueInputOption=USER_ENTERED',
     {
-      method: 'POST',
+      method: 'PUT',
       headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values: rows }),
+      body: JSON.stringify({ range, values: rows }),
     }
   );
   const j = await r.json();
-  if (!r.ok) throw new Error('gsheet append: ' + JSON.stringify(j));
+  if (!r.ok) throw new Error('gsheet update: ' + JSON.stringify(j));
   return j;
 }

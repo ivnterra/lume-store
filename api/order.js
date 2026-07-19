@@ -6,7 +6,7 @@
 //   SUPABASE_SERVICE_ROLE_KEY  — service_role / secret ключ (обходить RLS; тримати у секреті!)
 
 import { sendToLpCrm, SKU_TO_ID, genOrderId } from './lpcrm.js';
-import { appendRows } from './gsheet.js';
+import { writeOrderRows } from './gsheet.js';
 
 // Робоча таблиця менеджера (lite-версія автосинку): дата/ФІО/email + по товару в
 // заказі (артикул/назва/колір/розмір/ціна/знижка%). D,E,G заповнюються лише в
@@ -225,7 +225,7 @@ export default async function handler(req, res) {
           it.price != null ? it.price : '',               // P Ціна (за 1 шт.)
           it.disc_pct ? it.disc_pct + '%' : '',            // Q Знижка (%)
         ]));
-        await appendRows(MANAGER_SHEET_ID, MANAGER_SHEET_GID, 'D:Q', rows);
+        await writeOrderRows(MANAGER_SHEET_ID, MANAGER_SHEET_GID, rows);
       } catch (e) {
         console.error('Google Sheet sync failed:', e && e.message);
       }
