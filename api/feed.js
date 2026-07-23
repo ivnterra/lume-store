@@ -14,6 +14,10 @@ const SITE = 'https://talvyna.com';
 const CURRENCY = 'UAH';
 const BRAND = 'Talvyna';
 
+// Мітка магазину для сегментації в рекламі (Google Ads / Meta) -> custom_label_1.
+// Визначається за доменом: піддомен majestic — 'majestic'; основний talvyna — 'talvyna'.
+const LINE = /majestic\./i.test(SITE) ? 'majestic' : 'talvyna';
+
 // anon publishable-ключ публічний (товари мають RLS "public read") — безпечний фолбек,
 // щоб фід працював навіть без service-role у середовищі.
 const ANON_FALLBACK = 'sb_publishable_agwV8VZz7vSQ_xQSONg22w_upAe5lQA';
@@ -119,6 +123,7 @@ function expand(p) {
     // категорія магазину — для розподілу на набори в Meta (product set)
     product_type: p.category || '',
     custom_label_0: p.category || '',
+    custom_label_1: LINE,
     price: priceStr(regularPrice),
     sale_price: salePrice != null ? priceStr(salePrice) : null,
     sku: p.sku || ''
@@ -145,6 +150,7 @@ function rowToXml(r) {
   g('google_product_category', r.google_product_category);
   g('product_type', r.product_type);
   g('custom_label_0', r.custom_label_0);
+  g('custom_label_1', r.custom_label_1);
   g('gender', r.gender);
   g('age_group', r.age_group);
   t.push('    </item>');
@@ -166,7 +172,7 @@ function buildXml(rows) {
 function buildCsv(rows) {
   const cols = ['id', 'title', 'description', 'availability', 'condition',
     'price', 'sale_price', 'link', 'image_link', 'additional_image_link', 'brand', 'mpn',
-    'google_product_category', 'product_type', 'custom_label_0', 'gender', 'age_group'];
+    'google_product_category', 'product_type', 'custom_label_0', 'custom_label_1', 'gender', 'age_group'];
   const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
   const lines = [cols.join(',')];
   rows.forEach(r => {
@@ -177,6 +183,7 @@ function buildCsv(rows) {
       additional_image_link: (r.extra || []).join(','), brand: r.brand, mpn: r.sku,
       google_product_category: r.google_product_category,
       product_type: r.product_type, custom_label_0: r.custom_label_0,
+      custom_label_1: r.custom_label_1,
       gender: r.gender, age_group: r.age_group
     };
     lines.push(cols.map(c => q(m[c])).join(','));
