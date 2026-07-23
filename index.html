@@ -144,7 +144,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .size-chip.oos{text-decoration:line-through;color:var(--muted);background:#f5f5f5;border-style:dashed;cursor:not-allowed;opacity:.65}
 .size-chip.oos:hover{border-color:var(--line)}
 .card-actions{display:flex;gap:10px;margin-top:auto}
-.card-actions .btn{flex:1;padding:12px 8px;font-size:14px}
+.card-actions .btn{flex:1;min-width:0;padding:12px 8px;font-size:14px}
 .btn-detail{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
 .btn-detail:hover{background:#fff;color:var(--ink);border-color:var(--ink);transform:none}
 
@@ -203,8 +203,8 @@ textarea{resize:vertical;min-height:96px;line-height:1.5}
 .field-err{border-color:#c0564e!important}
 .err-msg{color:#ffb4ae;font-size:13px;display:none}
 .contact-form label,.modal label{font-size:14px;font-weight:500;display:block;margin-bottom:6px}
-.checkbox-row{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted)}
-.checkbox-row input{width:auto;margin-top:3px}
+.checkbox-row{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted);line-height:1.4}
+.checkbox-row input{flex:0 0 18px;width:18px;height:18px;margin:1px 0 0;accent-color:var(--accent)}
 
 /* FOOTER */
 footer{background:#211d1a;color:rgba(255,255,255,.6);padding:36px 0;text-align:center;font-size:14px}
@@ -299,6 +299,9 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
   .nav-links.open{right:0}
   .burger{display:block}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  /* у вузькій картці 2 кнопки в ряд не влазять — «Замовити» обрізалась краєм картки; ставимо в стовпчик */
+  .card-actions{flex-direction:column}
+  .card-actions .btn{width:100%}
   .steps,.delivery-grid,.reviews-grid{grid-template-columns:1fr}
   .slide-content h1{font-size:34px}
   .slide{height:480px}
