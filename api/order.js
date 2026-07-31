@@ -141,8 +141,6 @@ export default async function handler(req, res) {
         `👤 Ім'я: ${name}\n` +
         `📞 Телефон: ${phone}\n` +
         `📧 Email: ${email || '—'}\n` +
-        `🏙️ Місто: ${city || '—'}\n` +
-        `🏤 Відділення НП: ${npBranch || '—'}\n` +
         `💳 Оплата: ${pay || '—'}\n\n` +
         `🧾 Товари:\n${lines}\n\n` +
         totalsStr;
