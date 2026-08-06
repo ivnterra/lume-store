@@ -2,7 +2,45 @@
   "permissions": {
     "allow": [
       "Bash(python3 -c ' *)",
-      "Bash(python3 download_imgs.py pyjamas-raw.json pizh)"
+      "Bash(python3 download_imgs.py *)",
+      "Bash(python3 fetch.py *)",
+      "Bash(python3 to_webp.py *)",
+      "Bash(python3 contact.py *)",
+      "Bash(python3 xlsx.py *)",
+      "Bash(python3 stock.py *)",
+      "Bash(python3 stock2.py *)",
+      "Bash(python3 gen_sql.py *)",
+      "Bash(python3 -m json.tool *)",
+      "Bash(curl -s https://gwzywunqffubbmscmgam.supabase.co/rest/v1/*)",
+      "Bash(curl -s https://talvyna.com/*)",
+      "Bash(curl -s https://majestic.talvyna.com/*)",
+      "Bash(curl -s https://img.talvyna.com/*)",
+      "Bash(curl -sL https://docs.google.com/*)",
+      "Bash(curl -sL https://drive.google.com/*)",
+      "Bash(curl -sL https://phone-passionate-tilapia.tilda.ws/*)",
+      "Bash(curl -s https://phone-passionate-tilapia.tilda.ws/*)",
+      "Bash(git status *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git diff)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git add *)",
+      "Bash(git check-ignore *)",
+      "Bash(ls *)",
+      "Bash(du *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(head *)",
+      "Bash(wc *)",
+      "Bash(mkdir -p *)",
+      "Bash(cp *)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(curl * -X POST *)",
+      "Bash(curl * -X PATCH *)",
+      "Bash(curl * -X DELETE *)"
     ]
   }
 }
