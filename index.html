@@ -14,14 +14,14 @@
 <meta name="facebook-domain-verification" content="cw46mzl5vnz83l5mlw0h01grxspn3l" />
 <meta name="google-site-verification" content="QXgzyGk-b-2sNVP5lmstpeR3FFo3RCByrMLjP4hSHsc" />
 <title>Talvyna — Магазин одягу та аксесуарів</title>
-<meta name="description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів Talvyna. Доставка по Україні Новою Поштою.">
+<meta name="description" content="Онлайн-магазин жіночого одягу Talvyna: купальники, пляжні накидки, атласні халати, піжами та пеньюари. Розміри S–7XL. Доставка по Україні Новою Поштою.">
 <link rel="canonical" href="https://talvyna.com/">
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Talvyna">
 <meta property="og:url" content="https://talvyna.com/">
 <meta property="og:title" content="Talvyna — Магазин одягу та аксесуарів">
-<meta property="og:description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів Talvyna. Доставка по Україні Новою Поштою.">
+<meta property="og:description" content="Онлайн-магазин жіночого одягу Talvyna: купальники, пляжні накидки, атласні халати, піжами та пеньюари. Розміри S–7XL. Доставка по Україні Новою Поштою.">
 <meta property="og:locale" content="uk_UA">
 <meta property="og:image" content="https://talvyna.com/talvyna-og-collage-6XL-1200x630.jpg">
 <meta property="og:image:width" content="1200">
@@ -30,7 +30,7 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Talvyna — Магазин одягу та аксесуарів">
-<meta name="twitter:description" content="Онлайн-магазин стильного жіночого одягу та аксесуарів Talvyna. Доставка по Україні Новою Поштою.">
+<meta name="twitter:description" content="Онлайн-магазин жіночого одягу Talvyna: купальники, пляжні накидки, атласні халати, піжами та пеньюари. Розміри S–7XL. Доставка по Україні Новою Поштою.">
 <meta name="twitter:image" content="https://talvyna.com/talvyna-og-collage-6XL-1200x630.jpg">
 <script src="/config.js"></script>
 <!-- Google Tag Manager -->
@@ -86,6 +86,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,247,244,.92);backdro
 .slide-1{background:linear-gradient(120deg,#c9a98a,#8a6f55)}
 .slide-2{background:linear-gradient(120deg,#a98e9e,#6f5563)}
 .slide-3{background:linear-gradient(120deg,#8aa9a0,#556f63)}
+.slide-4{background:linear-gradient(120deg,#a98a95,#6f5560)}
 .slide-content{position:relative;z-index:2;color:#fff;max-width:560px}
 .slide-content .eyebrow{text-transform:uppercase;letter-spacing:3px;font-size:13px;opacity:.9;margin-bottom:14px}
 .slide-content h1{font-size:48px;font-weight:800;line-height:1.1;margin-bottom:16px}
@@ -365,6 +366,15 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
         <h1>Купальники для пишних форм</h1>
         <div class="promo">Бездоганна посадка на будь-який тип фігури</div><br>
         <a href="#catalog" class="btn">Перейти до каталогу</a>
+      </div>
+    </div>
+    <div class="slide">
+      <div class="slide-bg slide-4" style="background-image:linear-gradient(120deg,rgba(46,32,38,.62),rgba(46,32,38,.18)),url('https://img.talvyna.com/storage/v1/render/image/public/product-images/hal-222-16p/1.webp?width=1200&quality=70&format=webp')"></div>
+      <div class="container slide-content">
+        <div class="eyebrow">Халати та домашній одяг</div>
+        <h1>Атласні халати з мереживом</h1>
+        <div class="promo">Комплекти з пеньюаром і піжамою</div><br>
+        <a href="?cat=khalaty#catalog" class="btn">Перейти до каталогу</a>
       </div>
     </div>
   </div>
@@ -1119,11 +1129,15 @@ function shuffle(arr){
   for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
   return a;
 }
+const BEACH_CATS=['Купальники','Пляжні накидки'];
 function renderRelated(p){
   const rel=document.getElementById('relatedGrid');
-  // завжди 2 купальники + 2 пляжні накидки (випадкові)
   const pick=(cat,n)=>shuffle(PRODUCTS.filter(x=>x.cat===cat && x.id!==p.id)).slice(0,n);
-  let pool=pick('Купальники',2).concat(pick('Пляжні накидки',2));
+  // пляжна група — перехресна добірка (працює на акцію купальник + накидка -15%);
+  // решта категорій (халати, піжами, пеньюари) — товари зі своєї категорії.
+  let pool = BEACH_CATS.indexOf(p.cat)>=0
+    ? pick('Купальники',2).concat(pick('Пляжні накидки',2))
+    : pick(p.cat,4);
   // якщо десь бракує товарів — добираємо рештою випадкових
   if(pool.length<4){
     const extra=shuffle(PRODUCTS.filter(x=>x.id!==p.id && !pool.includes(x)));
@@ -1466,7 +1480,7 @@ function showToast(msg){
 }
 
 /* ---------- SLIDER ---------- */
-let slideIdx=0;const slideCount=3;
+let slideIdx=0;const slideCount=document.querySelectorAll('#slides .slide').length;
 const slidesEl=document.getElementById('slides');
 const dotsEl=document.getElementById('dots');
 for(let i=0;i<slideCount;i++){

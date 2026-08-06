@@ -24,11 +24,15 @@ const ANON_FALLBACK = 'sb_publishable_agwV8VZz7vSQ_xQSONg22w_upAe5lQA';
 
 // --- Категорія магазину -> Google product category (числові ID таксономії Google) ---
 //  Купальники / Накидки -> Swimwear (5250); Сукні -> Dresses (2271);
+//  Халати -> Robes (2302); Піжами -> Pajamas (2580); Пеньюари -> Nightgowns (5513);
 //  Верх -> Shirts & Tops (212); Низ -> Clothing (1604); Аксесуари -> Clothing Accessories (167).
 const GOOGLE_CAT = {
   'Купальники': '5250',
   'Пляжні накидки': '5250',
   'Накидки': '5250',
+  'Халати': '2302',
+  'Піжами': '2580',
+  'Пеньюари': '5513',
   'Сукні': '2271',
   'Верх': '212',
   'Низ': '1604',

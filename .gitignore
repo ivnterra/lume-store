@@ -4,6 +4,9 @@
 .env.local
 *.key
 
+# Фото товарів, підготовлені до завантаження в Supabase Storage (не в git)
+_photos/
+
 # macOS
 .DS_Store
 .vercel
