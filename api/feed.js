@@ -69,6 +69,15 @@ function productLink(p) { return SITE + '/product/' + productSlug(p); }
 
 function priceStr(n) { return (Number(n) || 0).toFixed(2) + ' ' + CURRENCY; }
 
+// Meta вимагає JPEG/PNG для головного фото товару; сайт віддає webp (легше і швидше
+// для відвідувачів). Для фіду прописуємо ту саму картинку через wsrv.nl — безкоштовний
+// проксі-конвертер на лету (кешується на його CDN), сайту та завантаженню фото це не
+// торкається.
+function toJpg(url) {
+  if (!url || !/\.webp(\?.*)?$/i.test(url)) return url;
+  return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&output=jpg';
+}
+
 function cleanText(s, max) {
   const t = String(s || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   return max ? t.slice(0, max) : t;
@@ -85,8 +94,8 @@ function expand(p) {
   const link = productLink(p);
   const images = (Array.isArray(p.images) && p.images.length) ? p.images
     : (p.image_url ? [p.image_url] : []);
-  const imageLink = images[0] || '';
-  const extra = images.slice(1, 11); // Meta: до 10 additional_image_link
+  const imageLink = toJpg(images[0] || '');
+  const extra = images.slice(1, 11).map(toJpg); // Meta: до 10 additional_image_link
   const productInStock = p.in_stock !== false;
   const desc = cleanText(p.description, 5000) ||
     cleanText((p.title || '') + '. ' + (p.category || '') + '. Бренд ' + BRAND, 5000);
