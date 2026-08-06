@@ -58,7 +58,7 @@ export default async function handler(req, res) {
 
   try {
     const endpoint = SB.replace(/\/$/, '') +
-      '/rest/v1/products?select=*&order=sort.asc,id.asc';
+      '/rest/v1/products?select=*&store=eq.talvyna&order=sort.asc,id.asc';
     const resp = await fetch(endpoint, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } });
     if (!resp.ok) throw new Error('Supabase HTTP ' + resp.status);
     const products = await resp.json();

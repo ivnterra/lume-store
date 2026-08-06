@@ -423,7 +423,7 @@ const STORES=[
    sbUrl:'https://gwzywunqffubbmscmgam.supabase.co', sbKey:'sb_publishable_agwV8VZz7vSQ_xQSONg22w_upAe5lQA',
    accent:'#c08a5e', accentDark:'#a06d44'},
   {id:'majestic', name:'Majestic', logo:'Majesti<span>c</span>', site:'https://majestic.talvyna.com',
-   sbUrl:'https://rsjdvvhhcvqhthvxtuzp.supabase.co', sbKey:'sb_publishable_mBJZz5tbBM89FIkqY3Y_sg_tTBZJtZW',
+   sbUrl:'https://gwzywunqffubbmscmgam.supabase.co', sbKey:'sb_publishable_agwV8VZz7vSQ_xQSONg22w_upAe5lQA',
    accent:'#4a6fa5', accentDark:'#38547f'}
 ];
 const STORE=(()=>{  // збережений вибір; першого разу — за доменом
@@ -551,7 +551,7 @@ async function showDashboard(){
 async function loadList(){
   const box=document.getElementById('list');
   box.innerHTML='<div class="loader">Завантаження…</div>';
-  const {data,error}=await sb.from('products').select('*').order('sort',{ascending:true}).order('id',{ascending:true});
+  const {data,error}=await sb.from('products').select('*').eq('store',STORE.id).order('sort',{ascending:true}).order('id',{ascending:true});
   if(error){ box.innerHTML='<div class="loader">Помилка завантаження</div>'; return; }
   products=data||[];
   // оновити список категорій для datalist
@@ -728,6 +728,7 @@ document.getElementById('prodForm').addEventListener('submit', async e=>{
       else sortVal=autoSort(category);
     }
     const payload={
+      store:STORE.id,
       title:document.getElementById('ptitle').value.trim(),
       sku:document.getElementById('psku').value.trim()||null,
       category,
@@ -822,7 +823,7 @@ async function loadOrders(){
   box.innerHTML='<div class="loader">Завантаження…</div>';
   lbox.innerHTML='<div class="loader">Завантаження…</div>';
   ordersLoading=(async()=>{
-    const {data,error}=await sb.from('orders').select('*').order('created_at',{ascending:false}).limit(5000);
+    const {data,error}=await sb.from('orders').select('*').eq('store',STORE.id).order('created_at',{ascending:false}).limit(5000);
     if(error){
       const msg='<div class="loader">Помилка: '+esc(error.message)+'</div>';
       box.innerHTML=msg; lbox.innerHTML=msg; return;

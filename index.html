@@ -724,7 +724,7 @@ async function loadProducts(){
   // supabase-js CDN, який можуть блокувати розширення/мережа.
   const configured = url && url.indexOf('ВСТАВ')<0 && url.indexOf('YOUR')<0 && key;
   if(configured){
-    const endpoint = url.replace(/\/+$/,'') + '/rest/v1/products?select=*&order=sort.asc,id.asc';
+    const endpoint = url.replace(/\/+$/,'') + '/rest/v1/products?select=*&store=eq.talvyna&order=sort.asc,id.asc';
     let loaded=false;
     for(let attempt=1; attempt<=3 && !loaded; attempt++){
       try{
