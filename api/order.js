@@ -166,6 +166,7 @@ export default async function handler(req, res) {
     const crmOrderId = (!isContact && process.env.LPCRM_KEY) ? genOrderId() : null;
     const savedOrderId = await saveOrder({
       type: isContact ? 'contact' : 'order',
+      store: 'talvyna',
       crm_order_id: crmOrderId,
       name, phone,
       email: email || null,
@@ -188,6 +189,9 @@ export default async function handler(req, res) {
     });
 
     // ---- надсилаємо у LP-CRM (лише покупки, не заявки; не блокуючи замовлення) ----
+    // sendToLpCrm() сам повторює спробу при збоях CRM; якщо і після цього не
+    // вдалося — попереджаємо менеджерів прямо в тому ж повідомленні Telegram,
+    // щоб замовлення не загубилося непоміченим (раніше було видно лише в логах Vercel).
     if (!isContact) {
       try {
         const crmRes = await sendToLpCrm({
@@ -205,9 +209,11 @@ export default async function handler(req, res) {
         });
         if (crmRes && crmRes.status !== 'ok') {
           console.error('LP-CRM error:', crmRes.message);
+          text += `\n\n🆘 НЕ пройшло в LP-CRM (${crmRes.message || 'помилка'}) — заведіть замовлення вручну!`;
         }
       } catch (e) {
         console.error('LP-CRM send failed:', e && e.message);
+        text += `\n\n🆘 НЕ пройшло в LP-CRM (${(e && e.message) || 'помилка'}) — заведіть замовлення вручну!`;
       }
     }
 

@@ -173,10 +173,22 @@ async function sendToLpCrm(rec) {
   if (utm.utm_content) fd.append('utm_content', utm.utm_content);
   if (utm.utm_campaign) fd.append('utm_campaign', utm.utm_campaign);
 
-  const r = await fetch(LPCRM_URL, { method: 'POST', body: fd });
-  let data = null;
-  try { data = await r.json(); } catch (e) { data = { status: 'error', message: 'non-JSON response' }; }
-  return data;
+  // Повторюємо при збоях (мережа/таймаут/технічна помилка CRM) — той самий
+  // order_id у кожній спробі, CRM дедуплікує замовлення за ним.
+  const ATTEMPTS = 3;
+  let lastData = null;
+  for (let i = 1; i <= ATTEMPTS; i++) {
+    try {
+      const r = await fetch(LPCRM_URL, { method: 'POST', body: fd });
+      try { lastData = await r.json(); }
+      catch (e) { lastData = { status: 'error', message: 'non-JSON response', httpStatus: r.status }; }
+    } catch (e) {
+      lastData = { status: 'error', message: 'fetch failed: ' + (e && e.message) };
+    }
+    if (lastData && lastData.status === 'ok') return lastData;
+    if (i < ATTEMPTS) await new Promise(res => setTimeout(res, 1000 * i));
+  }
+  return lastData;
 }
 
 export { sendToLpCrm, phpSerializeProducts, SKU_TO_ID, genOrderId };
