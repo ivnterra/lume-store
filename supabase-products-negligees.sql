@@ -26,17 +26,16 @@ L-XL — ОГ 80-102 см, ОС 90-118 см
   ('Мереживний пеньюар «Ізольда»', '39/53', 'Пеньюари', 849, 1149, null, '{"S","M","L"}', 'Насичений винний відтінок і мереживний ліф із дрібним квітковим візерунком роблять цей пеньюар святковим. Від грудей спадає легка спідниця з розрізом спереду, її край оздоблено дрібними воланами — силует виходить пишним і грайливим. Тонкі бретелі регулюються, невеликий бант посередині ліфа завершує образ. Спина відкрита, тож модель гарно виглядає з будь-якого ракурсу.
 
 Комплектація: пеньюар, трусики-стрінги
-Матеріал: мереживо
 Колір: бордо
 
 Розмірна сітка:
 S — ОГ 70-92 см, ОС 76-102 см
 M — ОГ 80-102 см, ОС 82-110 см
 L — ОГ 87-110 см, ОС 88-126 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-53/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-53/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-53/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-53/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-53/4.webp"}', true, true, 'talvyna', '[{"color": "бордо", "active": true, "sizes": [{"size": "S", "active": true}, {"size": "M", "active": true}, {"size": "L", "active": true}]}]'::jsonb, 802),
-  ('Пеньюар із мереживом «Наомі»', '39/46', 'Пеньюари', 749, 1049, null, '{"S-M","L-XL","2XL-3XL"}', 'М''яка щільна тканина зі стрейчем лягає по фігурі й окреслює силует, не стискаючи рухів. Мереживо йде по глибокому вирізу та по низу, а високий боковий розріз відкриває ногу під час кроку. Маленький бант під грудьми додає моделі ніжності. Пеньюар однаково добре працює і для фотосесії, і для сну — тканина дихає й приємна до тіла.
+  ('Пеньюар із мереживом «Наомі»', '39/46', 'Пеньюари', 749, 1049, null, '{"S-M","L-XL","2XL-3XL"}', 'М''яка щільна тканина зі стрейчем лягає по фігурі й окреслює силует, не стискаючи рухів. Мереживо йде по глибокому вирізу та по низу, а високий боковий розріз відкриває ногу під час кроку. Маленький бант під грудьми додає моделі ніжності. Пеньюар однаково добре працює і для фотосесії, і для сну.
 
 Комплектація: пеньюар, стрінги
-Матеріал: котон, стрейч, мереживо
+Матеріал: котон, стрейч
 Колір: чорний, рожевий, бордо, сірий
 
 Розмірна сітка:
@@ -46,7 +45,7 @@ L-XL — ОГ 80-106 см, ОС 90-120 см
   ('Леопардовий пеньюар «Мадлен»', '39/45', 'Пеньюари', 749, 1049, null, '{"S-M","L-XL","2XL-3XL","4XL-5XL"}', 'Леопардовий принт і чорне мереживо по низу — поєднання, яке не залишає сумнівів у настрої. Чашечки тримають форму грудей, тканина зі стрейчем щільно обіймає фігуру й підкреслює талію. Боковий розріз із мереживною вставкою відкриває стегно, а тонкі бретелі регулюються по висоті. Розмірний ряд іде до 5XL, тож модель добре сідає й на пишні форми.
 
 Комплектація: пеньюар із чашечками
-Матеріал: котон, стрейч, мереживо
+Матеріал: котон, стрейч
 Колір: леопардовий
 
 Розмірна сітка:
@@ -57,7 +56,7 @@ L-XL — ОГ 80-106 см, ОС 90-120 см
   ('Атласний пеньюар «Пристрасть»', '39/36', 'Пеньюари', 749, 1049, null, '{"S-M","L-XL","2XL-3XL","4XL-5XL"}', 'Сердечка з написами або леопардовий принт — залежно від кольору модель звучить по-різному, але щоразу помітно. Виріз облямований мереживом, на бретелях зав''язані маленькі банти, а по низу є розріз, який відкриває ногу. Тканина зі стрейчем щільно сідає по фігурі й гарно тягнеться, тому пеньюар зручний навіть у великих розмірах — ряд іде до 5XL.
 
 Комплектація: пеньюар, стринги
-Матеріал: стрейч, мереживо
+Матеріал: стрейч
 Колір: чорний, білий, леопардовий
 
 Розмірна сітка:
@@ -65,7 +64,7 @@ S-M — ОГ 85-110 см, ОС 90-120 см
 L-XL — ОГ 90-126 см, ОС 100-132 см
 2XL-3XL — ОГ 95-136 см, ОС 110-142 см
 4XL-5XL — ОГ 100-146 см, ОС 120-162 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-36/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-36/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-36/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-36/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-36/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-36/5.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}, {"size": "4XL-5XL", "active": true}]}, {"color": "білий", "active": false, "sizes": [{"size": "S-M", "active": false}, {"size": "L-XL", "active": false}, {"size": "2XL-3XL", "active": false}, {"size": "4XL-5XL", "active": false}]}, {"color": "леопардовий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}, {"size": "4XL-5XL", "active": true}]}]'::jsonb, 805),
-  ('Мереживний пеньюар «Сирена»', '39/33', 'Пеньюари', 799, 1099, null, '{"S-M","L-XL","2XL-3XL","4XL-5XL"}', 'Мереживний ліф із фігурними чашечками переходить у прозору спідницю, яка вільно розлітається від грудей і завершується дрібним воланом. Атласний бант посередині стягує ліф і додає моделі кокетства. Мереживо м''яке, зі спандексом — воно тягнеться й не залишає слідів на шкірі. Спина відкрита, бретелі регулюються. Розмірний ряд до 5XL.
+  ('Мереживний пеньюар «Сирена»', '39/33', 'Пеньюари', 799, 1099, null, '{"S-M","L-XL","2XL-3XL","4XL-5XL"}', 'Мереживний ліф із фігурними чашечками переходить у прозору спідницю, яка вільно розлітається від грудей і завершується дрібним воланом. Атласний бант посередині стягує ліф і додає моделі кокетства. Мереживо м''яке, зі спандексом — воно добре тягнеться й повторює рухи. Спина відкрита, бретелі регулюються. Розмірний ряд до 5XL.
 
 Комплектація: пеньюар, мереживні трусики
 Матеріал: бавовна, спандекс, мереживо
@@ -86,7 +85,7 @@ L-XL — ОГ 80-102 см, ОС 90-118 см
 S-M — ОГ 75-94 см, ОС 85-98 см
 L-XL — ОГ 85-108 см, ОС 90-128 см
 2XL-3XL — ОГ 95-122 см, ОС 95-138 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-30/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-30/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-30/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-30/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-30/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-30/5.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}, {"color": "червоний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}, {"color": "рожевий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}]'::jsonb, 807),
-  ('Мереживний пеньюар «Кармелла»', '39/26', 'Пеньюари', 799, 1099, null, '{"S-M","L-XL","2XL-3XL","4XL-5XL","6XL-7XL"}', 'Контрастне світле мереживо по вирізу й широкою смугою по низу — саме воно робить цю модель помітною. Ліф із м''якими чашечками зібраний бантом, спідниця легка, вільна, трохи розкльошена. Тонке нейлонове полотно майже не відчувається на тілі й швидко сохне. Розмірний ряд від S-M до 6XL-7XL, тож підібрати посадку зможе кожна.
+  ('Мереживний пеньюар «Кармелла»', '39/26', 'Пеньюари', 799, 1099, null, '{"S-M","L-XL","2XL-3XL","4XL-5XL","6XL-7XL"}', 'Контрастне світле мереживо по вирізу й широкою смугою по низу — саме воно робить цю модель помітною. Ліф із м''якими чашечками зібраний бантом, спідниця легка, вільна, трохи розкльошена. Тонке нейлонове полотно майже не відчувається на тілі. Розмірний ряд від S-M до 6XL-7XL, тож підібрати посадку зможе кожна.
 
 Комплектація: пеньюар, труси
 Матеріал: нейлон, мереживо
@@ -110,7 +109,7 @@ L-XL — ОГ 80-96 см, ОС 90-110 см
 2XL-3XL — ОГ 88-104 см, ОС 102-118 см
 4XL-5XL — ОГ 92-116 см, ОС 110-128 см
 6XL-7XL — ОГ 94-128 см, ОС 110-144 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-25/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-25/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-25/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-25/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-25/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-25/5.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-25/6.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-25/7.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}, {"size": "4XL-5XL", "active": true}, {"size": "6XL-7XL", "active": true}]}, {"color": "червоний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}, {"size": "4XL-5XL", "active": true}, {"size": "6XL-7XL", "active": true}]}, {"color": "рожевий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}, {"size": "4XL-5XL", "active": true}, {"size": "6XL-7XL", "active": true}]}]'::jsonb, 809),
-  ('Мереживний пеньюар «Далія»', '39/23', 'Пеньюари', 799, 1099, null, '{"S-M","L-XL","2XL-3XL"}', 'Мереживна вставка на талії розділяє силует і візуально витягує його, а спідниця від неї спадає м''якими складками. Ліф із фігурними чашечками підтримує груди, тонкі бретелі регулюються по висоті. Тканина гладенька й прохолодна, лягає по тілу без статики. Модель виглядає радше як коротка сукня — у ній не соромно вийти на кухню по каву.
+  ('Мереживний пеньюар «Далія»', '39/23', 'Пеньюари', 799, 1099, null, '{"S-M","L-XL","2XL-3XL"}', 'Мереживна вставка на талії розділяє силует і візуально витягує його, а спідниця від неї спадає м''якими складками. Ліф із фігурними чашечками підтримує груди, тонкі бретелі регулюються по висоті. Тканина гладенька, лягає по тілу м''якими складками. Модель виглядає радше як коротка сукня — у ній не соромно вийти на кухню по каву.
 
 Комплектація: пеньюар, стринги
 Матеріал: поліестер, мереживо
@@ -120,17 +119,17 @@ L-XL — ОГ 80-96 см, ОС 90-110 см
 S-M — ОГ 70-96 см, ОС 80-98 см
 L-XL — ОГ 80-110 см, ОС 92-132 см
 2XL-3XL — ОГ 90-124 см, ОС 102-142 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-23/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-23/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-23/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-23/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-23/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-23/5.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-23/6.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-23/7.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}, {"color": "бордо", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}]'::jsonb, 810),
-  ('Атласний пеньюар «Естель»', '39/18', 'Пеньюари', 749, 1049, null, '{"S","M","L"}', 'Щільний атлас гарно ловить світло й спадає рівними складками, а мереживний ліф додає моделі м''якості. Спідниця розкльошена від грудей, тому силует виходить легким і не облягає живіт. Виріз глибокий, зав''язаний тонким бантом, спина відкрита. Прохолодна на дотик тканина робить пеньюар зручним для сну навіть теплої ночі.
+  ('Атласний пеньюар «Естель»', '39/18', 'Пеньюари', 749, 1049, null, '{"S","M","L"}', 'Щільний атлас гарно ловить світло й спадає рівними складками, а мереживний ліф додає моделі м''якості. Спідниця розкльошена від грудей, тому силует виходить легким і не облягає живіт. Виріз глибокий, зав''язаний тонким бантом, спина відкрита. Модель однаково доречна і для сну, і для світлин.
 
 Комплектація: пеньюар, стринги
-Матеріал: щільний атлас, мереживо
+Матеріал: щільний атлас
 Колір: чорний, рожевий, зелений
 
 Розмірна сітка:
 S — ОГ 75-84 см, ОС 85-100 см
 M — ОГ 80-90 см, ОС 90-106 см
 L — ОГ 85-94 см, ОС 92-110 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-18/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-18/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-18/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-18/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-18/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-18/5.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-18/6.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-18/7.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S", "active": true}, {"size": "M", "active": true}, {"size": "L", "active": true}]}, {"color": "рожевий", "active": true, "sizes": [{"size": "S", "active": true}, {"size": "M", "active": true}, {"size": "L", "active": true}]}, {"color": "зелений", "active": true, "sizes": [{"size": "S", "active": true}, {"size": "M", "active": true}, {"size": "L", "active": true}]}]'::jsonb, 811),
-  ('Мереживний пеньюар «Мішель»', '39/21', 'Пеньюари', 749, 1049, null, '{"S","M","L","XL","2XL"}', 'Два великі атласні банти на грудях — деталь, заради якої й купують цю модель: вони зав''язуються спереду, тож глибину декольте ви регулюєте самі. Далі йде прозора спідниця, що вільно розлітається від грудей і відкривається посередині. Мереживо приємне до тіла, бавовна в складі не парить. Пеньюар особливо ефектний на світлинах.
+  ('Мереживний пеньюар «Мішель»', '39/21', 'Пеньюари', 749, 1049, null, '{"S","M","L","XL","2XL"}', 'Два великі атласні банти на грудях — деталь, заради якої й купують цю модель: вони зав''язуються спереду, тож глибину декольте ви регулюєте самі. Далі йде прозора спідниця, що вільно розлітається від грудей і відкривається посередині. Мереживо дуже приємне до тіла. Пеньюар особливо ефектний на світлинах.
 
 Комплектація: пеньюар, труси
 Матеріал: бавовна, мереживо
@@ -152,7 +151,7 @@ XL — ОГ 85-98 см, ОС 95-106 см
 S-M — ОГ 70-88 см, ОС 80-98 см
 L-XL — ОГ 80-96 см, ОС 90-112 см
 2XL-3XL — ОГ 87-112 см, ОС 95-126 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-31/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-31/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-31/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-31/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-31/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-31/5.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-39-31/6.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S-M", "active": false}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}]'::jsonb, 813),
-  ('Мереживний пеньюар «Анжеліка»', '16/28', 'Пеньюари', 749, 1049, null, '{"S","M","L","XL","2XL","3XL","4XL","5XL","6XL"}', 'Атласний пояс зав''язується бантом під грудьми й акуратно позначає найтоншу частину силуету, а нижче спадає прозора спідниця з широкою мереживною облямівкою. Ліф тримає форму, бретелі регулюються по висоті. Мереживо м''яке, з бавовною в складі, тому пеньюар приємний до тіла й не дряпає. Дев''ять розмірів — від S до 6XL. За бажанням можна замовити послугу вшивання кісточок.
+  ('Мереживний пеньюар «Анжеліка»', '16/28', 'Пеньюари', 749, 1049, null, '{"S","M","L","XL","2XL","3XL","4XL","5XL","6XL"}', 'Атласний пояс зав''язується бантом під грудьми й акуратно позначає найтоншу частину силуету, а нижче спадає прозора спідниця з широкою мереживною облямівкою. Бретелі регулюються по висоті. Мереживо м''яке, з бавовною в складі, тому пеньюар приємний до тіла й не дряпає. Дев''ять розмірів — від S до 6XL. За бажанням можна замовити послугу вшивання кісточок.
 
 Комплектація: пеньюар, мереживні стрінги
 Матеріал: бавовна, спандекс, мереживо
@@ -168,7 +167,7 @@ XL — ОГ 85-100 см, ОС 95-110 см
 4XL — ОГ 100-115 см, ОС 110-125 см
 5XL — ОГ 105-120 см, ОС 115-130 см
 6XL — ОГ 110-125 см, ОС 115-145 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/5.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/6.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/7.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/8.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pen-16-28/9.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S", "active": true}, {"size": "M", "active": true}, {"size": "L", "active": true}, {"size": "XL", "active": true}, {"size": "2XL", "active": true}, {"size": "3XL", "active": true}, {"size": "4XL", "active": true}, {"size": "5XL", "active": true}, {"size": "6XL", "active": true}]}, {"color": "білий", "active": true, "sizes": [{"size": "S", "active": true}, {"size": "M", "active": true}, {"size": "L", "active": true}, {"size": "XL", "active": true}, {"size": "2XL", "active": true}, {"size": "3XL", "active": true}, {"size": "4XL", "active": true}, {"size": "5XL", "active": true}, {"size": "6XL", "active": true}]}]'::jsonb, 814),
-  ('Мереживний пеньюар «Люсія»', '16/42', 'Пеньюари', 699, 999, null, '{"S-M","L-XL","2XL-3XL","4XL-5XL"}', 'Мереживний ліф із глибоким V-подібним вирізом переходить у легку спідницю, яка загортається спереду й відкриває ногу під час руху. Шість кольорів — від класичного чорного до жовтого й фіолетового, тож модель легко підібрати під настрій. Мереживо м''яке та еластичне, добре тримає форму грудей. Розмірний ряд до 5XL.
+  ('Мереживний пеньюар «Люсія»', '16/42', 'Пеньюари', 699, 999, null, '{"S-M","L-XL","2XL-3XL","4XL-5XL"}', 'Мереживний ліф із глибоким V-подібним вирізом переходить у легку спідницю, яка загортається спереду й відкриває ногу під час руху. Шість кольорів — від класичного чорного до жовтого й фіолетового, тож модель легко підібрати під настрій. Мереживо м''яке та еластичне. Розмірний ряд до 5XL.
 
 Комплектація: пеньюар, мереживні стрінги
 Матеріал: бавовна, спандекс, мереживо

@@ -13,10 +13,10 @@ insert into public.products
   (title, sku, category, price, old_price, badge, sizes, description,
    image_url, images, in_stock, published, store, variants, sort)
 values
-  ('Піжама з шортами «Ліана»', '41/12', 'Піжами', 849, 1149, null, '{"S-M","L-XL","2XL-3XL"}', 'Тканина в дрібний рубчик м''яко тягнеться й повторює рухи, тому в цій піжамі зручно і спати, і провести вечір удома. Топ на тонких бретелях застібається на маленькі ґудзики, а хвиляста мереживна облямівка по вирізу й низу шортів робить комплект ніжним без зайвого декору. Шорти сидять на м''якій гумці зі шнурком — талію легко підтягнути під себе. Бавовна дихає, тож уночі не спекотно.
+  ('Піжама з шортами «Ліана»', '41/12', 'Піжами', 849, 1149, null, '{"S-M","L-XL","2XL-3XL"}', 'Еластична тканина м''яко тягнеться й повторює рухи, тому в цій піжамі зручно і спати, і провести вечір удома. Топ на тонких бретелях застібається на маленькі ґудзики, а хвиляста мереживна облямівка по вирізу й низу шортів робить комплект ніжним без зайвого декору. Шорти сидять на м''якій гумці зі шнурком — талію легко підтягнути під себе.
 
 Комплектація: топ, шорти
-Матеріал: бавовняний стрейч у рубчик
+Матеріал: бавовняний стрейч
 Колір: чорний, рожевий, бордо, салатовий
 
 Розмірна сітка:
@@ -33,7 +33,7 @@ L-XL — ОГ 80-98 см, ОС 85-114 см
 S-M — ОГ 72-80 см, ОС 70-90 см
 L-XL — ОГ 80-98 см, ОС 85-110 см
 2XL-3XL — ОГ 95-102 см, ОС 90-120 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-14/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-14/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-14/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-14/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-14/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-14/5.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}, {"color": "червоний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}, {"color": "рожевий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}, {"color": "срібло", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}, {"color": "бордо", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}]'::jsonb, 702),
-  ('Піжама з шортами «Соня»', '41/15', 'Піжами', 799, 1099, null, '{"S-M","L-XL","2XL-3XL"}', 'Напис good night на топі та картаті шорти з дрібними сердечками — комплект із тих, що піднімають настрій перед сном. Топ щільно сідає по фігурі й трохи вкорочений, шорти вільні, на гумці зі шнурком. Бавовняний стрейч приємний до тіла, добре тягнеться й тримає форму після прання. Проста, зручна піжама на щодень, у якій не шкода показатися вранці на кухні.
+  ('Піжама з шортами «Соня»', '41/15', 'Піжами', 799, 1099, null, '{"S-M","L-XL","2XL-3XL"}', 'Напис good night на топі та картаті шорти з дрібними сердечками — комплект із тих, що піднімають настрій перед сном. Топ щільно сідає по фігурі й трохи вкорочений, шорти вільні, на гумці зі шнурком. Бавовняний стрейч приємний до тіла й добре тягнеться. Проста, зручна піжама на щодень, у якій не шкода показатися вранці на кухні.
 
 Комплектація: топ, шорти
 Матеріал: бавовняний стрейч
@@ -43,7 +43,7 @@ L-XL — ОГ 80-98 см, ОС 85-110 см
 S-M — ОГ 72-94 см, ОС 70-102 см
 L-XL — ОГ 80-102 см, ОС 85-118 см
 2XL-3XL — ОГ 95-114 см, ОС 95-132 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-15/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-15/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-15/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-15/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-15/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-15/5.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": false, "sizes": [{"size": "S-M", "active": false}, {"size": "L-XL", "active": false}, {"size": "2XL-3XL", "active": false}]}, {"color": "білий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}]'::jsonb, 703),
-  ('Атласна піжама «Мірабель»', '41/17', 'Піжами', 749, 1049, null, '{"S-M","L-XL"}', 'Контрастний рожевий кант по вирізу майки й по низу шортів — деталь, яка робить простий крій помітним. Майка вільна, з м''якою драпіровкою на грудях, не облягає й не стискає, шорти короткі, на широкій гумці. Щільний атлас прохолодний на дотик і приємно ковзає, тому в такій піжамі комфортно навіть теплої ночі. Комплект легкий, майже невагомий.
+  ('Атласна піжама «Мірабель»', '41/17', 'Піжами', 749, 1049, null, '{"S-M","L-XL"}', 'Контрастний рожевий кант по вирізу майки й по низу шортів — деталь, яка робить простий крій помітним. Майка вільна, з м''якою драпіровкою на грудях, не облягає й не стискає, шорти короткі, на широкій гумці. Щільний атлас приємно ковзає по шкірі й гарно спадає. Комплект легкий, майже невагомий.
 
 Комплектація: майка, шорти
 Матеріал: щільний атлас
@@ -52,10 +52,10 @@ L-XL — ОГ 80-102 см, ОС 85-118 см
 Розмірна сітка:
 S-M — ОГ 75-86 см, ОС 74-98 см
 L-XL — ОГ 82-94 см, ОС 94-106 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/5.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/6.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/7.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/8.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-17/9.webp"}', true, true, 'talvyna', '[{"color": "чорний", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}]}, {"color": "бордо", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}]}, {"color": "сірий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}]}]'::jsonb, 704),
-  ('Піжама з шортами «Емілі»', '41/18', 'Піжами', 749, 1049, null, '{"S-M","L-XL","2XL-3XL"}', 'Дрібні сердечка по всьому полотну й маленькі бантики на планці топа — комплект виглядає по-домашньому тепло. Контрастна окантовка підкреслює виріз, а хвилястий край шортів додає легкості. Тканина в рубчик еластична, добре сідає по фігурі й не сковує рухів. Шорти тримаються на м''якій гумці, тож у піжамі зручно спати в будь-якій позі.
+  ('Піжама з шортами «Емілі»', '41/18', 'Піжами', 749, 1049, null, '{"S-M","L-XL","2XL-3XL"}', 'Дрібні сердечка по всьому полотну й маленькі бантики на планці топа — комплект виглядає по-домашньому тепло. Контрастна окантовка підкреслює виріз, а хвилястий край шортів додає легкості. Тканина еластична, добре сідає по фігурі й не сковує рухів. Шорти тримаються на м''якій гумці, тож у піжамі зручно спати в будь-якій позі.
 
 Комплектація: топ, шорти
-Матеріал: бавовняний стрейч у рубчик
+Матеріал: бавовняний стрейч
 Колір: чорний, рожевий
 
 Розмірна сітка:
@@ -71,10 +71,10 @@ L-XL — ОГ 80-96 см, ОС 82-110 см
 Розмірна сітка:
 S-M — ОГ 62-100 см, ОС 65-110 см
 L-XL — ОГ 80-115 см, ОС 80-135 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/3.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/4.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/5.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/6.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/7.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/8.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/9.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-41-23/10.webp"}', true, true, 'talvyna', '[{"color": "білий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}]}, {"color": "рожевий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}]}]'::jsonb, 706),
-  ('Атласна піжама «Феліція»', '11/44', 'Піжами', 749, 1049, null, '{"S-M","L-XL","2XL-3XL"}', 'Кожен колір цієї піжами має свій характер: губи, горошок, сердечка з написами чи леопардовий принт. Топ вільний, із глибоким вирізом, облямованим чорним мереживом, шорти короткі, теж із мереживною облямівкою по низу. Щільний атлас прохолодний на дотик і гарно спадає, не обтягуючи фігуру. Комплект помітний і легкий — саме той випадок, коли домашній одяг хочеться показати.
+  ('Атласна піжама «Феліція»', '11/44', 'Піжами', 749, 1049, null, '{"S-M","L-XL","2XL-3XL"}', 'Кожен колір цієї піжами має свій характер: губи, горошок, сердечка з написами чи леопардовий принт. Топ вільний, із глибоким вирізом, облямованим чорним мереживом, шорти короткі, теж із мереживною облямівкою по низу. Щільний атлас гарно спадає, не обтягуючи фігуру. Комплект помітний і легкий — саме той випадок, коли домашній одяг хочеться показати.
 
 Комплектація: топ, шорти
-Матеріал: щільний атлас, мереживо
+Матеріал: щільний атлас
 Колір: чорний, червоний, синій, леопардовий
 
 Розмірна сітка:
@@ -101,7 +101,7 @@ L-XL — ОГ 80-98 см, ОС 85-108 см
 S-M — ОГ 72-94 см, ОС 70-106 см
 L-XL — ОГ 80-106 см, ОС 85-118 см
 2XL-3XL — ОГ 95-116 см, ОС 95-134 см', 'https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-11-71/1.webp', '{"https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-11-71/1.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-11-71/2.webp","https://gwzywunqffubbmscmgam.supabase.co/storage/v1/object/public/product-images/pizh-11-71/3.webp"}', true, true, 'talvyna', '[{"color": "рожевий", "active": true, "sizes": [{"size": "S-M", "active": true}, {"size": "L-XL", "active": true}, {"size": "2XL-3XL", "active": true}]}]'::jsonb, 709),
-  ('Піжама з шортами «Клер»', '11/70', 'Піжами', 799, 1099, null, '{"S-M","L-XL","2XL-3XL"}', 'Однотонний топ у рубчик із ґудзиками на планці та картаті шорти в тон — поєднання, яке виглядає охайно й трохи по-американськи. Топ вкорочений, щільно сідає по фігурі, шорти вільні, на гумці зі шнурком, тому не залишають слідів на талії. Бавовна зі стрейчем прохолодна на дотик і добре тримає форму. Зручний варіант на щодень, який легко доповнити халатом.
+  ('Піжама з шортами «Клер»', '11/70', 'Піжами', 799, 1099, null, '{"S-M","L-XL","2XL-3XL"}', 'Однотонний топ із ґудзиками на планці та картаті шорти в тон — поєднання, яке виглядає охайно й трохи по-американськи. Топ вкорочений, щільно сідає по фігурі, шорти вільні, на гумці зі шнурком, тому не залишають слідів на талії. Бавовна зі стрейчем приємно холодить шкіру. Зручний варіант на щодень, який легко доповнити халатом.
 
 Комплектація: топ, шорти
 Матеріал: бавовна, стрейч
