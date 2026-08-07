@@ -56,7 +56,10 @@ def load_table():
 
 def main():
     table = load_table()
+    # неопубліковані товари зняті свідомо (напр. висока частка повернень) —
+    # їх наявність перераховувати не потрібно, навіть якщо є дані постачальника
     url = (SB + '/rest/v1/products?select=id,sku,title,variants&store=eq.talvyna'
+           '&published=eq.true'
            '&category=eq.' + urllib.parse.quote('Купальники') + '&order=sort.asc')
     products = json.loads(urllib.request.urlopen(
         urllib.request.Request(url, headers={'apikey': ANON}), timeout=60).read())
