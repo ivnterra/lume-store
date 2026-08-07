@@ -7,6 +7,11 @@
 # Фото товарів, підготовлені до завантаження в Supabase Storage (не в git)
 _photos/
 
+# Таблиці постачальника (приватні дані, швидко застарівають) — качати перед
+# кожним запуском scripts/recalc_*.py, див. коментарі в самих скриптах
+scripts/sup*.xlsx
+scripts/sup*.csv
+
 # macOS
 .DS_Store
 .vercel

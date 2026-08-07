@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Перерахунок наявності купальників Talvyna за порогом (наявність + резерв) >= 5.
+"""Перерахунок наявності купальників Talvyna за порогом (наявність + резерв) >= 5
+(узгоджено з ботом @swimsuits_checking_goods_bot — див. stock-threshold-rule у пам'яті).
 
 Набір кольорів і розмірів у картках не змінюється — оновлюються лише
 прапорці active. Якщо в таблиці постачальника даних немає, значення
-лишається як було, і рядок потрапляє у звіт.
+лишається як було, і рядок потрапляє у звіт. Неопубліковані товари
+(published=false) не чіпаються — див. unpublished-no-resync у пам'яті.
+
+Перед запуском покласти свіжу таблицю постачальника поруч зі скриптом:
+    curl -sL -o sup.xlsx \\
+      "https://drive.google.com/uc?export=download&id=1ecYHH4gLq8KvDsqlc-FVOtz3GcKTIjho"
 
     python3 recalc_swim.py           # тільки звіт
     python3 recalc_swim.py --apply   # записати в базу
