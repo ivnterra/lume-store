@@ -16,3 +16,9 @@ scripts/sup*.csv
 .DS_Store
 .vercel
 .env*
+
+# graphify — локальний кеш knowledge graph, регенерується /graphify
+graphify-out/
+
+# калькулятор прибутку — окремий Vercel-проект (DEPLOY-PROFIT-CALC.md), НЕ частина цього репо
+profit-calc/
