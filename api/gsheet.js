@@ -99,8 +99,11 @@ export async function writeOrderRows(spreadsheetId, gid, rows) {
   const sa = JSON.parse(process.env.GOOGLE_SA_JSON);
   const token = await getAccessToken(sa);
   const title = await resolveSheetTitle(token, spreadsheetId, gid);
-  // "зайнятість" рядка перевіряємо за колонкою D (Дата) — надійніший маркер,
-  // ніж B, бо B історично міг лишатись порожнім у ручному процесі.
-  const startRow = await findFirstEmptyRow(token, spreadsheetId, title, 'D');
+  // "зайнятість" рядка перевіряємо за колонкою K (Артикул), а не D (Дата):
+  // при замовленні з кількома товарами дата стоїть лише в першому рядку
+  // замовлення, а наступні рядки (2-й, 3-й товар) мають порожню D — тому
+  // пошук "першої порожньої по D" знаходив ці рядки як вільні й затирав їх
+  // наступним замовленням. Артикул же заповнений у кожному рядку без винятків.
+  const startRow = await findFirstEmptyRow(token, spreadsheetId, title, 'K');
   return writeOrderRowsAt(spreadsheetId, gid, startRow, rows);
 }

@@ -213,10 +213,24 @@ export default async function handler(req, res) {
     // select=* — стійко до відсутніх колонок (напр. oos_sizes ще може бути не створено)
     const endpoint = SB.replace(/\/$/, '') +
       '/rest/v1/products?select=*&store=eq.talvyna&order=sort.asc,id.asc';
-    const resp = await fetch(endpoint, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } });
-    if (!resp.ok) throw new Error('Supabase HTTP ' + resp.status);
-    const products = await resp.json();
-    if (!Array.isArray(products)) throw new Error('Unexpected response');
+    let products;
+    try {
+      const resp = await fetch(endpoint, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } });
+      if (!resp.ok) throw new Error('Supabase HTTP ' + resp.status);
+      products = await resp.json();
+      if (!Array.isArray(products)) throw new Error('Unexpected response');
+    } catch (e) {
+      // Аварійний фолбек: Supabase недоступний (напр. вичерпано egress-квоту) —
+      // беремо статичний знімок каталогу з Meta. Видалити після відновлення Supabase.
+      const staticResp = await fetch(SITE + '/static-catalog/products.json');
+      if (!staticResp.ok) throw e;
+      const staticProducts = await staticResp.json();
+      products = staticProducts.map(p => ({
+        ...p,
+        images: (p.images || []).map(u => u.startsWith('http') ? u : SITE + u),
+        image_url: p.image_url && !p.image_url.startsWith('http') ? SITE + p.image_url : p.image_url
+      }));
+    }
 
     // лише товари з валідним посиланням і фото
     const rows = [];

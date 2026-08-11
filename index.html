@@ -759,6 +759,28 @@ async function loadProducts(){
         if(attempt<3) await new Promise(done=>setTimeout(done, 700*attempt));
       }
     }
+    // Аварійний фолбек: якщо Supabase недоступний (напр. вичерпано egress-квоту),
+    // беремо статичний знімок каталогу з Meta (тимчасово, видалити після відновлення Supabase).
+    if(!loaded){
+      try{
+        const res=await fetch('/static-catalog/products.json');
+        if(res.ok){
+          const data=await res.json();
+          if(Array.isArray(data)&&data.length){
+            PRODUCTS=data.map(r=>{
+              const imgs=(Array.isArray(r.images)&&r.images.length)?r.images:(r.image_url?[r.image_url]:[]);
+              return {
+                id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
+                badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?sortSizes(r.sizes):ONE_SIZE,
+                images:imgs, image:imgs[0]||null, description:r.description||'', in_stock:r.in_stock!==false,
+                oos:[], variants:[]
+              };
+            });
+            loaded=true;
+          }
+        }
+      }catch(e){ console.error('fallback static-catalog не вдався', e); }
+    }
     if(!loaded){
       // НЕ показуємо фейкові демо-товари при збої — показуємо чітке повідомлення
       grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:50px 16px;color:var(--muted)">Не вдалося завантажити товари. Перевірте зʼєднання та <a href="#" onclick="location.reload();return false" style="color:var(--accent);text-decoration:underline">оновіть сторінку</a>.</div>';
