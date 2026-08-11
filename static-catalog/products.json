@@ -21,7 +21,59 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 1,
     "store": "talvyna"
   },
@@ -47,7 +99,93 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Голубий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 2,
     "store": "talvyna"
   },
@@ -73,7 +211,25 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 3,
     "store": "talvyna"
   },
@@ -99,7 +255,76 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Леопардовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 4,
     "store": "talvyna"
   },
@@ -123,7 +348,17 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "Універсальний M-4XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 5,
     "store": "talvyna"
   },
@@ -149,7 +384,59 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 6,
     "store": "talvyna"
   },
@@ -173,7 +460,53 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 7,
     "store": "talvyna"
   },
@@ -201,7 +534,33 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 8,
     "store": "talvyna"
   },
@@ -227,7 +586,42 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 9,
     "store": "talvyna"
   },
@@ -251,7 +645,17 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 10,
     "store": "talvyna"
   },
@@ -275,7 +679,35 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бежевий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 11,
     "store": "talvyna"
   },
@@ -299,7 +731,71 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний S-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "Універсальний S-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "Універсальний S-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "Універсальний S-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Малиновий",
+        "sizes": [
+          {
+            "size": "Універсальний S-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Помаранчевий",
+        "sizes": [
+          {
+            "size": "Універсальний S-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Салатний",
+        "sizes": [
+          {
+            "size": "Універсальний S-XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 12,
     "store": "talvyna"
   },
@@ -331,7 +827,49 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          },
+          {
+            "size": "6XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 13,
     "store": "talvyna"
   },
@@ -359,7 +897,58 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 14,
     "store": "talvyna"
   },
@@ -385,7 +974,42 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 15,
     "store": "talvyna"
   },
@@ -409,7 +1033,26 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 16,
     "store": "talvyna"
   },
@@ -433,7 +1076,53 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Жовтий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 17,
     "store": "talvyna"
   },
@@ -457,7 +1146,35 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Коричневий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 18,
     "store": "talvyna"
   },
@@ -481,7 +1198,17 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний S-XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 19,
     "store": "talvyna"
   },
@@ -505,7 +1232,89 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Світло-бірюзовий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Жовтий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Голубий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 20,
     "store": "talvyna"
   },
@@ -532,7 +1341,134 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Фіолетовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Жовтий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 21,
     "store": "talvyna"
   },
@@ -558,7 +1494,59 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 22,
     "store": "talvyna"
   },
@@ -588,7 +1576,206 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 23,
     "store": "talvyna"
   },
@@ -611,7 +1798,26 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "Універсальний",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 24,
     "store": "talvyna"
   },
@@ -643,7 +1849,90 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          },
+          {
+            "size": "6XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          },
+          {
+            "size": "6XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 25,
     "store": "talvyna"
   },
@@ -759,7 +2048,92 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 29,
     "store": "talvyna"
   },
@@ -785,7 +2159,59 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Темно-бірюзовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 30,
     "store": "talvyna"
   },
@@ -812,7 +2238,25 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Леопардовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 31,
     "store": "talvyna"
   },
@@ -841,7 +2285,124 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Персиковий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 32,
     "store": "talvyna"
   },
@@ -893,7 +2454,76 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Темно-бірюзовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Світло-бірюзовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Жовтий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 34,
     "store": "talvyna"
   },
@@ -919,7 +2549,76 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 35,
     "store": "talvyna"
   },
@@ -944,7 +2643,47 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 36,
     "store": "talvyna"
   },
@@ -970,7 +2709,93 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 37,
     "store": "talvyna"
   },
@@ -996,7 +2821,93 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 38,
     "store": "talvyna"
   },
@@ -1022,7 +2933,76 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 39,
     "store": "talvyna"
   },
@@ -1050,7 +3030,83 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 40,
     "store": "talvyna"
   },
@@ -1076,7 +3132,25 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 41,
     "store": "talvyna"
   },
@@ -1102,7 +3176,76 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 42,
     "store": "talvyna"
   },
@@ -1130,7 +3273,83 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          },
+          {
+            "size": "6XL-7XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          },
+          {
+            "size": "6XL-7XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Помаранчевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          },
+          {
+            "size": "6XL-7XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 43,
     "store": "talvyna"
   },
@@ -1156,7 +3375,42 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 44,
     "store": "talvyna"
   },
@@ -1183,7 +3437,50 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Леопардовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 45,
     "store": "talvyna"
   },
@@ -1210,7 +3507,71 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 46,
     "store": "talvyna"
   },
@@ -1238,7 +3599,83 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          },
+          {
+            "size": "6XL-7XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          },
+          {
+            "size": "6XL-7XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          },
+          {
+            "size": "6XL-7XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 47,
     "store": "talvyna"
   },
@@ -1264,7 +3701,59 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 48,
     "store": "talvyna"
   },
@@ -1291,7 +3780,29 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Леопардовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          },
+          {
+            "size": "4XL-5XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 49,
     "store": "talvyna"
   },
@@ -1317,7 +3828,59 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 50,
     "store": "talvyna"
   },
@@ -1343,7 +3906,42 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 51,
     "store": "talvyna"
   },
@@ -1369,7 +3967,25 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 52,
     "store": "talvyna"
   },
@@ -1395,7 +4011,93 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Срібний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 53,
     "store": "talvyna"
   },
@@ -1420,7 +4122,47 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 54,
     "store": "talvyna"
   },
@@ -1446,7 +4188,42 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 55,
     "store": "talvyna"
   },
@@ -1472,7 +4249,76 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Салатний",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 56,
     "store": "talvyna"
   },
@@ -1498,7 +4344,25 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          },
+          {
+            "size": "2XL-3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 57,
     "store": "talvyna"
   },
@@ -1523,7 +4387,34 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S-M",
+            "active": true
+          },
+          {
+            "size": "L-XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 58,
     "store": "talvyna"
   },
@@ -1552,7 +4443,95 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Блакитний",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Хакі",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 59,
     "store": "talvyna"
   },
@@ -1583,7 +4562,230 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Хакі",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Блакитний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": false
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 60,
     "store": "talvyna"
   },
@@ -1643,7 +4845,82 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          },
+          {
+            "size": "6XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Блакитний",
+        "sizes": [
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": false
+          },
+          {
+            "size": "3XL",
+            "active": false
+          },
+          {
+            "size": "4XL",
+            "active": false
+          },
+          {
+            "size": "5XL",
+            "active": false
+          },
+          {
+            "size": "6XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 62,
     "store": "talvyna"
   },
@@ -1673,7 +4950,107 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 63,
     "store": "talvyna"
   },
@@ -1703,7 +5080,41 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 64,
     "store": "talvyna"
   },
@@ -1731,7 +5142,108 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Жовтий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 65,
     "store": "talvyna"
   },
@@ -1762,7 +5274,119 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 66,
     "store": "talvyna"
   },
@@ -1790,7 +5414,58 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 67,
     "store": "talvyna"
   },
@@ -1817,7 +5492,92 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 68,
     "store": "talvyna"
   },
@@ -1845,7 +5605,108 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Леопардовий",
+        "sizes": [
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 69,
     "store": "talvyna"
   },
@@ -1873,7 +5734,108 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Світло-коричневий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Хакі",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Леопардовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 70,
     "store": "talvyna"
   },
@@ -1904,7 +5866,82 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Леопардовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": false
+          },
+          {
+            "size": "5XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 71,
     "store": "talvyna"
   },
@@ -1932,7 +5969,108 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 72,
     "store": "talvyna"
   },
@@ -1959,7 +6097,92 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Блакитний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Жовтий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 73,
     "store": "talvyna"
   },
@@ -1988,7 +6211,95 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бірюзовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Помаранчевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": false
+          },
+          {
+            "size": "3XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 74,
     "store": "talvyna"
   },
@@ -2016,7 +6327,108 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бірюзовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Жовтий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 75,
     "store": "talvyna"
   },
@@ -2073,7 +6485,133 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 77,
     "store": "talvyna"
   },
@@ -2102,7 +6640,124 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Бірюзовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": false
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Жовтий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Малиновий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 78,
     "store": "talvyna"
   },
@@ -2130,7 +6785,83 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Фіолетовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 79,
     "store": "talvyna"
   },
@@ -2156,7 +6887,50 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бірюзовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 80,
     "store": "talvyna"
   },
@@ -2184,7 +6958,83 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Бордовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 81,
     "store": "talvyna"
   },
@@ -2216,7 +7066,140 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": false
+          },
+          {
+            "size": "4XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Блакитний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": false
+          },
+          {
+            "size": "4XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": false
+          },
+          {
+            "size": "4XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": false
+          },
+          {
+            "size": "3XL",
+            "active": false
+          },
+          {
+            "size": "4XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 82,
     "store": "talvyna"
   },
@@ -2246,7 +7229,107 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Сірий",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          },
+          {
+            "size": "3XL",
+            "active": false
+          },
+          {
+            "size": "4XL",
+            "active": false
+          },
+          {
+            "size": "5XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": true
+          },
+          {
+            "size": "5XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 83,
     "store": "talvyna"
   },
@@ -2312,7 +7395,74 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Блакитний",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": false
+          },
+          {
+            "size": "5XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          },
+          {
+            "size": "3XL",
+            "active": true
+          },
+          {
+            "size": "4XL",
+            "active": false
+          },
+          {
+            "size": "5XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 85,
     "store": "talvyna"
   },
@@ -2340,7 +7490,133 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Рожевий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Світло-коричневий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Хакі",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          },
+          {
+            "size": "2XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Леопардовий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": false
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 86,
     "store": "talvyna"
   },
@@ -2367,7 +7643,29 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 87,
     "store": "talvyna"
   },
@@ -2457,7 +7755,66 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Зелений",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": true
+          },
+          {
+            "size": "3XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 90,
     "store": "talvyna"
   },
@@ -2484,7 +7841,50 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          }
+        ]
+      },
+      {
+        "color": "Білий",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": true
+          },
+          {
+            "size": "L",
+            "active": true
+          },
+          {
+            "size": "XL",
+            "active": true
+          }
+        ]
+      }
+    ],
     "sort": 91,
     "store": "talvyna"
   },
@@ -2517,7 +7917,33 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Бірюзовий",
+        "sizes": [
+          {
+            "size": "XL",
+            "active": true
+          },
+          {
+            "size": "2XL",
+            "active": false
+          },
+          {
+            "size": "3XL",
+            "active": false
+          },
+          {
+            "size": "4XL",
+            "active": false
+          },
+          {
+            "size": "5XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 92,
     "store": "talvyna"
   },
@@ -2548,7 +7974,71 @@
     ],
     "in_stock": true,
     "published": true,
-    "variants": {},
+    "variants": [
+      {
+        "color": "Чорний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Червоний",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      },
+      {
+        "color": "Синій",
+        "sizes": [
+          {
+            "size": "S",
+            "active": true
+          },
+          {
+            "size": "M",
+            "active": false
+          },
+          {
+            "size": "L",
+            "active": false
+          },
+          {
+            "size": "XL",
+            "active": false
+          }
+        ]
+      }
+    ],
     "sort": 93,
     "store": "talvyna"
   }

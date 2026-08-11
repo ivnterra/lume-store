@@ -777,7 +777,8 @@ async function loadProducts(){
                 id:r.id, title:r.title, cat:r.category||'Інше', price:r.price||0, old:r.old_price||null,
                 badge:r.badge||null, sku:r.sku||'', sizes:(Array.isArray(r.sizes)&&r.sizes.length)?sortSizes(r.sizes):ONE_SIZE,
                 images:imgs, image:imgs[0]||null, description:r.description||'', in_stock:r.in_stock!==false,
-                oos:[], variants:[]
+                oos:(Array.isArray(r.oos_sizes)?r.oos_sizes:[]),
+                variants:Array.isArray(r.variants)?r.variants:[]
               };
             });
             loaded=true;
