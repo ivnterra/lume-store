@@ -339,10 +339,14 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
 </header>
 
 <!-- HERO SLIDER -->
+<!-- ⚠️ ТИМЧАСОВО: 4 картинки хедера нижче ведуть на static-catalog/img/ (локальний
+     знімок), бо img.talvyna.com/…/render/ теж зав'язаний на Supabase Storage,
+     яка зараз заблокована по квоті. Повернути на CDN-URL з ?width=1200&quality=70,
+     коли Supabase відновиться (див. заплановану перевірку на 13.08). -->
 <section class="hero">
   <div class="slides" id="slides">
     <div class="slide">
-      <div class="slide-bg slide-1" style="background-image:linear-gradient(120deg,rgba(50,38,28,.6),rgba(50,38,28,.15)),url('https://img.talvyna.com/storage/v1/render/image/public/product-images/kup-50-10/1.jpg?width=1200&quality=70&format=webp')"></div>
+      <div class="slide-bg slide-1" style="background-image:linear-gradient(120deg,rgba(50,38,28,.6),rgba(50,38,28,.15)),url('/static-catalog/img/50-10/1.webp')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Купальники 2026</div>
         <h1>Купальники, що пасують кожній</h1>
@@ -351,7 +355,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
       </div>
     </div>
     <div class="slide">
-      <div class="slide-bg slide-2" style="background-image:linear-gradient(120deg,rgba(45,42,40,.6),rgba(45,42,40,.15)),url('https://img.talvyna.com/storage/v1/render/image/public/product-images/nak-13-11/1.png?width=1200&quality=70&format=webp')"></div>
+      <div class="slide-bg slide-2" style="background-image:linear-gradient(120deg,rgba(45,42,40,.6),rgba(45,42,40,.15)),url('/static-catalog/img/13-10/1.webp')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Пляжні накидки</div>
         <h1>Легкі накидки для пляжу</h1>
@@ -360,7 +364,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
       </div>
     </div>
     <div class="slide">
-      <div class="slide-bg slide-3" style="background-image:linear-gradient(120deg,rgba(46,32,38,.62),rgba(46,32,38,.18)),url('https://img.talvyna.com/storage/v1/render/image/public/product-images/hal-222-16p/1.webp?width=1200&quality=70&format=webp')"></div>
+      <div class="slide-bg slide-3" style="background-image:linear-gradient(120deg,rgba(46,32,38,.62),rgba(46,32,38,.18)),url('/static-catalog/img/222-16/1.webp')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Халати та домашній одяг</div>
         <h1>Атласні халати з мереживом</h1>
@@ -369,7 +373,7 @@ footer .footer-legal a:hover{color:#fff;text-decoration:underline}
       </div>
     </div>
     <div class="slide">
-      <div class="slide-bg slide-4" style="background-image:linear-gradient(120deg,rgba(38,34,46,.6),rgba(38,34,46,.15)),url('https://img.talvyna.com/storage/v1/render/image/public/product-images/pizh-41-23/1.webp?width=1200&quality=70&format=webp')"></div>
+      <div class="slide-bg slide-4" style="background-image:linear-gradient(120deg,rgba(38,34,46,.6),rgba(38,34,46,.15)),url('/static-catalog/img/41-23/1.webp')"></div>
       <div class="container slide-content">
         <div class="eyebrow">Піжами</div>
         <h1>Піжами для затишних вечорів</h1>
