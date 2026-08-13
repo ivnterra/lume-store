@@ -64,6 +64,15 @@ export default async function handler(req, res) {
   }
 
   try {
+    if (req.query.debug) {
+      const r = await fetch(`${LPCRM_BASE}/getOrdersIdByStatus.html`, {
+        method: 'POST',
+        body: new URLSearchParams({ key: KEY, status: '3', date_start: from, date_end: to }),
+      });
+      res.status(200).json({ httpStatus: r.status, body: await r.text() });
+      return;
+    }
+
     const statuses = await lpcrm('getStatuses.html', { key: KEY }); // { id: name }
     const statusIds = Object.keys(statuses);
 
