@@ -64,21 +64,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    if (req.query.debug) {
-      const r = await fetch(`${LPCRM_BASE}/getOrdersIdByStatus.html`, {
-        method: 'POST',
-        body: new URLSearchParams({ key: KEY, status: '3', date_start: from, date_end: to }),
-      });
-      res.status(200).json({ httpStatus: r.status, body: await r.text() });
-      return;
-    }
-
     const statuses = await lpcrm('getStatuses.html', { key: KEY }); // { id: name }
     const statusIds = Object.keys(statuses);
 
-    // ponytail: LP-CRM API не тримає паралельні запити (віддає HTML замість JSON
-    // при одночасних викликах з одним ключем) — тому послідовно, не Promise.all.
-    // Апгрейд: якщо CRM колись почне тримати паралель — повернути Promise.all.
+    // ponytail: LP-CRM тихо ріже запити, що йдуть занадто часто з одним ключем
+    // (повертає ok/порожні дані замість помилки) — знайдено дослідно. Тому
+    // послідовно + пауза 400мс, не Promise.all. Апгрейд: якщо колись знайдеться
+    // документований ліміт — підлаштувати паузу під нього.
     const byStatus = {};
     let leads = 0, buyouts = 0, nonBuyouts = 0;
     const allIds = [];
