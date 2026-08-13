@@ -67,20 +67,16 @@ export default async function handler(req, res) {
     const statuses = await lpcrm('getStatuses.html', { key: KEY }); // { id: name }
     const statusIds = Object.keys(statuses);
 
-    // ID замовлень у кожному статусі за період (паралельно).
-    const idsByStatus = await Promise.all(
-      statusIds.map((id) =>
-        lpcrm('getOrdersIdByStatus.html', { key: KEY, status: id, date_start: from, date_end: to })
-          .catch(() => []) // статус без замовлень у періоді CRM теж може віддати помилку — тоді просто 0
-      )
-    );
-
+    // ponytail: LP-CRM API не тримає паралельні запити (віддає HTML замість JSON
+    // при одночасних викликах з одним ключем) — тому послідовно, не Promise.all.
+    // Апгрейд: якщо CRM колись почне тримати паралель — повернути Promise.all.
     const byStatus = {};
     let leads = 0, buyouts = 0, nonBuyouts = 0;
     const allIds = [];
 
-    statusIds.forEach((id, i) => {
-      const ids = Array.isArray(idsByStatus[i]) ? idsByStatus[i] : [];
+    for (const id of statusIds) {
+      const ids = await lpcrm('getOrdersIdByStatus.html', { key: KEY, status: id, date_start: from, date_end: to })
+        .catch(() => []);
       const name = statuses[id];
       byStatus[name] = ids.length;
       leads += ids.length;
@@ -88,7 +84,7 @@ export default async function handler(req, res) {
       if (kind === 'buyout') buyouts += ids.length;
       if (kind === 'nonBuyout') nonBuyouts += ids.length;
       if (brand) allIds.push(...ids.map((oid) => ({ oid, name })));
-    });
+    }
 
     if (!brand) {
       res.status(200).json({ from, to, leads, buyouts, nonBuyouts, byStatus });
