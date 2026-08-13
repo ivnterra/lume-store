@@ -99,6 +99,7 @@ export default async function handler(req, res) {
     const office = BRAND_TO_OFFICE[brand];
     let bLeads = 0, bBuyouts = 0, bNonBuyouts = 0;
     for (let i = 0; i < allIds.length; i += 100) {
+      await new Promise((r) => setTimeout(r, 400)); // той самий rate-limit CRM, див. коментар вище
       const chunk = allIds.slice(i, i + 100);
       const data = await lpcrm('getOrdersByID.html', { key: KEY, order_id: chunk.map((x) => x.oid).join(',') });
       const orders = chunk.length === 1 ? { [chunk[0].oid]: data } : data;
