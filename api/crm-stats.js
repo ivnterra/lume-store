@@ -83,7 +83,10 @@ export default async function handler(req, res) {
     let leads = 0, buyouts = 0, nonBuyouts = 0;
     const allIds = [];
 
+    let first = true;
     for (const id of statusIds) {
+      if (!first) await new Promise((r) => setTimeout(r, 400));
+      first = false;
       const ids = await lpcrm('getOrdersIdByStatus.html', { key: KEY, status: id, date_start: from, date_end: to })
         .catch(() => []);
       const name = statuses[id];
