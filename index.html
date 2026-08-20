@@ -991,19 +991,9 @@ function orderFromCard(id){
 
 /* ---------- PRODUCT DETAIL PAGE ---------- */
 function promoFor(p){
-  if(p.cat==='Купальники'){
-    return `<div class="pv-promo"><h4>При купівлі 2-х купальників — знижка 10% на другий</h4><ul>`
-      +`<li>Знижка діє на купальник з меншою вартістю.</li>`
-      +`<li>Знижку буде показано в кошику та при оформленні замовлення.</li></ul></div>`
-      +`<div class="pv-promo"><h4>При купівлі купальника — знижка на пляжну накидку -15%</h4><ul>`
-      +`<li>Знижку буде показано в кошику та при оформленні замовлення.</li></ul></div>`;
-  }
-  if(p.cat==='Пляжні накидки'){
-    return `<div class="pv-promo"><h4>Ця накидка на -15% дешевше разом із купальником</h4><ul>`
-      +`<li>Додайте до замовлення будь-який купальник — і отримаєте знижку 15% на цю накидку.</li>`
-      +`<li>Знижку буде показано в кошику та при оформленні замовлення.</li></ul></div>`;
-  }
-  return '';
+  return `<div class="pv-promo"><h4>Знижка 10% при купівлі 2-х і більше товарів</h4><ul>`
+    +`<li>Найдорожчий товар — за повною ціною, решта — зі знижкою 10%.</li>`
+    +`<li>Знижку буде показано в кошику та при оформленні замовлення.</li></ul></div>`;
 }
 function descFor(p){
   if(p.description) return p.description.replace(/\n/g,'<br>');
@@ -1164,7 +1154,7 @@ const BEACH_CATS=['Купальники','Пляжні накидки'];
 function renderRelated(p){
   const rel=document.getElementById('relatedGrid');
   const pick=(cat,n)=>shuffle(PRODUCTS.filter(x=>x.cat===cat && x.id!==p.id)).slice(0,n);
-  // пляжна група — перехресна добірка (працює на акцію купальник + накидка -15%);
+  // пляжна група — перехресна добірка купальник + накидка;
   // решта категорій (халати, піжами, пеньюари) — товари зі своєї категорії.
   let pool = BEACH_CATS.indexOf(p.cat)>=0
     ? pick('Купальники',2).concat(pick('Пляжні накидки',2))
@@ -1240,24 +1230,17 @@ function cartItemsCount(){return Object.values(cart).reduce((a,i)=>a+i.qty,0);}
 function cartTotal(){return Object.values(cart).reduce((s,i)=>s+PRODUCTS.find(p=>p.id===i.id).price*i.qty,0);}
 
 /* ---------- АКЦІЇ (знижки) ----------
-   • 2+ купальники → -10% на всі, крім одного найдорожчого.
-   • є хоча б 1 купальник → -15% на всі пляжні накидки.            */
+   • 2+ товари в кошику → -10% на всі, крім одного найдорожчого.  */
 function promoBreakdown(){
-  const entries=Object.keys(cart).map(k=>{const it=cart[k];const p=PRODUCTS.find(x=>x.id===it.id);return {k,price:p.price,qty:it.qty,cat:p.cat};});
+  const entries=Object.keys(cart).map(k=>{const it=cart[k];const p=PRODUCTS.find(x=>x.id===it.id);return {k,price:p.price,qty:it.qty};});
   const disc={}; entries.forEach(e=>disc[e.k]={amount:0,pct:0});
-  const swim=entries.filter(e=>e.cat==='Купальники');
-  const swimUnits=swim.reduce((s,e)=>s+e.qty,0);
-  if(swimUnits>=2){
+  const totalUnits=entries.reduce((s,e)=>s+e.qty,0);
+  if(totalUnits>=2){
     let exemptKey=null,maxPrice=-1;
-    swim.forEach(e=>{ if(e.price>maxPrice){maxPrice=e.price;exemptKey=e.k;} });
-    swim.forEach(e=>{
+    entries.forEach(e=>{ if(e.price>maxPrice){maxPrice=e.price;exemptKey=e.k;} });
+    entries.forEach(e=>{
       let units=e.qty; if(e.k===exemptKey) units-=1; // один найдорожчий — без знижки
       if(units>0){ disc[e.k].amount+=Math.round(e.price*units*0.10); disc[e.k].pct=10; }
-    });
-  }
-  if(swimUnits>=1){
-    entries.filter(e=>e.cat==='Пляжні накидки').forEach(e=>{
-      disc[e.k].amount+=Math.round(e.price*e.qty*0.15); disc[e.k].pct=15;
     });
   }
   const subtotal=entries.reduce((s,e)=>s+e.price*e.qty,0);
