@@ -1,0 +1,40 @@
+# Оновлює аварійний знімок каталогу (static-catalog/products.json) з Supabase.
+#
+# Навіщо: сайт показує знімок, коли Supabase недоступний. Поки знімок
+# оновлювали руками, він відставав — 29.08.2026 через це реклама 4 години
+# вела на ціни до знижки. Тепер оновлюється сам.
+#
+# Запустити негайно (після зміни цін у адмінці):
+#   GitHub -> Actions -> "Синхронізація каталогу" -> Run workflow
+name: Синхронізація каталогу
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'      # кожні 6 годин
+  workflow_dispatch:             # і вручну, кнопкою
+
+permissions:
+  contents: write
+
+concurrency: sync-catalog        # два запуски одночасно не потрібні
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Оновити знімок
+        run: python3 scripts/sync-catalog.py
+
+      - name: Закомітити, якщо змінилось
+        run: |
+          if git diff --quiet -- static-catalog; then
+            echo "Змін немає"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add static-catalog
+          git commit -m "chore(catalog): автосинхронізація знімка з Supabase"
+          git push
