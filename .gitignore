@@ -20,5 +20,10 @@ scripts/sup*.csv
 # graphify — локальний кеш knowledge graph, регенерується /graphify
 graphify-out/
 
+# Скріншоти й артефакти локальних інструментів (Playwright MCP тощо) — не в git,
+# інакше роздувають кожен деплой Vercel
+.playwright-mcp/
+artifact-*.png
+
 # калькулятор прибутку — окремий Vercel-проект (DEPLOY-PROFIT-CALC.md), НЕ частина цього репо
 profit-calc/
