@@ -1,8 +1,5 @@
 {
   "cleanUrls": true,
-  "crons": [
-    { "path": "/api/img-usage-check", "schedule": "0 9 * * *" }
-  ],
   "functions": {
     "api/crm-stats.js": { "maxDuration": 30 }
   },
